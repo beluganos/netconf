@@ -1,0 +1,26 @@
+
+[[neighbors]]
+ [neighbors.config]
+  neighbor-address = "20.0.0.100"
+  peer-as = 65001
+
+ [neighbors.transport]
+ [neighbors.transport.config]
+  local-address = "10.0.1.6"
+
+[[neighbors.afi-safis]]
+ [neighbors.afi-safis.config]
+  afi-safi-name = "l3vpn-ipv4-unicast"
+
+ [neighbors.apply-policy]
+  export-policy-list = ["policy-nexthop-self2"]
+  default-export-policy = "accept-route"
+
+[[policy-definitions]]
+  name = "policy-nexthop-self2"
+[[policy-definitions.statements]]
+ [policy-definitions.statements.actions]
+  route-disposition = "accept-route"
+ [policy-definitions.statements.actions.bgp-actions]
+  set-local-pref = 200
+  set-next-hop = "10.0.1.0"

@@ -1,0 +1,66 @@
+submodule beluganos-ospfv2-area {
+
+  belongs-to beluganos-ospfv2 {
+    prefix "boc-ospfv2";
+  }
+
+  import ietf-yang-types { prefix "yang"; }
+  import openconfig-extensions { prefix "oc-ext"; }
+
+  // include other required submodules
+  include beluganos-ospfv2-area-interface;
+
+  // meta
+  organization "OpenConfig working group";
+
+  contact
+    "OpenConfig working group
+    www.openconfig.net";
+
+  description
+    "This submodule provides OSPFv2 configuration and operational
+    state parameters that are specific to the area context";
+
+  oc-ext:openconfig-version "0.1.1";
+
+  revision "2017-10-20" {
+    description
+      "Minor formatting fixes.";
+    reference "0.0.1";
+  }
+
+  grouping ospfv2-area-config {
+    description
+      "Configuration parameters relating to an OSPF area";
+
+    leaf identifier {
+      type yang:dotted-quad;
+      description
+        "An identifier for the OSPFv2 area - described as either a
+        32-bit unsigned integer, or a dotted-quad";
+    }
+  }
+
+  grouping ospfv2-area-structure {
+    description
+      "Structural grouping for configuration and operational state
+      parameters that relate to an individual area";
+
+    container config {
+      description
+        "Configuration parameters relating to an OSPFv2 area";
+
+      uses ospfv2-area-config;
+    }
+
+    container state {
+      // @BEL
+      //config false;
+      description
+        "Operational state parameters relating to an OSPFv2 area";
+      //uses ospfv2-area-config;
+    }
+
+    uses ospfv2-area-interfaces-structure;
+  }
+}

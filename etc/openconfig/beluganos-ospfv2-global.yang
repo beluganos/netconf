@@ -1,0 +1,67 @@
+submodule beluganos-ospfv2-global {
+
+  belongs-to beluganos-ospfv2 {
+    prefix "boc-ospfv2";
+  }
+
+  import ietf-yang-types { prefix "yang"; }
+  import openconfig-extensions { prefix "oc-ext"; }
+
+  // meta
+  organization "OpenConfig working group";
+
+  contact
+    "OpenConfig working group
+    www.openconfig.net";
+
+  description
+    "This submodule provides OSPFv2 configuration and operational
+    state parameters that are global to a particular OSPF instance";
+
+  oc-ext:openconfig-version "0.1.1";
+
+  revision "2017-10-20" {
+    description
+      "Minor formatting fixes.";
+    reference "0.1.1";
+  }
+  
+  grouping ospfv2-global-config {
+    description
+      "Global configuration for OSPFv2";
+
+    leaf router-id {
+      type yang:dotted-quad;
+      description
+        "A 32-bit number represented as a dotted quad assigned to
+        each router running the OSPFv2 protocol. This number should
+        be unique within the autonomous system";
+      reference "rfc2828";
+    }
+  }
+
+  grouping ospfv2-global-structural {
+    description
+      "Top level structural grouping for OSPFv2 global parameters";
+
+    container global {
+      description
+        "Configuration and operational state parameters for settings
+        that are global to the OSPFv2 instance";
+
+      container config {
+        description
+          "Global configuration parameters for OSPFv2";
+        uses ospfv2-global-config;
+      }
+
+      container state {
+	// @BEL
+        //config false;
+        description
+          "Operational state parameters for OSPFv2";
+        //uses ospfv2-global-config;
+      }
+    }
+  }
+}

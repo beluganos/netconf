@@ -1,0 +1,57 @@
+<network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
+  <!--
+      +- network-instance(PE1-VRF10)
+      |  +- router-id:10.0.1.6, RD:10:100, RT:10:10, L3VRF
+      |  +- interface(eth4)
+      |  +- interface(eth4.20)
+      |  +- interface(eth5)
+      |  +- interface(eth5.20)
+  -->
+  <!-- PE1-VRF10 -->
+  <network-instance>
+    <name>PE1-VRF10</name>
+    <config>
+      <name>PE1-VRF10</name>
+      <type xmlns:oc-ni-types="http://openconfig.net/yang/network-instance-types">oc-ni-types:L3VRF</type>
+      <router-id>10.0.1.6</router-id>
+      <route-distinguisher>10:2001</route-distinguisher>
+      <route-target>10:1</route-target>
+    </config>
+
+    <interfaces>
+      <interface>
+        <id>eth4</id>
+        <config>
+          <id>eth4</id>
+        </config>
+      </interface>
+      <interface>
+        <id>eth4.20</id>
+        <config>
+          <id>eth4.20</id>
+          <interface>eth4</interface>
+          <subinterface>20</subinterface>
+        </config>
+      </interface>
+
+      <interface>
+        <id>eth5</id>
+        <config>
+          <id>eth5</id>
+        </config>
+      </interface>
+      <interface>
+        <id>eth5.20</id>
+        <config>
+          <id>eth5.20</id>
+          <interface>eth5</interface>
+          <subinterface>20</subinterface>
+        </config>
+      </interface>
+    </interfaces>
+
+    <protocols>
+    </protocols>
+
+  </network-instance>
+</network-instances>

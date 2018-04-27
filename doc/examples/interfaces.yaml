@@ -1,0 +1,12 @@
+---
+
+network:
+  ethernets:
+    eth1: {}
+    eth2: {}
+    eth3:
+      mac-address: "00:22:33:44:55:03"
+    eth4:
+      mac-address: "00:22:33:44:55:04"
+    eth5:
+      mac-address: "00:22:33:44:55:05"

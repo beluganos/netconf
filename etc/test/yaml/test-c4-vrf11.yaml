@@ -1,0 +1,11 @@
+---
+
+network-instances:
+  PE1-VRF11:
+    type: L3VRF
+    router-id: 10.0.1.6
+    route-distinguisher: "11:2001"
+    route-target: "11:1"
+    # interfaces:
+    #   eth3: []
+    #   eth3.10: [both]

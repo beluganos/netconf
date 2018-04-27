@@ -1,0 +1,22 @@
+---
+
+network-instances:
+  PE1-VRF10:
+    type: L3VRF
+    router-id: 10.0.1.6
+    route-distinguisher: "10:2001"
+    route-target: "10:1"
+    loopbacks:
+      lo:
+        - 10.0.1.6/32
+    interfaces:
+      eth4: []
+      eth4.20: [both]
+      eth5: []
+      eth5.20: [both]
+
+    routes:
+      30.10.2.0/24:
+        - dev: eth5.20
+      # 30.0.0.2/32:
+      #   - via: 30.10.2.2

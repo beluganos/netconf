@@ -1,0 +1,61 @@
+<network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
+  <!--
+      +- network-instance(PE1)
+      |  +- router-id:10.0.1.6, RD:10:100, RT:10:10, DEFAULT_INSTANCE
+      |  +- interface(eth1)
+      |  +- interface(eth1.100)
+      |  +- interface(eth2)
+      |  +- interface(eth2.100)
+  -->
+  <!-- PE1 -->
+  <network-instance>
+    <name>PE1</name>
+    <config>
+      <name>PE1</name>
+      <type xmlns:oc-ni-types="http://openconfig.net/yang/network-instance-types">oc-ni-types:DEFAULT_INSTANCE</type>
+      <router-id>10.0.1.6</router-id>
+      <route-distinguisher>10:100</route-distinguisher>
+      <route-target>10:10</route-target>
+    </config>
+
+    <interfaces>
+      <interface>
+        <id>eth1</id>
+        <config>
+          <id>eth1</id>
+          <interface>eth1</interface>
+          <subinterface>0</subinterface>
+        </config>
+      </interface>
+      <interface>
+        <id>eth1.100</id>
+        <config>
+          <id>eth1.100</id>
+          <interface>eth1</interface>
+          <subinterface>100</subinterface>
+        </config>
+      </interface>
+
+      <interface>
+        <id>eth2</id>
+        <config>
+          <id>eth2</id>
+          <interface>eth2</interface>
+          <subinterface>0</subinterface>
+        </config>
+      </interface>
+      <interface>
+        <id>eth2.100</id>
+        <config>
+          <id>eth2.100</id>
+          <interface>eth2</interface>
+          <subinterface>100</subinterface>
+        </config>
+      </interface>
+    </interfaces>
+
+    <protocols>
+    </protocols>
+
+  </network-instance>
+</network-instances>

@@ -1,0 +1,76 @@
+submodule beluganos-bgp-global {
+
+  belongs-to beluganos-bgp {
+    prefix "boc-bgp";
+  }
+
+  import openconfig-extensions { prefix oc-ext; }
+  import openconfig-yang-types { prefix oc-yang; }
+  import openconfig-inet-types { prefix oc-inet; }
+
+  // Include common submodules
+  include beluganos-bgp-common;
+  include beluganos-bgp-common-multiprotocol;
+
+  // meta
+  organization
+    "OpenConfig working group";
+
+  contact
+    "OpenConfig working group
+    netopenconfig@googlegroups.com";
+
+  description
+    "This sub-module contains groupings that are specific to the
+    global context of the OpenConfig BGP module";
+
+  oc-ext:openconfig-version "4.0.1";
+
+  revision "2017-10-20" {
+    description
+      "Clarification of add-paths send-max leaf";
+    reference "0.0.1";
+  }
+
+  grouping bgp-global-config {
+    description
+      "Global configuration options for the BGP router.";
+
+    leaf as {
+      type oc-inet:as-number;
+      description
+        "Local autonomous system number of the router.  Uses
+        the 32-bit as-number type from the model in RFC 6991.";
+    }
+
+    leaf router-id {
+      type oc-yang:dotted-quad;
+      description
+        "Router id of the router - an unsigned 32-bit integer
+        expressed in dotted quad notation.";
+      reference
+        "RFC4271 - A Border Gateway Protocol 4 (BGP-4),
+        Section 4.2";
+    }
+  }
+
+  // Structural groupings
+  grouping bgp-global-base {
+    description
+      "Global configuration parameters for the BGP router";
+
+    container config {
+      description
+        "Configuration parameters relating to the global BGP router";
+      uses bgp-global-config;
+    }
+    container state {
+      // @BEL
+      //config false;
+      description
+        "State information relating to the global BGP router";
+      //uses bgp-global-config;
+      //uses bgp-global-state;
+    }
+  }
+}

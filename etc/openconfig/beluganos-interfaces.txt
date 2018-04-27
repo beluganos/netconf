@@ -1,0 +1,19 @@
+module: beluganos-interfaces
+    +--rw interfaces
+       +--rw interface* [name]
+          +--rw name             -> ../config/name
+          +--rw config
+          |  +--rw name?          string
+          |  +--rw type           identityref
+          |  +--rw mtu?           uint16
+          |  +--rw description?   string
+          |  +--rw enabled?       boolean
+          +--rw state
+          +--rw subinterfaces
+             +--rw subinterface* [index]
+                +--rw index     -> ../config/index
+                +--rw config
+                |  +--rw index?         uint32
+                |  +--rw description?   string
+                |  +--rw enabled?       boolean
+                +--rw state

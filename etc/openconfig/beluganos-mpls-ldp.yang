@@ -1,0 +1,216 @@
+module beluganos-mpls-ldp {
+
+  yang-version "1";
+
+  // namespace
+  namespace "https://github.com/beluganos/beluganos/yang/ldp";
+
+  prefix "boc-ldp";
+
+  // import some basic types
+  import ietf-yang-types { prefix "yang"; }
+  import openconfig-inet-types { prefix oc-inet; }
+  import openconfig-extensions { prefix oc-ext; }
+  import beluganos-interfaces { prefix "boc-if"; }
+
+  // meta
+  organization "Nippon Telegraph and Telephone Corporation";
+
+  contact
+    "NTT R&D
+    https://github.com/beluganos";
+
+  description
+    "Configuration of Label Distribution Protocol global and LSP-
+    specific parameters for IGP-congruent LSPs";
+
+  oc-ext:openconfig-version "2.4.1";
+
+  revision "2017-10-20" {
+    description
+      "Minor formatting fixes.";
+    reference "0.0.1";
+  }
+
+  // grouping statements
+  grouping basic-discovery-timers {
+    description
+      "Basic discovery timer attributes.";
+
+    leaf hello-holdtime {
+      type uint16 {
+	range 15..3600;
+      }
+      units seconds;
+      description
+	"The time interval for which a LDP link Hello adjacency
+           is maintained in the absence of link Hello messages from
+           the LDP neighbor";
+    }
+
+    leaf hello-interval {
+      type uint16 {
+	range 5..1200;
+      }
+      units seconds;
+      description
+	"The interval between consecutive LDP link Hello messages
+           used in basic LDP discovery";
+    }
+  } // basic-discovery-timers
+
+  grouping instance-attributes {
+    description "Configuration attributes at instance level.";
+
+    leaf lsr-id {
+      type yang:dotted-quad;
+      description "Router ID.";
+    }
+  } // instance-attributes
+
+  grouping global-attributes {
+    description "Configuration attributes at global level.";
+    uses instance-attributes;
+  } // global-attributes
+
+  grouping policy-container {
+    description
+      "LDP policy attributes.";
+
+    container label-policy {
+      description
+	"Label policy attributes.";
+
+      container advertise {
+	description
+            "Label advertising policies.";
+
+	container egress-explicit-null {
+	  description
+	    "Enables an egress router to advertise an
+               explicit null label (value 0) in place of an
+               implicit null label (value 3) to the
+               penultimate hop router.";
+
+	  leaf enable {
+	    type boolean;
+	    description
+	      "'true' to enable explicit null.";
+	  }
+	}
+      } // advertise
+    } // label-policy
+  } // policy-container
+  
+  grouping mpls-ldp {
+    description
+      "Container for LDP protocol.";
+
+    container global {
+      description
+	"Global attributes for LDP.";
+
+      container config {
+	description
+	  "Configuration data.";
+	uses global-attributes;
+      }
+
+      container address-families {
+	description
+	  "Container for address families.";
+
+	container ipv4 {
+	  description
+	    "IPv4 address family.";
+
+	  container config {
+	    description
+	      "Configuration data.";
+
+	    leaf transport-address {
+	      type oc-inet:ipv4-address;
+	    }
+
+	    leaf session-ka-holdtime {
+	      type uint16;
+	    }
+
+	    uses policy-container;
+
+	  }
+	} // ipv4
+      } // address-families
+
+      container discovery {
+	description
+	  "Neibgbor discovery configuration.";
+	
+	container interfaces {
+	  description
+	    "A list of interfaces for basic descovery.";
+
+	  container config {
+	    description
+	      "Configuration data.";
+	    uses basic-discovery-timers;
+	  }
+	  
+	  list interface {
+	    key "interface-id";
+
+	    description
+	      "List of LDP interfaces.";
+
+	    leaf interface-id {
+	      type leafref {
+		path "../config/interface-id";
+	      }
+	    }
+
+	    container config {
+	      leaf interface-id {
+		type boc-if:interface-id;
+		description
+		  "Indentifier for the MPLS interface";
+	      }
+
+	      uses basic-discovery-timers;
+	    }
+	    
+            container address-families {
+              description
+                "Container for address families.";
+
+              container ipv4 {
+                description
+                  "IPv4 address family.";
+
+                container config {
+                  description
+                    "Configuration data.";
+
+                  leaf enable {
+                    type boolean;
+                    default true;
+                    description
+                      "Enable the address family on the interface.";
+                  }
+                } // config
+              } // ipv4
+            } // address-families
+
+	    uses boc-if:interface-ref;
+
+	  } // list interface
+	} // interfaces
+      } // discovery
+    } // global
+  } // container mpls-ldp
+
+  grouping ldp-global {
+    container ldp {
+      uses mpls-ldp;
+    }
+  }
+}

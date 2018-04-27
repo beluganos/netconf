@@ -1,0 +1,348 @@
+<network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
+  <!--
+      +- network-instance(PE1)
+      |  +- router-id:10.0.1.6, RD:10:100, RT:10:10, DEFAULT_INSTANCE
+      |  +- interface(eth1)
+      |  +- interface(eth1.100)
+      |  +- interface(eth2)
+      |  +- interface(eth2.100)
+      |  +- protocol(ospf)
+      |  |  +- router-id:10.0.1.6
+      |  |  +- lo
+      |  |  |  +- area:0.0.0.0
+      |  |  |  +- passive
+      |  |  +- eth1.100
+      |  |  |  +- area:0.0.0.0
+      |  |  |  +- cost:100
+      |  |  |  +- timers: dead:10, hello:40
+      |  |  +- eth2.100
+      |  |  |  +- area:0.0.0.0
+      |  |  |  +- cost:200
+      |  |  |  +- timers: dead:10, hello:40
+      |  +- protocol(mpls)
+      |  |  +- EXPLICIT-NULL
+      |  |  +- interface(eth1.100)
+      |  |  +- interface(eth2.100)
+      |  |  +- ldp
+      |  |  |  +- transport-address: 10.0.1.6
+      |  |  |  +- session-ka-holdtime: 30
+      |  |  |  +- EXPLICIT-NULL
+      |  |  |  +- interface(eth1.100)
+      |  |  |  |  +- hello-holdtime:15
+      |  |  |  |  +- hello-interval:5
+      |  |  |  +- interface(eth2.100)
+      |  |  |  |  +- hello-holdtime:15
+      |  |  |  |  +- hello-interval:5
+      |  +- protocols(bgp)
+      |  |  +- as:65001
+      |  |  +- router-id:10.0.1.6
+      |  |  +- zebra
+      |  |  |  +- enabled: false
+      |  |  +- neighbor(10.0.0.100)
+      |  |  |  +- peer-as: 65001
+      |  |  |  +- local-address: 10.0.1.6
+      |  |  |  +- afi-safi-name: l3vpn-ipv4-unicast
+      |  |  |  +- timers:
+      |  |  |  |  +- hold-time:3600
+      |  |  |  |  +- keepalive-interval: 180
+      |  |  |  +- apply-policy
+      |  |  |  |  +- default-import-policy: ACCEPT
+      |  |  |  |  +- default-export-policy: -
+      |  |  |  |  +- export-policy: policy-nexthop-self, policy-local-pref
+      |  |  |  |  +- import-policy: -
+  -->
+  <!-- PE1 -->
+  <network-instance>
+    <name>PE1
+    </name>
+    <config>
+      <name>PE1</name>
+      <type xmlns:oc-ni-types="http://openconfig.net/yang/network-instance-types">oc-ni-types:DEFAULT_INSTANCE</type>
+      <router-id>10.0.1.6</router-id>
+      <route-distinguisher>10:100</route-distinguisher>
+      <route-target>10:10</route-target>
+    </config>
+
+    <interfaces>
+      <interface>
+        <id>eth1</id>
+        <config>
+          <id>eth1</id>
+          <interface>eth1</interface>
+          <subinterface>0</subinterface>
+        </config>
+      </interface>
+      <interface>
+        <id>eth1.100</id>
+        <config>
+          <id>eth1.100</id>
+          <interface>eth1</interface>
+          <subinterface>100</subinterface>
+        </config>
+      </interface>
+
+      <interface>
+        <id>eth2</id>
+        <config>
+          <id>eth2</id>
+          <interface>eth2</interface>
+          <subinterface>0</subinterface>
+        </config>
+      </interface>
+      <interface>
+        <id>eth2.100</id>
+        <config>
+          <id>eth2.100</id>
+          <interface>eth2</interface>
+          <subinterface>100</subinterface>
+        </config>
+      </interface>
+    </interfaces>
+
+    <mpls>
+      <global>
+        <config>
+          <null-label xmlns:oc-mpls-types="http://openconfig.net/yang/mpls-types">oc-mpls-types:EXPLICIT</null-label>
+        </config>
+        <interface-attributes>
+          <interface>
+            <interface-id>eth1.100</interface-id>
+            <config>
+              <interface-id>eth1.100</interface-id>
+            </config>
+            <interface-ref>
+              <config>
+                <interface>eth1</interface>
+                <subinterface>100</subinterface>
+              </config>
+            </interface-ref>
+          </interface>
+          <interface>
+            <interface-id>eth2.100</interface-id>
+            <config>
+              <interface-id>eth2.100</interface-id>
+            </config>
+            <interface-ref>
+              <config>
+                <interface>eth2</interface>
+                <subinterface>100</subinterface>
+              </config>
+            </interface-ref>
+          </interface>
+        </interface-attributes>
+      </global>
+      <signaling-protocols>
+	<ldp>
+	  <global>
+	    <config>
+	      <lsr-id>10.0.1.6</lsr-id>
+	    </config>
+	    <address-families>
+	      <ipv4>
+		<config>
+		  <transport-address>10.0.1.6</transport-address>
+		  <session-ka-holdtime>30</session-ka-holdtime>
+		  <label-policy>
+		    <advertise>
+		      <egress-explicit-null>
+			<enable>false</enable>
+		      </egress-explicit-null>
+		    </advertise>
+		  </label-policy>
+		</config>
+	      </ipv4>
+	    </address-families>
+	    <discovery>
+	      <interfaces>
+		<config>
+		  <hello-holdtime>15</hello-holdtime>
+		  <hello-interval>5</hello-interval>
+		</config>
+		<interface>
+		  <interface-id>eth1.100</interface-id>
+		  <config>
+		    <interface-id>eth1.100</interface-id>
+		    <hello-holdtime>15</hello-holdtime>
+		    <hello-interval>5</hello-interval>
+		  </config>
+		  <address-families>
+		    <ipv4>
+		      <config>
+			<enable>true</enable>
+		      </config>
+		    </ipv4>
+		  </address-families>
+		  <interface-ref>
+		    <config>
+		      <interface>eth1</interface>
+		      <subinterface>100</subinterface>
+		    </config>
+		  </interface-ref>
+		</interface>
+		<interface>
+		  <interface-id>eth2.100</interface-id>
+		  <config>
+		    <interface-id>eth2.100</interface-id>
+		    <hello-holdtime>15</hello-holdtime>
+		    <hello-interval>5</hello-interval>
+		  </config>
+		  <address-families>
+		    <ipv4>
+		      <config>
+			<enable>true</enable>
+		      </config>
+		    </ipv4>
+		  </address-families>
+		  <interface-ref>
+		    <config>
+		      <interface>eth2</interface>
+		      <subinterface>100</subinterface>
+		    </config>
+		  </interface-ref>
+		</interface>
+	      </interfaces>
+	    </discovery>
+	  </global>
+	</ldp>
+      </signaling-protocols>
+    </mpls>
+
+    <protocols>
+      <!-- OSPFv2 -->
+      <protocol>
+        <identifier xmlns:oc-pol-types="http://openconfig.net/yang/policy-types">oc-pol-types:OSPF</identifier>
+        <name>test</name>
+        <config>
+          <identifier xmlns:oc-pol-types="http://openconfig.net/yang/policy-types">oc-pol-types:OSPF</identifier>
+          <name>test</name>
+        </config>
+        <ospfv2>
+          <global>
+            <config>
+              <router-id>10.0.1.6</router-id>
+            </config>
+          </global>
+          <areas>
+            <area>
+              <identifier>0.0.0.0</identifier>
+              <config>
+                <identifier>0.0.0.0</identifier>
+              </config>
+              <interfaces>
+		<interface>
+		  <id>lo</id>
+		  <config>
+		    <id>lo</id>
+		    <passive>true</passive>
+		  </config>
+                  <interface-ref>
+                    <config>
+                      <interface>lo</interface>
+                      <subinterface>0</subinterface>
+                    </config>
+                  </interface-ref>
+		</interface>
+                <interface>
+                  <id>eth1.100</id>
+                  <config>
+                    <id>eth1.100</id>
+                    <metric>100</metric>
+                    <passive>false</passive>
+                  </config>
+                  <interface-ref>
+                    <config>
+                      <interface>eth1</interface>
+                      <subinterface>100</subinterface>
+                    </config>
+                  </interface-ref>
+                  <timers>
+                    <config>
+                      <dead-interval>10</dead-interval>
+                      <hello-interval>40</hello-interval>
+                    </config>
+                  </timers>
+                </interface>
+
+                <interface>
+                  <id>eth2.100</id>
+                  <config>
+                    <id>eth2.100</id>
+                    <metric>200</metric>
+                    <passive>false</passive>
+                  </config>
+                  <interface-ref>
+                    <config>
+                      <interface>eth2</interface>
+                      <subinterface>100</subinterface>
+                    </config>
+                  </interface-ref>
+                  <timers>
+                    <config>
+                      <dead-interval>10</dead-interval>
+                      <hello-interval>40</hello-interval>
+                    </config>
+                  </timers>
+                </interface>
+              </interfaces>
+            </area>
+          </areas>
+        </ospfv2>
+      </protocol>
+      <!-- BGP -->
+      <protocol>
+        <identifier xmlns:oc-pol-types="http://openconfig.net/yang/policy-types">oc-pol-types:BGP</identifier>
+        <name>test</name>
+        <config>
+          <identifier xmlns:oc-pol-types="http://openconfig.net/yang/policy-types">oc-pol-types:BGP</identifier>
+          <name>test</name>
+        </config>
+
+        <bgp>
+          <global>
+            <config>
+              <as>65001</as>
+              <router-id>10.0.1.6</router-id>
+            </config>
+          </global>
+          <zebra>
+            <config>
+              <enabled>false</enabled>
+            </config>
+          </zebra>
+          <neighbors>
+            <!-- neighobor: 10.0.0.100 -->
+            <neighbor>
+              <neighbor-address>10.0.0.100</neighbor-address>
+              <config>
+                <neighbor-address>10.0.0.100</neighbor-address>
+                <peer-as>65001</peer-as>
+              </config>
+	      <transport>
+		<config>
+		  <local-address>10.0.1.6</local-address>
+		</config>
+	      </transport>
+              <apply-policy>
+                <config>
+                  <export-policy>policy-next-hop-self</export-policy>
+                  <export-policy>policy-local-pref</export-policy>
+                  <default-import-policy>ACCEPT_ROUTE</default-import-policy>
+		  <default-export-policy>ACCEPT_ROUTE</default-export-policy>
+                </config>
+              </apply-policy>
+              <afi-safis>
+                <afi-safi>
+                  <afi-safi-name xmlns:oc-bgp-types="http://openconfig.net/yang/bgp-types">oc-bgp-types:L3VPN_IPV4_UNICAST</afi-safi-name>
+                  <config>
+                    <afi-safi-name xmlns:oc-bgp-types="http://openconfig.net/yang/bgp-types">oc-bgp-types:L3VPN_IPV4_UNICAST</afi-safi-name>
+                  </config>
+                </afi-safi>
+              </afi-safis>
+            </neighbor>
+	  </neighbors>
+        </bgp>
+      </protocol>
+    </protocols>
+
+  </network-instance>
+</network-instances>

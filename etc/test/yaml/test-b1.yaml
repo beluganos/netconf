@@ -1,0 +1,22 @@
+---
+
+network-instances:
+  PE1:
+    type: DEFAULT_INSTANCE
+    route-distinguisher: "10:1"
+    route-target: "10:1"
+    loopbacks:
+      lo:
+        - 10.0.1.6/32
+
+    interfaces:
+      eth1: []
+      eth1.100: [both]
+
+    ospfv2:
+      router-id: 10.0.1.6
+      areas:
+        0.0.0.0:
+          eth1.100:
+            metric: 100
+            passive: false

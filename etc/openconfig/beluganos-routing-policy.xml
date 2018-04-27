@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <routing-policy xmlns="https://github.com/beluganos/beluganos/yang/routing-policy">
+    <policy-definitions>
+      <policy-definition>
+	<name />
+	<config>
+	  <name />
+	</config>
+	<state />
+	<statements>
+	  <statement>
+	    <name />
+	    <config>
+	      <name />
+	    </config>
+	    <state />
+	    <actions>
+	      <config>
+		<policy-result />
+	      </config>
+	      <state />
+	    </actions>
+	  </statement>
+	</statements>
+      </policy-definition>
+    </policy-definitions>
+  </routing-policy>
+</data>

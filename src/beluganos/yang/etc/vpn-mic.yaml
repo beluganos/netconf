@@ -1,0 +1,14 @@
+---
+
+network-instances:
+  vpn-mic:
+    type: DEFAULT_INSTANCE  # DEFAULT_INSTANCE or L3VPN
+    router-id: 10.0.0.1
+    route-distinguisher: "10:10"
+    route-target: "10:100"
+    interfaces:
+      eth1: []
+      eth1.10: ["both"]
+      eth2: []
+      eth2.10: ["subif"]
+      eth2.20: ["iface"]

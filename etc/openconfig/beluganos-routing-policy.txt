@@ -1,0 +1,18 @@
+module: beluganos-routing-policy
+    +--rw routing-policy
+       +--rw policy-definitions
+          +--rw policy-definition* [name]
+             +--rw name          -> ../config/name
+             +--rw config
+             |  +--rw name?   string
+             +--rw state
+             +--rw statements
+                +--rw statement* [name]
+                   +--rw name       -> ../config/name
+                   +--rw config
+                   |  +--rw name?   string
+                   +--rw state
+                   +--rw actions
+                      +--rw config
+                      |  +--rw policy-result?   policy-result-type
+                      +--rw state

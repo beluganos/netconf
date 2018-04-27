@@ -1,0 +1,112 @@
+module beluganos-bgp-policy {
+
+  yang-version "1";
+
+  // namespace
+  namespace "https://github.com/beluganos/beluganos/yang/bgp-policy";
+
+  prefix "boc-bgp-pol";
+
+  // import some basic types
+  import openconfig-inet-types { prefix oc-inet; }
+  import openconfig-extensions { prefix oc-ext; }
+
+  import beluganos-routing-policy {prefix boc-rpol; }
+
+  // meta
+  organization "Nippon Telegraph and Telephone Corporation";
+
+  contact
+    "NTT R&D
+    https://github.com/beluganos";
+
+  description
+    "This module contains data definitions for BGP routing policy.
+    It augments the base routing-policy module with BGP-specific
+    options for conditions and actions.";
+
+  oc-ext:openconfig-version "4.0.1";
+
+  revision "2017-10-20" {
+    description
+      "Clarification of add-paths send-max leaf";
+    reference "0.0.1";
+  }
+
+  // typedef statements
+
+  typedef bgp-next-hop-type {
+    type union {
+      type oc-inet:ip-address;
+      type enumeration {
+        enum SELF {
+          description "special designation for local router's own
+          address, i.e., next-hop-self";
+        }
+      }
+    }
+    description
+      "type definition for specifying next-hop in policy actions";
+  }
+
+  // grouping statements
+
+  // augment statements
+
+  grouping bgp-actions-config {
+    description
+      "Configuration data for BGP-specific actions";
+
+    leaf set-local-pref {
+      type uint32;
+      description "set the local pref attribute on the route
+      update";
+    }
+
+    leaf set-next-hop {
+      type bgp-next-hop-type;
+      description "set the next-hop attribute in the route update";
+    }
+  }
+
+  grouping bgp-actions-top {
+    description
+      "Top-level grouping for BGP-specific actions";
+
+    container bgp-actions {
+      description
+        "Top-level container for BGP-specific actions";
+
+      container config {
+        description
+          "Configuration data for BGP-specific actions";
+
+        uses bgp-actions-config;
+      }
+
+      container state {
+	// @BEL
+        //config false;
+
+        description
+          "Operational state data for BGP-specific actions";
+
+        //uses bgp-actions-config;
+        //uses bgp-actions-state;
+      }
+    }
+  }
+
+  augment "/boc-rpol:routing-policy/boc-rpol:policy-definitions/" +
+    "boc-rpol:policy-definition/boc-rpol:statements/boc-rpol:statement/" +
+    "boc-rpol:actions" {
+    description "BGP policy actions added to routing policy
+    module";
+
+    uses bgp-actions-top;
+  }
+
+  // rpc statements
+
+  // notification statements
+}

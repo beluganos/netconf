@@ -1,0 +1,46 @@
+<routing-policy xmlns="https://github.com/beluganos/beluganos/yang/routing-policy">
+  <policy-definitions>
+    <policy-definition>
+      <name>policy-next-hop-self</name>
+      <config>
+        <name>policy-next-hop-self</name>
+      </config>
+      <statements>
+        <statement>
+          <name>stmt-next-hop-self</name>
+          <config>
+            <name>stmt-next-hop-self</name>
+          </config>
+          <actions>
+            <config>
+              <policy-result>ACCEPT_ROUTE</policy-result>
+            </config>
+            <bgp-actions xmlns="https://github.com/beluganos/beluganos/yang/bgp-policy">
+              <config>
+                <set-local-pref>100</set-local-pref>
+                <set-next-hop>SELF</set-next-hop>
+              </config>
+            </bgp-actions>
+          </actions>
+        </statement>
+        <statement>
+          <name>stmt-next-hop-self2</name>
+          <config>
+            <name>stmt-next-hop-self2</name>
+          </config>
+          <actions>
+            <config>
+              <policy-result>REJECT_ROUTE</policy-result>
+            </config>
+            <bgp-actions xmlns="https://github.com/beluganos/beluganos/yang/bgp-policy">
+              <config>
+                <set-local-pref>100</set-local-pref>
+                <set-next-hop>192.168.1.1</set-next-hop>
+              </config>
+            </bgp-actions>
+          </actions>
+        </statement>
+      </statements>
+    </policy-definition>
+  </policy-definitions>
+</routing-policy>

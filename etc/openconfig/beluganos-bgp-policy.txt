@@ -1,0 +1,7 @@
+module: beluganos-bgp-policy
+  augment /boc-rpol:routing-policy/boc-rpol:policy-definitions/boc-rpol:policy-definition/boc-rpol:statements/boc-rpol:statement/boc-rpol:actions:
+    +--rw bgp-actions
+       +--rw config
+       |  +--rw set-local-pref?   uint32
+       |  +--rw set-next-hop?     bgp-next-hop-type
+       +--rw state

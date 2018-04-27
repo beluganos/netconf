@@ -1,0 +1,108 @@
+<network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
+  <!--
+      +- network-instance(PE1-VRF10)
+      |  +- router-id:10.0.1.6, RD:10:100, RT:10:10, L3VRF
+      |  +- interface(eth4)
+      |  +- interface(eth4.20)
+      |  +- interface(eth5)
+      |  +- interface(eth5.20)
+  -->
+  <!-- PE1-VRF10 -->
+  <network-instance>
+    <name>PE1-VRF10</name>
+    <config>
+      <name>PE1-VRF10</name>
+      <type xmlns:oc-ni-types="http://openconfig.net/yang/network-instance-types">oc-ni-types:L3VRF</type>
+      <router-id>10.0.1.6</router-id>
+      <route-distinguisher>10:2001</route-distinguisher>
+      <route-target>10:1</route-target>
+    </config>
+
+    <interfaces>
+      <interface>
+        <id>eth4</id>
+        <config>
+          <id>eth4</id>
+        </config>
+      </interface>
+      <interface>
+        <id>eth4.20</id>
+        <config>
+          <id>eth4.20</id>
+          <interface>eth4</interface>
+          <subinterface>20</subinterface>
+        </config>
+      </interface>
+
+      <interface>
+        <id>eth5</id>
+        <config>
+          <id>eth5</id>
+        </config>
+      </interface>
+      <interface>
+        <id>eth5.20</id>
+        <config>
+          <id>eth5.20</id>
+          <interface>eth5</interface>
+          <subinterface>20</subinterface>
+        </config>
+      </interface>
+    </interfaces>
+
+    <protocols>
+      <!-- BGP -->
+      <protocol>
+        <identifier xmlns:oc-pol-types="http://openconfig.net/yang/policy-types">oc-pol-types:BGP</identifier>
+        <name>test</name>
+        <config>
+          <identifier xmlns:oc-pol-types="http://openconfig.net/yang/policy-types">oc-pol-types:BGP</identifier>
+          <name>test</name>
+        </config>
+
+        <bgp>
+          <global>
+            <config>
+              <as>65001</as>
+              <router-id>10.0.1.6</router-id>
+            </config>
+          </global>
+          <zebra>
+            <config>
+              <enabled>true</enabled>
+              <version>4</version>
+	      <url>unix:/var/run/frr/zserv.api</url>
+            </config>
+          </zebra>
+          <neighbors>
+            <!-- neighobor: 30.10.1.2 -->
+            <neighbor>
+              <neighbor-address>30.10.1.2</neighbor-address>
+              <config>
+                <neighbor-address>30.10.1.2</neighbor-address>
+                <peer-as>30</peer-as>
+              </config>
+              <apply-policy>
+                <config>
+                  <import-policy>policy-next-hop-self</import-policy>
+                  <default-import-policy>ACCEPT_ROUTE</default-import-policy>
+                  <export-policy>policy-local-pref-vrf</export-policy>
+                  <default-export-policy>REJECT_ROUTE</default-export-policy>
+                </config>
+              </apply-policy>
+              <afi-safis>
+                <afi-safi>
+                  <afi-safi-name xmlns:oc-bgp-types="http://openconfig.net/yang/bgp-types">oc-bgp-types:IPV4_UNICAST</afi-safi-name>
+                  <config>
+                    <afi-safi-name xmlns:oc-bgp-types="http://openconfig.net/yang/bgp-types">oc-bgp-types:IPV4_UNICAST</afi-safi-name>
+                  </config>
+                </afi-safi>
+              </afi-safis>
+            </neighbor>
+          </neighbors>
+        </bgp>
+      </protocol>
+    </protocols>
+
+  </network-instance>
+</network-instances>

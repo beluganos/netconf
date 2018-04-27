@@ -1,0 +1,182 @@
+module: beluganos-network-instance
+    +--rw network-instances
+       +--rw network-instance* [name]
+          +--rw name          -> ../config/name
+          +--rw config
+          |  +--rw name?                  string
+          |  +--rw type?                  identityref
+          |  +--rw description?           string
+          |  +--rw router-id?             yang:dotted-quad
+          |  +--rw route-distinguisher?   oc-ni-types:route-distinguisher
+          |  +--rw route-target?          oc-ni-types:route-distinguisher
+          +--rw loopbacks
+          |  +--rw loopback* [id]
+          |     +--rw id           -> ../config/id
+          |     +--rw config
+          |     |  +--rw id?   string
+          |     +--rw addresses
+          |        +--rw address* [index]
+          |           +--rw index     -> ../config/index
+          |           +--rw config
+          |              +--rw index?           uint32
+          |              +--rw ip?              inet:ipv4-address
+          |              +--rw prefix-length?   uint8
+          +--rw state
+          +--rw interfaces
+          |  +--rw interface* [id]
+          |     +--rw id        -> ../config/id
+          |     +--rw config
+          |     |  +--rw id?             string
+          |     |  +--rw interface?      string
+          |     |  +--rw subinterface?   uint32
+          |     +--rw state
+          +--rw mpls
+          |  +--rw global
+          |  |  +--rw config
+          |  |  |  +--rw null-label?   identityref
+          |  |  +--rw state
+          |  |  +--rw interface-attributes
+          |  |     +--rw interface* [interface-id]
+          |  |        +--rw interface-id     -> ../config/interface-id
+          |  |        +--rw config
+          |  |        |  +--rw interface-id?   boc-if:interface-id
+          |  |        +--rw state
+          |  |        +--rw interface-ref
+          |  |           +--rw config
+          |  |           |  +--rw interface?      string
+          |  |           |  +--rw subinterface?   uint32
+          |  |           +--rw state
+          |  +--rw signaling-protocols
+          |     +--rw ldp
+          |        +--rw global
+          |           +--rw config
+          |           |  +--rw lsr-id?   yang:dotted-quad
+          |           +--rw address-families
+          |           |  +--rw ipv4
+          |           |     +--rw config
+          |           |        +--rw transport-address?     oc-inet:ipv4-address
+          |           |        +--rw session-ka-holdtime?   uint16
+          |           |        +--rw label-policy
+          |           |           +--rw advertise
+          |           |              +--rw egress-explicit-null
+          |           |                 +--rw enable?   boolean
+          |           +--rw discovery
+          |              +--rw interfaces
+          |                 +--rw config
+          |                 |  +--rw hello-holdtime?   uint16
+          |                 |  +--rw hello-interval?   uint16
+          |                 +--rw interface* [interface-id]
+          |                    +--rw interface-id        -> ../config/interface-id
+          |                    +--rw config
+          |                    |  +--rw interface-id?     boc-if:interface-id
+          |                    |  +--rw hello-holdtime?   uint16
+          |                    |  +--rw hello-interval?   uint16
+          |                    +--rw address-families
+          |                    |  +--rw ipv4
+          |                    |     +--rw config
+          |                    |        +--rw enable?   boolean
+          |                    +--rw interface-ref
+          |                       +--rw config
+          |                       |  +--rw interface?      string
+          |                       |  +--rw subinterface?   uint32
+          |                       +--rw state
+          +--rw protocols
+             +--rw protocol* [identifier name]
+                +--rw identifier       -> ../config/identifier
+                +--rw name             -> ../config/name
+                +--rw config
+                |  +--rw identifier?   identityref
+                |  +--rw name?         string
+                +--rw state
+                +--rw static-routes
+                |  +--rw static* [ip prefix-length]
+                |     +--rw ip               -> ../config/ip
+                |     +--rw prefix-length    -> ../config/prefix-length
+                |     +--rw config
+                |     |  +--rw ip?              inet:ipv4-address
+                |     |  +--rw prefix-length?   uint8
+                |     +--rw state
+                |     +--rw next-hops
+                |        +--rw next-hop* [index]
+                |           +--rw index            -> ../config/index
+                |           +--rw config
+                |           |  +--rw index?      string
+                |           |  +--rw next-hop?   string
+                |           +--rw state
+                |           +--rw interface-ref
+                |              +--rw config
+                |              |  +--rw interface?      string
+                |              |  +--rw subinterface?   uint32
+                |              +--rw state
+                +--rw bgp
+                |  +--rw global
+                |  |  +--rw config
+                |  |  |  +--rw as?          oc-inet:as-number
+                |  |  |  +--rw router-id?   oc-yang:dotted-quad
+                |  |  +--rw state
+                |  +--rw zebra
+                |  |  +--rw config
+                |  |     +--rw enabled?               boolean
+                |  |     +--rw version?               uint32
+                |  |     +--rw url?                   string
+                |  |     +--rw redistribute-routes*   identityref
+                |  +--rw neighbors
+                |     +--rw neighbor* [neighbor-address]
+                |        +--rw neighbor-address    -> ../config/neighbor-address
+                |        +--rw config
+                |        |  +--rw neighbor-address?   oc-inet:ipv4-address
+                |        |  +--rw peer-as?            oc-inet:as-number
+                |        |  +--rw local-as?           oc-inet:as-number
+                |        |  +--rw description?        string
+                |        +--rw state
+                |        +--rw timers
+                |        |  +--rw config
+                |        |  |  +--rw hold-time?            decimal64
+                |        |  |  +--rw keepalive-interval?   decimal64
+                |        |  +--rw state
+                |        +--rw transport
+                |        |  +--rw config
+                |        |  |  +--rw local-address?   union
+                |        |  +--rw state
+                |        +--rw apply-policy
+                |        |  +--rw config
+                |        |  |  +--rw import-policy*           string
+                |        |  |  +--rw default-import-policy?   default-policy-type
+                |        |  |  +--rw export-policy*           string
+                |        |  |  +--rw default-export-policy?   default-policy-type
+                |        |  +--rw state
+                |        +--rw afi-safis
+                |           +--rw afi-safi* [afi-safi-name]
+                |              +--rw afi-safi-name    -> ../config/afi-safi-name
+                |              +--rw config
+                |              |  +--rw afi-safi-name?   identityref
+                |              +--rw state
+                +--rw ospfv2
+                   +--rw global
+                   |  +--rw config
+                   |  |  +--rw router-id?   yang:dotted-quad
+                   |  +--rw state
+                   +--rw areas
+                      +--rw area* [identifier]
+                         +--rw identifier    -> ../config/identifier
+                         +--rw config
+                         |  +--rw identifier?   yang:dotted-quad
+                         +--rw state
+                         +--rw interfaces
+                            +--rw interface* [id]
+                               +--rw id               -> ../config/id
+                               +--rw config
+                               |  +--rw id?        string
+                               |  +--rw metric?    oc-ospf-types:ospf-metric
+                               |  +--rw passive?   boolean
+                               +--rw state
+                               +--rw interface-ref
+                               |  +--rw config
+                               |  |  +--rw interface?      string
+                               |  |  +--rw subinterface?   uint32
+                               |  +--rw state
+                               +--rw timers
+                                  +--rw config
+                                  |  +--rw dead-interval?    uint32
+                                  |  +--rw hello-interval?   uint32
+                                  +--rw state

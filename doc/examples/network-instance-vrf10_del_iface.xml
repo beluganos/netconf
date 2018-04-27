@@ -1,0 +1,22 @@
+<network-instances xmlns:netconf="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
+  <network-instance>
+    <name>PE1-VRF10</name>
+    <config>
+      <name>PE1-VRF10</name>
+    </config>
+    <interfaces>
+      <interface netconf:operation="delete">
+        <id>eth5</id>
+        <config>
+          <id>eth5</id>
+        </config>
+      </interface>
+      <interface netconf:operation="delete">
+        <id>eth5.20</id>
+        <config>
+          <id>eth5.20</id>
+        </config>
+      </interface>
+    </interfaces>
+  </network-instance>
+</network-instances>

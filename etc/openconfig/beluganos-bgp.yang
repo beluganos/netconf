@@ -1,0 +1,93 @@
+module beluganos-bgp {
+
+  yang-version "1";
+
+  // namespace
+  namespace "https://github.com/beluganos/beluganos/yang/bgp";
+
+  prefix "boc-bgp";
+
+  // import some basic inet types
+  import openconfig-extensions { prefix oc-ext; }
+
+  // Include the OpenConfig BGP submodules
+  // Common: defines the groupings that are common across more than
+  //         one context (where contexts are neighbor, group, global)
+  include beluganos-bgp-common;
+  // Multiprotocol: defines the groupings that are common across more
+  //                than one context, and relate to Multiprotocol
+  include beluganos-bgp-common-multiprotocol;
+  // that are specific to one context
+  include beluganos-bgp-neighbor;
+  include beluganos-bgp-global;
+  include beluganos-bgp-zebra;
+
+  // meta
+  organization "Nippon Telegraph and Telephone Corporation";
+
+  contact
+    "NTT R&D
+    https://github.com/beluganos";
+
+  description
+    "This module describes a YANG model for BGP protocol
+    configuration.It is a limited subset of all of the configuration
+    parameters available in the variety of vendor implementations,
+    hence it is expected that it would be augmented with vendor-
+    specific configuration data as needed. Additional modules or
+    submodules to handle other aspects of BGP configuration,
+    including policy, VRFs, VPNs, and additional address families
+    are also expected.
+
+    This model supports the following BGP configuration level
+    hierarchy:
+
+      BGP
+        |
+        +-> [ global BGP configuration ]
+          +-> AFI / SAFI global
+        +-> peer group
+          +-> [ peer group config ]
+          +-> AFI / SAFI [ per-AFI overrides ]
+        +-> neighbor
+          +-> [ neighbor config ]
+          +-> [ optional pointer to peer-group ]
+          +-> AFI / SAFI [ per-AFI overrides ]";
+
+  oc-ext:openconfig-version "4.0.1";
+
+  revision "2017-10-20" {
+    description
+      "Clarification of add-paths send-max leaf";
+    reference "0.0.1";
+  }
+
+  grouping bgp-top {
+    description
+      "Top-level grouping for the BGP model data";
+
+    container bgp {
+      description
+        "Top-level configuration and state for the BGP router";
+
+      container global {
+        description
+          "Global configuration for the BGP router";
+          uses bgp-global-base;
+      }
+
+      container zebra {
+	uses bgp-zebra;
+      }
+
+      container neighbors {
+        description
+          "Configuration for BGP neighbors";
+        uses bgp-neighbor-list;
+      }
+    }
+  }
+
+  uses bgp-top;
+
+}

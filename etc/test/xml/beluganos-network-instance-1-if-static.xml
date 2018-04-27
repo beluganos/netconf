@@ -1,0 +1,119 @@
+<network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
+  <!--
+      +- network-instance(PE1)
+      |  +- router-id:10.0.0.1, RD:10:100, RT:10:10, DEFAULT
+      |  +- interface(eth1)
+      |  +- interface(eth1.10)
+      |  |  +- interface(eth1)
+      |  |  +- subinterface(10)
+      |  +- protocol(static)
+      |  |  +- 192.168.122.0/24 via 172.16.0.1 dev eth1.10
+  -->
+  <!-- PE1 -->
+  <network-instance>
+    <name>PE1</name>
+    <config>
+      <name>PE1</name>
+      <type xmlns:oc-ni-types="http://openconfig.net/yang/network-instance-types">oc-ni-types:DEFAULT_INSTANCE</type>
+      <router-id>10.0.0.1</router-id>
+      <route-distinguisher>10:100</route-distinguisher>
+      <route-target>10:10</route-target>
+    </config>
+
+    <interfaces>
+      <interface>
+        <id>eth1</id>
+        <config>
+          <id>eth1</id>
+          <interface>eth1</interface>
+          <subinterface>0</subinterface>
+        </config>
+      </interface>
+      <interface>
+        <id>eth1.10</id>
+        <config>
+          <id>eth1.10</id>
+          <interface>eth1</interface>
+          <subinterface>10</subinterface>
+        </config>
+      </interface>
+    </interfaces>
+
+    <protocols>
+      <!-- STATIC ROUTE -->
+      <protocol>
+        <identifier xmlns:oc-pol-types="http://openconfig.net/yang/policy-types">oc-pol-types:STATIC</identifier>
+        <name>test</name>
+        <config>
+          <identifier xmlns:oc-pol-types="http://openconfig.net/yang/policy-types">oc-pol-types:STATIC</identifier>
+          <name>test</name>
+        </config>
+        <static-routes>
+	  <!-- NEIGHBOR -->
+          <static>
+            <ip>192.168.122.0</ip>
+            <prefix-length>24</prefix-length>
+            <config>
+              <ip>192.168.122.0</ip>
+              <prefix-length>24</prefix-length>
+            </config>
+            <next-hops>
+              <next-hop>
+                <index>TEST1</index>
+                <config>
+                  <index>TEST1</index>
+                  <next-hop>172.16.0.1</next-hop>
+                </config>
+              </next-hop>
+            </next-hops>
+          </static>
+
+	  <!-- LOCAL LINK -->
+          <static>
+            <ip>10.0.100.0</ip>
+            <prefix-length>24</prefix-length>
+            <config>
+              <ip>10.0.100.0</ip>
+              <prefix-length>24</prefix-length>
+            </config>
+            <next-hops>
+              <next-hop>
+                <index>TEST2</index>
+                <config>
+                  <index>TEST2</index>
+                  <next-hop>LOCAL_LINK</next-hop>
+                </config>
+                <interface-ref>
+                  <config>
+                    <interface>eth1</interface>
+                    <subinterface>10</subinterface>
+                  </config>
+                </interface-ref>
+              </next-hop>
+            </next-hops>
+          </static>
+
+	  <!-- DROP -->
+          <static>
+            <ip>10.0.101.0</ip>
+            <prefix-length>24</prefix-length>
+            <config>
+              <ip>10.0.101.0</ip>
+              <prefix-length>24</prefix-length>
+            </config>
+            <next-hops>
+              <next-hop>
+                <index>TEST3</index>
+                <config>
+                  <index>TEST3</index>
+                  <next-hop>DROP</next-hop>
+                </config>
+              </next-hop>
+            </next-hops>
+          </static>
+        </static-routes>
+      </protocol>
+    </protocols>
+
+  </network-instance>
+</network-instances>

@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <bgp xmlns="https://github.com/beluganos/beluganos/yang/bgp">
+    <global>
+      <config>
+	<as />
+	<router-id />
+      </config>
+      <state />
+    </global>
+    <zebra>
+      <config>
+	<version />
+	<url />
+	<redistribute-routes />
+      </config>
+    </zebra>
+    <neighbors>
+      <neighbor>
+	<neighbor-address />
+	<config>
+	  <neighbor-address />
+	  <peer-as />
+	  <local-as />
+	  <description />
+	</config>
+	<state />
+	<timers>
+	  <config />
+	  <state />
+	</timers>
+	<transport>
+	  <config>
+	    <local-address />
+	  </config>
+	  <state />
+	</transport>
+	<apply-policy>
+	  <config>
+	    <import-policy />
+	    <export-policy />
+	  </config>
+	  <state />
+	</apply-policy>
+	<afi-safis>
+	  <afi-safi>
+	    <afi-safi-name />
+	    <config>
+	      <afi-safi-name />
+	    </config>
+	    <state />
+	  </afi-safi>
+	</afi-safis>
+      </neighbor>
+    </neighbors>
+  </bgp>
+</data>

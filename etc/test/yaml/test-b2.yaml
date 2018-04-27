@@ -1,0 +1,45 @@
+---
+
+network-instances:
+  PE1:
+    type: DEFAULT_INSTANCE
+    route-distinguisher: "10:1"
+    route-target: "10:1"
+
+    interfaces:
+      eth1: []
+      eth1.100: [both]
+
+    ospfv2:
+      router-id: 10.0.1.6
+      areas:
+        0.0.0.0:
+          eth1.100:
+            metric: 100
+            passive: false
+
+    bgp:
+      as: 65001
+      router-id: 10.0.1.6
+
+      zebra:
+        enabled: true
+        version: 4
+        url: "unix:/var/run/frr/zserv.api"
+
+      neighbors:
+        10.0.0.100:
+          peer-as: 65001
+          transport-local-address: 10.0.1.6
+          afi-safis:
+            - IPV4_UNICAST
+          timers:
+            hold-time: 3600
+            keepalive-interval: 180
+          apply-policy:
+            import-policy: []
+            export-policy:
+              - policy-local-pref
+              - policy-next-hop-self
+            default-import-policy: ACCEPT_ROUTE
+            default-export-policy: ACCEPT_ROUTE

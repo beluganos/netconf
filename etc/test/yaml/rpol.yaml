@@ -1,0 +1,26 @@
+---
+
+policy-definitions:
+  policy-next-hop-self:
+    stmts:
+      stmt-next-hop-self:
+        actions:
+          policy-result: ACCEPT_ROUTE
+          bgp:
+            set-next-hop: SELF
+            
+  policy-local-pref:
+    stmts:
+      stmt-local-pref:
+        actions:
+          policy-result: ACCEPT_ROUTE
+          bgp:
+            set-local-pref: 100
+
+  policy-local-pref-vrf:
+    stmts:
+      stmt-local-pref-vrf:
+        actions:
+          policy-result: ACCEPT_ROUTE
+          bgp:
+            set-local-pref: 110

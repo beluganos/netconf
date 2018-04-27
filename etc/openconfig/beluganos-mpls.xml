@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <mpls xmlns="https://github.com/beluganos/beluganos/yang/mpls">
+    <global>
+      <config>
+	<null-label />
+      </config>
+      <state />
+      <interface-attributes>
+	<interface>
+	  <interface-id />
+	  <config>
+	    <interface-id />
+	  </config>
+	  <state />
+	  <interface-ref>
+	    <config>
+	      <interface />
+	      <subinterface />
+	    </config>
+	    <state />
+	  </interface-ref>
+	</interface>
+      </interface-attributes>
+    </global>
+    <signaling-protocols>
+      <ldp>
+	<global>
+	  <config>
+	    <lsr-id />
+	  </config>
+	  <address-families>
+	    <ipv4>
+	      <config>
+		<transport-address />
+		<session-ka-holdtime />
+		<label-policy>
+		  <advertise>
+		    <egress-explicit-null>
+		      <enable />
+		    </egress-explicit-null>
+		  </advertise>
+		</label-policy>
+	      </config>
+	    </ipv4>
+	  </address-families>
+	  <discovery>
+	    <interfaces>
+	      <config>
+		<hello-holdtime />
+		<hello-interval />
+	      </config>
+	      <interface>
+		<interface-id />
+		<config>
+		  <interface-id />
+		  <hello-holdtime />
+		  <hello-interval />
+		</config>
+		<address-families>
+		  <ipv4>
+		    <config />
+		  </ipv4>
+		</address-families>
+		<interface-ref>
+		  <config>
+		    <interface />
+		    <subinterface />
+		  </config>
+		  <state />
+		</interface-ref>
+	      </interface>
+	    </interfaces>
+	  </discovery>
+	</global>
+      </ldp>
+    </signaling-protocols>
+  </mpls>
+</data>

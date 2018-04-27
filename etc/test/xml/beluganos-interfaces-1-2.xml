@@ -1,0 +1,65 @@
+<interfaces xmlns="https://github.com/beluganos/beluganos/yang/interfaces">
+  <!--
+      +- interface(eth1)
+      |  +- subinterface(eth1)
+      |  +- subinterface(eth1.10)
+      |  |  +- 10.0.1.1/24
+      |  +- subinterface(eth1.20)
+      |  |  +- 20.0.1.1/24
+  -->
+  <interface>
+    <name>eth1</name>
+    <config>
+      <name>eth1</name>
+      <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+    </config>
+    <subinterfaces>
+      <!-- eth1 -->
+      <subinterface>
+        <index>0</index>
+        <config>
+          <index>0</index>
+          <enabled>true</enabled>
+        </config>
+      </subinterface>
+      <!-- eth1.10 -->
+      <subinterface>
+        <index>10</index>
+        <config>
+          <index>10</index>
+          <enabled>true</enabled>
+        </config>
+        <ipv4 xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ip">
+          <addresses>
+            <address>
+              <ip>10.0.1.1</ip>
+              <config>
+                <ip>10.0.1.1</ip>
+                <prefix-length>24</prefix-length>
+              </config>
+            </address>
+          </addresses>
+        </ipv4>
+      </subinterface>
+      <!-- eth1.20 -->
+      <subinterface>
+        <index>20</index>
+        <config>
+          <index>20</index>
+          <enabled>true</enabled>
+        </config>
+        <ipv4 xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ip">
+          <addresses>
+            <address>
+              <ip>20.0.1.1</ip>
+              <config>
+                <ip>20.0.1.1</ip>
+                <prefix-length>24</prefix-length>
+              </config>
+            </address>
+          </addresses>
+        </ipv4>
+      </subinterface>
+    </subinterfaces>
+  </interface>
+</interfaces>

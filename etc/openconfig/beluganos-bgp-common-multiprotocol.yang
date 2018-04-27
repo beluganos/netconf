@@ -1,0 +1,43 @@
+submodule beluganos-bgp-common-multiprotocol {
+
+  belongs-to beluganos-bgp {
+    prefix "boc-bgp";
+  }
+
+  import openconfig-extensions { prefix oc-ext; }
+  import openconfig-bgp-types { prefix oc-bgp-types; }
+  include beluganos-bgp-common;
+
+  // meta
+  organization
+    "OpenConfig working group";
+
+  contact
+    "OpenConfig working group
+    netopenconfig@googlegroups.com";
+
+  description
+    "This sub-module contains groupings that are related to support
+    for multiple protocols in BGP. The groupings are common across
+    multiple contexts.";
+
+  oc-ext:openconfig-version "4.0.1";
+
+  revision "2017-10-20" {
+    description
+      "Clarification of add-paths send-max leaf";
+    reference "0.0.1";
+  }
+
+  grouping bgp-common-mp-afi-safi-config {
+    description
+      "Configuration parameters used for all BGP AFI-SAFIs";
+
+    leaf afi-safi-name {
+      type identityref {
+        base oc-bgp-types:AFI_SAFI_TYPE;
+      }
+      description "AFI,SAFI";
+    }
+  }
+}

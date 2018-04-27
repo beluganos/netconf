@@ -1,0 +1,230 @@
+module beluganos-local-routing {
+
+  yang-version "1";
+
+  // namespace
+  namespace "https://github.com/beluganos/beluganos/yang/local-routing";
+
+  prefix "boc-loc-rt";
+
+  // import some basic types
+  import openconfig-inet-types { prefix inet; }
+  import openconfig-extensions { prefix oc-ext; }
+  import beluganos-interfaces { prefix boc-if; }
+
+  // meta
+  organization "Nippon Telegraph and Telephone Corporation";
+
+  contact
+    "NTT R&D
+    https://github.com/beluganos";
+
+  description
+    "This module describes configuration and operational state data
+    for routes that are locally generated, i.e., not created by
+    dynamic routing protocols.  These include static routes, locally
+    created aggregate routes for reducing the number of constituent
+    routes that must be advertised, summary routes for IGPs, etc.
+
+    This model expresses locally generated routes as generically as
+    possible, avoiding configuration of protocol-specific attributes
+    at the time of route creation.  This is primarily to avoid
+    assumptions about how underlying router implementations handle
+    route attributes in various routing table data structures they
+    maintain.  Hence, the definition of locally generated routes
+    essentially creates 'bare' routes that do not have any protocol-
+    specific attributes.
+
+    When protocol-specific attributes must be attached to a route
+    (e.g., communities on a locally defined route meant to be
+    advertised via BGP), the attributes should be attached via a
+    protocol-specific policy after importing the route into the
+    protocol for distribution (again via routing policy).";
+
+  oc-ext:openconfig-version "1.0.1";
+
+  revision "2017-10-20" {
+    description
+      "Update to resolve style guide non-compliance.";
+    reference "0.0.1";
+  }
+
+  // identity statements
+
+  identity LOCAL_DEFINED_NEXT_HOP {
+    description
+      "A base identity type of local defined next-hops";
+  }
+
+  identity DROP {
+    base LOCAL_DEFINED_NEXT_HOP;
+    description
+      "Discard traffic for the corresponding destination";
+  }
+
+  identity LOCAL_LINK {
+    base LOCAL_DEFINED_NEXT_HOP;
+    description
+      "Treat traffic towards addresses within the specified
+      next-hop prefix as though they are connected to a local
+      link. When the LOCAL_LINK next-hop type is specified,
+      an interface must also be specified such that
+      the local system can determine which link to trigger
+      link-layer address discovery against";
+  }
+
+  // typedef statements
+
+  typedef local-defined-next-hop {
+    type identityref {
+      base LOCAL_DEFINED_NEXT_HOP;
+    }
+    description
+      "Pre-defined next-hop designation for locally generated
+      routes";
+  }
+
+  // grouping statements
+
+  grouping local-static-config {
+    description
+      "Configuration data for static routes.";
+
+    leaf ip {
+      type inet:ipv4-address;
+      description
+        "The IPv4 address on the interface.";
+    }
+
+    leaf prefix-length {
+      type uint8 {
+	range "0..32";
+      }
+      description
+	"The length of the subnet prefix.";
+    }
+  }
+
+  grouping local-static-nexthop-config {
+    description
+      "Configuration parameters related to each next-hop entry
+      specified for a static route";
+
+    leaf index {
+      type string;
+      description
+        "An user-specified identifier utilised to uniquely reference
+        the next-hop entry in the next-hop list. The value of this
+        index has no semantic meaning other than for referencing
+        the entry.";
+    }
+
+    leaf next-hop {
+      type string;
+      description
+        "The next-hop that is to be used for the static route
+        - this may be specified as an IP address, an interface
+        or a pre-defined next-hop type - for instance, DROP or
+        LOCAL_LINK. When this leaf is not set, and the interface-ref
+        value is specified for the next-hop, then the system should
+        treat the prefix as though it is directly connected to the
+        interface.";
+    }
+  }
+
+  grouping local-static-top {
+    description
+      "Top-level grouping for the list of static route definitions";
+
+    container static-routes {
+      description
+        "Enclosing container for the list of static routes";
+
+      list static {
+        key "ip prefix-length";
+        description
+          "List of locally configured static routes";
+
+        leaf ip {
+          type leafref {
+            path "../config/ip";
+          }
+          description
+            "Reference to the destination prefix list key.";
+        }
+
+	leaf prefix-length {
+	  type leafref {
+	    path "../config/prefix-length";
+	  }
+	}
+
+        container config {
+          description
+            "Configuration data for static routes";
+
+          uses local-static-config;
+        }
+
+        container state {
+	  // @BEL
+          //config false;
+
+          description
+            "Operational state data for static routes";
+
+          //uses local-static-config;
+          //uses local-static-state;
+        }
+
+        container next-hops {
+          description
+            "Configuration and state parameters relating to the
+            next-hops that are to be utilised for the static
+            route being specified";
+
+          list next-hop {
+            key "index";
+
+            description
+              "A list of next-hops to be utilised for the static
+              route being specified.";
+
+            leaf index {
+              type leafref {
+                path "../config/index";
+              }
+              description
+                "A reference to the index of the current next-hop.
+                The index is intended to be a user-specified value
+                which can be used to reference the next-hop in
+                question, without any other semantics being
+                assigned to it.";
+            }
+
+            container config {
+              description
+                "Configuration parameters relating to the next-hop
+                entry";
+
+              uses local-static-nexthop-config;
+            }
+
+            container state {
+	      // @BEL
+              //config false;
+              description
+                "Operational state parameters relating to the
+                next-hop entry";
+
+              //uses local-static-nexthop-config;
+              //uses local-static-nexthop-state;
+            }
+
+            uses boc-if:interface-ref;
+          }
+        }
+      }
+    }
+  }
+}

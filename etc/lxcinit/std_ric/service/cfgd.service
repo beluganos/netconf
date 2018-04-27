@@ -1,0 +1,13 @@
+[Unit]
+Description=cfgd
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/cfgd
+# User=beluganos
+# Group=beluganos
+Restart=on-abort
+
+[Install]
+WantedBy=network.target

@@ -1,0 +1,45 @@
+---
+
+network-instances:
+  PE1:
+    type: DEFAULT_INSTANCE
+    router-id: 10.0.1.6
+    route-distinguisher: "10:1"
+    route-target: "10:1"
+    loopbacks:
+      lo:
+        - 10.0.1.6/32
+    interfaces:
+      eth1: []
+      eth1.100: [both]
+      eth2: []
+      eth2.100: [both]
+
+    ospfv2:
+      router-id: 10.0.1.6
+      areas:
+        0.0.0.0:
+          lo:
+            metric: 10
+            passive: true
+          eth1.100:
+            metric: 100
+            passive: false
+          eth2.100:
+            metric: 200
+            passive: false
+
+    mpls:
+      ldp:
+        router-id: 10.0.1.6
+        ipv4:
+          transport-address: 10.0.1.6
+          session-holdtime: 3600
+          egress-explicit-null: false
+        interfaces:
+          eth1.100:
+            hello-holdtime: 180
+            hello-interval: 10
+          eth2.100:
+            hello-holdtime: 180
+            hello-interval: 10

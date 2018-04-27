@@ -1,0 +1,28 @@
+---
+
+interfaces:
+  ethernets:
+    eth1:
+      mtu: 1500
+      addresses:
+        - 10.0.1.1/24
+    eth2:
+      mtu: 1500
+  vlans:
+    eth1.10:
+      id: 10
+      link: eth1
+      mtu: 1496
+    eth2.10:
+      id: 20
+      link: eth2
+      mtu: 1496
+      addresses:
+        - 10.2.20.1/24
+    eth2.20:
+      id: 20
+      link: eth2
+      mtu: 1496
+      addresses:
+        - 10.2.20.1/24
+        - 10.2.20.2/24

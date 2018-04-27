@@ -1,0 +1,20 @@
+---
+
+network-instances:
+  vpn-mic:
+    ospfv2:
+      areas:
+        0.0.0.0:
+          eth1.10: {}
+          eth1.20:
+            metric: 100
+            passive: true
+          eth1.30:
+            hello-interval: 10
+            dead-interval: 40
+        0.0.0.1:
+          eth2.20:
+            metric: 100
+            passive: false
+            hello-interval: 10
+            dead-interval: 40

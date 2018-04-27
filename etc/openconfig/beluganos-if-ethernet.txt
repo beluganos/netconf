@@ -1,0 +1,6 @@
+module: beluganos-if-ethernet
+  augment /boc-if:interfaces/boc-if:interface:
+    +--rw ethernet
+       +--rw config
+       |  +--rw mac-address?   oc-yang:mac-address
+       +--ro state

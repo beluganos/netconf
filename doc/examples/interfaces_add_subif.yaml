@@ -1,0 +1,45 @@
+---
+
+network:
+  ethernets:
+    eth1: {}
+    eth2: {}
+    eth3: {}
+    eth4: {}
+    eth5: {}
+
+  vlans:
+    eth1.100:
+      id: 100
+      link: eth1
+      mtu: 1500
+      addresses:
+        - 10.10.1.6/30
+
+    eth2.100:
+      id: 100
+      link: eth2
+      mtu: 1500
+      addresses:
+        - 10.10.2.6/30
+
+    eth3.10:
+      id: 10
+      link: eth3
+      mtu: 1500
+      addresses:
+        - 20.10.1.1/24
+
+    eth4.20:
+      id: 20
+      link: eth4
+      mtu: 1500
+      addresses:
+        - 30.10.1.1/24
+
+    eth5.20:
+      id: 20
+      link: eth5
+      mtu: 1500
+      addresses:
+        - 30.10.2.1/24

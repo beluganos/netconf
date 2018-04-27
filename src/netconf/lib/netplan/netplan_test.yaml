@@ -1,0 +1,28 @@
+---
+
+network:
+  version: 2
+  ethernets:
+    eth1:
+      addresses:
+        - 10.10.10.2/24
+        - 10.10.20.2/24
+      dhcp4: no
+      mtu: 1500
+  vlans:
+    eth1.10:
+      link: eth1
+      id: 10
+      addresses:
+        - 20.0.1.1/24
+      mtu: 1492
+  bonds:
+    bond0:
+      interfaces:
+        - eth1
+        - eth0
+      mtu: 9000
+      parameters:
+         mii-monitor-interval: 100
+         mode: 802.3ad
+         transmit-hash-policy: layer3+4

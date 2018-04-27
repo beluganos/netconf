@@ -1,0 +1,10 @@
+---
+
+network-instances:
+  PE1:
+    type: DEFAULT_INSTANCE
+    router-id: 10.0.1.6
+    route-target: "10:1"
+    loopbacks:
+      lo:
+        - 10.0.1.6/32

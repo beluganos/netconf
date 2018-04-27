@@ -1,0 +1,38 @@
+---
+
+network-instances:
+  PE1-VRF10:
+    type: L3VRF
+    router-id: 10.0.1.6
+    route-distinguisher: "10:2001"
+    route-target: "10:1"
+    interfaces:
+      eth4: []
+      eth4.20: [both]
+      eth5: []
+      eth5.20: [both]
+
+    routes:
+      30.10.2.0/24:
+        - dev: eth5.20
+
+    bgp:
+      as: 65001
+      router-id: 10.0.1.6
+      zebra:
+        enabled: true
+        version: 4
+        url: "unix:/var/run/frr/zserv.api"
+      neighbors:
+        30.10.1.2:
+          peer-as: 30
+          timers:
+            hold-time: 3600
+            keepalive-interval: 180
+          apply-policy:
+            import-policy: [policy-next-hop-self]
+            export-policy: [policy-local-pref-vrf]
+            default-import-policy: ACCEPT_ROUTE
+            default-export-policy: ACCEPT_ROUTE
+          afi-safis:
+            - IPV4_UNICAST

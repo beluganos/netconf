@@ -1,0 +1,7 @@
+---
+
+network-instances:
+  PE1:
+    type: DEFAULT_INSTANCE
+    route-distinguisher: "10:1"
+    route-target: "10:1"

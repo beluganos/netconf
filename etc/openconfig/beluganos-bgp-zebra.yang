@@ -1,0 +1,41 @@
+submodule beluganos-bgp-zebra {
+
+  belongs-to beluganos-bgp {
+    prefix "boc-bgp";
+  }
+
+  import openconfig-policy-types { prefix "oc-pol-types"; }
+
+  revision "2017-10-20" {
+    description
+      "Clarification of add-paths send-max leaf";
+    reference "0.0.1";
+  }
+
+  grouping bgp-zebra-config {
+    leaf enabled {
+      type boolean;
+      default false;
+    }
+
+    leaf version {
+      type uint32;
+    }
+
+    leaf url {
+      type string;
+    }
+
+    leaf-list redistribute-routes {
+      type identityref {
+	base "oc-pol-types:INSTALL_PROTOCOL_TYPE";
+      }
+    }
+  }
+
+  grouping bgp-zebra {
+    container config {
+      uses bgp-zebra-config;
+    }
+  }
+}

@@ -1,0 +1,37 @@
+---
+
+network-instances:
+  PE1-VRF10:
+    type: L3VRF
+    router-id: 10.0.1.6
+    route-distinguisher: "10:2001"
+    route-target: "10:1"
+    loopbacks:
+      lo:
+        - 10.0.1.6/32
+    interfaces:
+      eth4: []
+      eth4.20: [both]
+      eth5: []
+      eth5.20: [both]
+
+    bgp:
+      as: 65001
+      router-id: 10.0.1.6
+      zebra:
+        enabled: true
+      neighbors:
+        30.10.1.2:
+          peer-as: 30
+          afi-safis:
+            - IPV4_UNICAST
+          timers:
+            hold-time: 3600
+            keepalive-interval: 180
+          apply-policy:
+            import-policy:
+              - policy-local-pref-vrf
+            export-policy:
+              - policy-next-hop-self
+            default-import-policy: ACCEPT_ROUTE
+            default-export-policy: ACCEPT_ROUTE

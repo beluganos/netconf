@@ -1,0 +1,17 @@
+[Unit]
+Description=Netopper2 server
+After=syslog.target network.target sysrepod.service
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/netopeer2-server
+PIDFile=/var/run/netopeer2-server.pid
+# PrivateTmp=yes
+# PrivateDevices=yes
+# ProtectSystem=yes
+# ProtectHome=yes
+SystemCallArchitectures=native
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

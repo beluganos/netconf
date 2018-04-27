@@ -1,0 +1,14 @@
+# -*- coding: utf-8 -*-
+
+[global]
+persist = true
+
+[frr]
+auto_restart = "restart"  # "restart", "reload"(experimental), "-"(no operation)
+
+[cli]
+lxcinit   = "lxcinit.sh"
+lxd       = "cfglxd"
+vty       = "cfgvtyc"
+gobgp     = "cfgbgpc"
+sys       = "cfgsysc"

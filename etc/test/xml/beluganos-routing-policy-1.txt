@@ -1,0 +1,36 @@
+/beluganos-routing-policy:routing-policy (container)
+/beluganos-routing-policy:routing-policy/policy-definitions (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self'] (list instance)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/name = policy-next-hop-self
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/config (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/config/name = policy-next-hop-self
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self'] (list instance)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/name = stmt-next-hop-self
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/config (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/config/name = stmt-next-hop-self
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/actions (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/actions/config (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/actions/config/policy-result = ACCEPT_ROUTE
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/actions/beluganos-bgp-policy:bgp-actions (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/actions/beluganos-bgp-policy:bgp-actions/config (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/actions/beluganos-bgp-policy:bgp-actions/config/set-local-pref = 200
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/actions/beluganos-bgp-policy:bgp-actions/config/set-next-hop = SELF
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/actions/beluganos-bgp-policy:bgp-actions/state (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/actions/state (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self']/state (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2'] (list instance)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/name = stmt-next-hop-self2
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/config (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/config/name = stmt-next-hop-self2
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/actions (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/actions/config (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/actions/config/policy-result = REJECT_ROUTE
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/actions/beluganos-bgp-policy:bgp-actions (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/actions/beluganos-bgp-policy:bgp-actions/config (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/actions/beluganos-bgp-policy:bgp-actions/config/set-local-pref = 200
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/actions/beluganos-bgp-policy:bgp-actions/config/set-next-hop = 192.168.1.1
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/actions/beluganos-bgp-policy:bgp-actions/state (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/actions/state (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/statements/statement[name='stmt-next-hop-self2']/state (container)
+/beluganos-routing-policy:routing-policy/policy-definitions/policy-definition[name='policy-next-hop-self']/state (container)

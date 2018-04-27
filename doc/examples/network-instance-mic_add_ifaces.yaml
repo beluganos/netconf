@@ -1,0 +1,9 @@
+---
+
+network-instances:
+  PE1:
+    interfaces:
+      eth1: []
+      eth1.100: [both] # empty, iface, subif, both
+      eth2: []
+      eth2.100: [iface, subif]

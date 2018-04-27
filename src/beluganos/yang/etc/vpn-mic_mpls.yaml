@@ -1,0 +1,21 @@
+---
+
+network-instances:
+  vpn-mic:
+    mpls:
+      ldp:
+        ipv4:
+          transport-address: 10.0.0.1
+          egress-explicit-null: true
+          session-holdtime: 3600
+        timers:
+          hello-holdtime: 10
+          hello-interval: 40
+        interfaces:
+          eth1.10:
+            hello-holdtime: 10
+            hello-interval: 40
+          eth2.10:
+            hello-holdtime: 10
+            hello-interval: 40
+          eth2.20: {}

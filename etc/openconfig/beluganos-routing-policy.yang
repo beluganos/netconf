@@ -1,0 +1,402 @@
+module beluganos-routing-policy {
+
+  yang-version "1";
+
+  // namespace
+  namespace "https://github.com/beluganos/beluganos/yang/routing-policy";
+
+  prefix "oc-rpol";
+
+  // import some basic types
+  import openconfig-extensions { prefix oc-ext; }
+
+  // meta
+  organization "Nippon Telegraph and Telephone Corporation";
+
+  contact
+    "NTT R&D
+    https://github.com/beluganos";
+
+  description
+    "This module describes a YANG model for routing policy
+    configuration. It is a limited subset of all of the policy
+    configuration parameters available in the variety of vendor
+    implementations, but supports widely used constructs for managing
+    how routes are imported, exported, and modified across different
+    routing protocols.  This module is intended to be used in
+    conjunction with routing protocol configuration models (e.g.,
+    BGP) defined in other modules.
+
+    Route policy expression:
+
+    Policies are expressed as a set of top-level policy definitions,
+    each of which consists of a sequence of policy statements. Policy
+    statements consist of simple condition-action tuples. Conditions
+    may include mutiple match or comparison operations, and similarly
+    actions may be multitude of changes to route attributes or a
+    final disposition of accepting or rejecting the route.
+
+    Route policy evaluation:
+
+    Policy definitions are referenced in routing protocol
+    configurations using import and export configuration statements.
+    The arguments are members of an ordered list of named policy
+    definitions which comprise a policy chain, and optionally, an
+    explicit default policy action (i.e., reject or accept).
+
+    Evaluation of each policy definition proceeds by evaluating its
+    corresponding individual policy statements in order.  When a
+    condition statement in a policy statement is satisfied, the
+    corresponding action statement is executed.  If the action
+    statement has either accept-route or reject-route actions, policy
+    evaluation of the current policy definition stops, and no further
+    policy definitions in the chain are evaluated.
+
+    If the condition is not satisfied, then evaluation proceeds to
+    the next policy statement.  If none of the policy statement
+    conditions are satisfied, then evaluation of the current policy
+    definition stops, and the next policy definition in the chain is
+    evaluated.  When the end of the policy chain is reached, the
+    default route disposition action is performed (i.e., reject-route
+    unless an an alternate default action is specified for the
+    chain).
+
+    Policy 'subroutines' (or nested policies) are supported by
+    allowing policy statement conditions to reference another policy
+    definition which applies conditions and actions from the
+    referenced policy before returning to the calling policy
+    statement and resuming evaluation.  If the called policy
+    results in an accept-route (either explicit or by default), then
+    the subroutine returns an effective true value to the calling
+    policy.  Similarly, a reject-route action returns false.  If the
+    subroutine returns true, the calling policy continues to evaluate
+    the remaining conditions (using a modified route if the
+    subroutine performed any changes to the route).";
+
+  oc-ext:openconfig-version "3.0.0";
+
+  revision "2017-10-20" {
+    description
+      "Replace policy choice node/type with policy-result
+      enumeration;simplified defined set naming;removed generic
+      IGP actions; migrate to OpenConfig types; added mode for
+      prefix sets";
+    reference "0.0.1";
+  }
+
+  // typedef statements
+
+  typedef default-policy-type {
+    // this typedef retained for name compatibiity with default
+    // import and export policy
+    type enumeration {
+      enum ACCEPT_ROUTE {
+        description
+          "Default policy to accept the route";
+      }
+      enum REJECT_ROUTE {
+        description
+          "Default policy to reject the route";
+      }
+    }
+    description
+      "Type used to specify route disposition in
+      a policy chain";
+  }
+
+  typedef policy-result-type {
+    type enumeration {
+      enum ACCEPT_ROUTE {
+        description "Policy accepts the route";
+      }
+      enum REJECT_ROUTE {
+        description "Policy rejects the route";
+      }
+    }
+    description
+      "Type used to specify route disposition in
+      a policy chain";
+  }
+
+
+  // grouping statements
+
+  grouping generic-actions {
+    description
+      "Definitions for common set of policy action statements that
+      manage the disposition or control flow of the policy";
+
+    leaf policy-result {
+      type policy-result-type;
+      description
+        "Select the final disposition for the route, either
+        accept or reject.";
+    }
+  }
+
+  grouping policy-statements-config {
+    description
+      "Configuration data for policy statements";
+
+    leaf name {
+      type string;
+      description
+        "name of the policy statement";
+    }
+  }
+
+  grouping policy-actions-config {
+    description
+      "Configuration data for policy actions";
+
+    uses generic-actions;
+  }
+
+  grouping policy-actions-state {
+    description
+      "Operational state data for policy actions";
+  }
+
+  grouping policy-actions-top {
+    description
+      "Top-level grouping for policy actions";
+
+    container actions {
+      description
+        "Top-level container for policy action statements";
+
+      container config {
+        description
+          "Configuration data for policy actions";
+
+        uses policy-actions-config;
+      }
+
+      container state {
+	// @BEL
+        //config false;
+
+        description
+          "Operational state data for policy actions";
+
+        //uses policy-actions-config;
+        //uses policy-actions-state;
+      }
+    }
+  }
+
+  grouping policy-statements-top {
+    description
+      "Top-level grouping for the policy statements list";
+
+    container statements {
+      description
+        "Enclosing container for policy statements";
+
+      list statement {
+        key "name";
+        // TODO: names of policy statements within a policy
+        // definition should probably be optional, however, YANG
+        // requires a unique id for lists
+        ordered-by user;
+        description
+          "Policy statements group conditions and actions
+          within a policy definition.  They are evaluated in
+          the order specified (see the description of policy
+          evaluation at the top of this module.";
+
+        leaf name {
+          type leafref {
+            path "../config/name";
+          }
+          description
+            "Reference to list key";
+        }
+
+        container config {
+          description
+            "Configuration data for policy statements";
+
+          uses policy-statements-config;
+        }
+
+        container state {
+	  // @BEL
+          //config false;
+
+          description
+            "Operational state data for policy statements";
+
+          //uses policy-statements-config;
+          //uses policy-statements-state;
+        }
+
+        uses policy-actions-top;
+      }
+    }
+  }
+
+  grouping policy-definitions-config {
+    description
+      "Configuration data for policy definitions";
+
+    leaf name {
+      type string;
+      description
+        "Name of the top-level policy definition -- this name
+        is used in references to the current policy";
+    }
+  }
+
+  grouping policy-definitions-top {
+    description
+      "Top-level grouping for the policy definition list";
+
+    container policy-definitions {
+      description
+        "Enclosing container for the list of top-level policy
+          definitions";
+
+      list policy-definition {
+        key "name";
+        description
+          "List of top-level policy definitions, keyed by unique
+          name.  These policy definitions are expected to be
+          referenced (by name) in policy chains specified in import
+          or export configuration statements.";
+
+        leaf name {
+          type leafref {
+            path "../config/name";
+          }
+          description
+            "Reference to the list key";
+        }
+
+        container config {
+          description
+            "Configuration data for policy defintions";
+
+          uses policy-definitions-config;
+        }
+
+        container state {
+	  // @BEL
+          //config false;
+
+          description
+            "Operational state data for policy definitions";
+
+          //uses policy-definitions-config;
+          //uses policy-definitions-state;
+        }
+
+        uses policy-statements-top;
+      }
+    }
+  }
+
+  grouping routing-policy-top {
+    description
+      "Top level container for OpenConfig routing policy";
+
+    container routing-policy {
+      description
+        "Top-level container for all routing policy configuration";
+
+
+      uses policy-definitions-top;
+    }
+  }
+
+  grouping apply-policy-import-config {
+    description
+      "Configuration data for applying import policies";
+
+    leaf-list import-policy {
+      type string;
+      ordered-by user;
+      description
+        "list of policy names in sequence to be applied on
+        receiving a routing update in the current context, e.g.,
+        for the current peer group, neighbor, address family,
+        etc.";
+    }
+
+    leaf default-import-policy {
+      type default-policy-type;
+      default REJECT_ROUTE;
+      description
+        "explicitly set a default policy if no policy definition
+        in the import policy chain is satisfied.";
+    }
+
+  }
+
+  grouping apply-policy-export-config {
+    description
+      "Configuration data for applying export policies";
+
+    leaf-list export-policy {
+      type string;
+      ordered-by user;
+      description
+        "list of policy names in sequence to be applied on
+        sending a routing update in the current context, e.g.,
+        for the current peer group, neighbor, address family,
+        etc.";
+    }
+
+    leaf default-export-policy {
+      type default-policy-type;
+      default REJECT_ROUTE;
+      description
+        "explicitly set a default policy if no policy definition
+        in the export policy chain is satisfied.";
+    }
+  }
+
+  grouping apply-policy-config {
+    description
+      "Configuration data for routing policies";
+
+    uses apply-policy-import-config;
+    uses apply-policy-export-config;
+
+  }
+
+  grouping apply-policy-group {
+    description
+      "Top level container for routing policy applications. This
+      grouping is intended to be used in routing models where
+      needed.";
+
+    container apply-policy {
+      description
+        "Anchor point for routing policies in the model.
+        Import and export policies are with respect to the local
+        routing table, i.e., export (send) and import (receive),
+        depending on the context.";
+
+      container config {
+        description
+          "Policy configuration data.";
+
+        uses apply-policy-config;
+      }
+
+      container state {
+	// @BEL
+        //config false;
+        description
+          "Operational state for routing policy";
+
+        //uses apply-policy-config;
+        //uses apply-policy-state;
+      }
+    }
+  }
+
+  uses routing-policy-top;
+
+}
