@@ -38,7 +38,7 @@ install_cmocka() {
     pushd ${WORK_HOME}
 
     if [ ! -e cmocka ]; then
-        git clone git://git.cryptomilk.org/projects/cmocka.git
+        git clone https://git.cryptomilk.org/projects/cmocka.git
     fi
 
     cd cmocka

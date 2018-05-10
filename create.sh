@@ -84,7 +84,7 @@ sysrepo_install() {
     if [ "$SYSREPO_INSTALL" = "yes" ]; then
         pushd etc/sysrepo
 
-        sudo HTTPS_PROXY=${PROXY} ./sr_install.sh install
+        HTTPS_PROXY=${PROXY} ./sr_install.sh install
         HTTPS_PROXY=${PROXY} ./sr_install.sh yang
 
         sudo sysrepod
