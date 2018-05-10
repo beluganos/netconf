@@ -9,14 +9,20 @@ The start/stop operation is described at this documents.
 
 ## Start / Stop
 
-You have two options to operate this software.
+You have two options to operate this software. Generally, launching as a linux service is recommended.
 
 ### (Option A) Launch as a service
+
+To start, 
 
 ```
 $ sudo systemctl start netopeer2-server
 $ sudo systemctl start ncm.target
+```
 
+To stop,
+
+```
 $ sudo systemctl stop ncmd
 $ sudo systemctl stop ncmi
 $ sudo systemctl stop ncms
@@ -31,3 +37,7 @@ $ cd ~/netconf/etc/test
 $ ./nop2.sh    # terminal-1
 $ ./ncmall.sh  # terminal-2
 ```
+
+## NETCONF operation
+
+In default settings, SSH port of NETCONF is 830. For more detail, please refer [examples/README.md](examples/README.md).
