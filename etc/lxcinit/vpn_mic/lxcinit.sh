@@ -38,6 +38,10 @@ do_init() {
     install -v -m 0644 -o ${BEL_USER} -g ${BEL_USER} ./conf/ribxd.conf  /etc/beluganos/ribxd.conf
     install -v -m 0644 -o ${BEL_USER} -g ${BEL_USER} ./conf/vrf.conf    /etc/vrf.conf
 
+    # create frr.conf and restart frr
+    touch /etc/frr/frr.conf
+    systemctl restart frr
+
     # copy service files.
     local SERVICE
     for SERVICE in ${SERVICES}; do

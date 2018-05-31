@@ -28,6 +28,10 @@ do_init() {
     # copy config files
     install -v -m 0644 -o ${FRR_USER} -g ${FRR_USER} ./conf/daemons /etc/frr/daemons
 
+    # create frr.conf and restart frr
+    touch /etc/frr/frr.conf
+    systemctl restart frr
+
     # copy service files.
     local SERVICE
     for SERVICE in ${SERVICES}; do

@@ -42,6 +42,10 @@ func GetImage(c lxd.ContainerServer, name string) (*api.Image, string, error) {
 	return c.GetImage(alias.Target)
 }
 
+func GetState(c lxd.ContainerServer, name string) (*api.ContainerState, string, error) {
+	return c.GetContainerState(name)
+}
+
 func CreateContainer(c lxd.ContainerServer, image string, container *api.ContainersPost) (lxd.RemoteOperation, error) {
 	im, _, err := GetImage(c, image)
 	if err != nil {
