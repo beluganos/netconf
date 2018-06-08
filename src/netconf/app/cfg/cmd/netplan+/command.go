@@ -105,29 +105,46 @@ func (c *NpCommand) SetMtu(ifname string, device *ncnplib.Device) error {
 }
 
 func (c *NpCommand) Init() error {
+	return c.DoInit(false) // force flag: false
+}
+
+func (c *NpCommand) DoInit(force bool) error {
 	cfg, err := ncnplib.ReadConfigDir(c.dir)
 	if err != nil {
+		log.Errorf("%s %s", c.dir, err)
 		return err
 	}
 
 	for ifname, eth := range cfg.Network.Ethernets {
 		log.Debugf("Ethernet[%s] %v", ifname, eth)
 		if err := c.SetMtu(ifname, &eth.Device); err != nil {
-			return nil
+			if !force {
+				log.Errorf("%s %s", ifname, err)
+				return err
+			}
+			log.Warnf("%s %s. but ignored.", ifname, err)
 		}
 	}
 
 	for ifname, vlan := range cfg.Network.Vlans {
 		log.Debugf("VLAN[%s] %v", ifname, vlan)
 		if err := c.SetMtu(ifname, &vlan.Device); err != nil {
-			return nil
+			if !force {
+				log.Errorf("%s %s", ifname, err)
+				return err
+			}
+			log.Warnf("%s %s. but ignored.", ifname, err)
 		}
 	}
 
 	for ifname, bond := range cfg.Network.Bonds {
 		log.Debugf("BOND[%s] %v", ifname, bond)
 		if err := c.SetMtu(ifname, &bond.Device); err != nil {
-			return nil
+			if !force {
+				log.Errorf("%s %s", ifname, err)
+				return err
+			}
+			log.Errorf("%s %s. but ignored.", ifname, err)
 		}
 	}
 
@@ -140,9 +157,11 @@ func (c *NpCommand) Run(arg string) error {
 }
 
 func (c *NpCommand) Apply() error {
+	c.DoInit(true) // force flag: true
+
 	if err := c.Run("apply"); err != nil {
 		return err
 	}
 
-	return c.Init()
+	return c.DoInit(false) // force flag: false
 }

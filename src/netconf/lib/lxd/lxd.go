@@ -26,7 +26,7 @@ import (
 
 const (
 	DEFAULT_BRIDGE_NAME = "lxdbr0"
-	DEFAULT_DEVICE_MTU  = "1500"
+	DEFAULT_DEVICE_MTU  = "8192"
 )
 
 func Connect() (lxd.ContainerServer, error) {
