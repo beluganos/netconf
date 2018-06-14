@@ -21,11 +21,11 @@ The strings like `std_mic` and `vpn_ric` represents the type of network-instance
                 service/
 ~~~
 
+Generally, in [install-guide.md](install-guide.md), the operation of `sudo make install-service` may copy this files from `~/netconf/etc/lxcinit/` to `/etc/lxcinit`. In daemon mode, the files under `/etc/lxcinit/` are applied. In CLI mode, the files under `~/netconf/etc/lxcinit` are applied. About the daemon/CLI mode, please refer [operation-guide.md](operation-guide.md).
 
-## Understand operating principle
+## Understand the principle of network-instance
 
-This repositories software has been developed based on the idea of [OpenConfig](http://www.openconfig.net/). This is because 
-at least one "**network-instance**" is required by this software. For example, in general IP routers, single **network-instance** (type = `DEFAULT_INSTANCE`) exists is assumed.
+This repositories software has been developed based on the idea of [OpenConfig](http://www.openconfig.net/). This is because at least one "**network-instance**" is required by this software. For example, in general IP routers, single **network-instance** (type = `DEFAULT_INSTANCE`) exists is assumed.
 
 In this section, the operation principle about adding network-instance is described. Generally, **adding network-instance may be operated at first NETCONF request**, except in case of adding beforehand some network-instance by another methods.
 
@@ -36,9 +36,9 @@ For example, following edit-config requests (default operation is "merge") is as
 ```
 <network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
   <network-instance>
-    <name>master-instance</name>
+    <name>PE1</name>
     <config>
-      <name>master-instance</name>
+      <name>PE1</name>
       <type xmlns:oc-ni-types="http://openconfig.net/yang/network-instance-types">oc-ni-types:DEFAULT_INSTANCE</type>
       <router-id>10.0.1.6</router-id>
     </config>
@@ -71,7 +71,7 @@ For example, following edit-config requests (default operation is "merge") is as
 The script of `lxcinit.sh` is executed automatically at host server (**NOT** linux container). The argument is container's name, path of directory, and the strings of "local".
 
 ```
-(host)$ ~/etc/lxcinit/std_mic/lxcinit.sh master-instance ~/etc/lxcinit/std_mic local
+(host)$ ~/etc/lxcinit/std_mic/lxcinit.sh PE1 ~/etc/lxcinit/std_mic local
 ```
 
 This operation is owned by nc-module.
@@ -85,7 +85,7 @@ Required files which exists on `etc/lxcinit/<container-type>` is tranfered to `/
 The argument is container's name, path of directory.
 
 ```
-(container)$ /tmp/lxcinit.sh master-instance /tmp/std_mic
+(container)$ /tmp/lxcinit.sh PE1 /tmp/std_mic
 ```
 
 ---
@@ -105,7 +105,7 @@ module: beluganos-network-instance
           |  +--rw ....
 ```
 
-The supported network instance (i.e. Linux container) type is following: 
+The supported network instance (i.e. Linux container) type is following:
 
 | Type             | Route-target | Name    | Description        |
 | ---------------- | ------------------------------------ | ---- | ---- |
@@ -118,22 +118,11 @@ The supported network instance (i.e. Linux container) type is following:
 
 ## 2. Edit initialization script
 
-Once network-instance is created, `lxcinit.sh` will be worked. You can customize this script. For more detail, please refer the section of "Understand operating principle" in this document.
+Once network-instance is created, `lxcinit.sh` will be worked. You can customize this script. For more detail, please refer the section of "Understand operating principle" in this document. Note that if you want to use just only Beluganos's feature, you need not to edit this file.
 
-## 3. Setup systemd
+### About `conf/ribxd.conf`
 
-If you want use systemd service, please put following files at `/etc/lxcinit/`.
-
-```
-/etc/lxcinit/
-        std_mic/
-        std_ric/
-        vpn_mic/
-        vpn_ric/
-            lxcinit.sh
-            conf/
-            service/
-```
+This files is the settings of RIBC which is a one of the component of Beluganos. If you will use this reporitories software in order to control GoBGP and FRR (not including Beluganos), `ribxd.conf` may be removed. On the other hand, if you use will Beluganos, you should edit  this files. For more details, please refer [Beluganos's manual](https://github.com/beluganos/beluganos/blob/master/doc/configure-ansible.md#8-ribxdconf-beluganoss-settings).
 
 ## Next steps
 
