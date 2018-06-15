@@ -26,7 +26,7 @@ import (
 
 const (
 	DEFAULT_BRIDGE_NAME = "lxdbr0"
-	DEFAULT_DEVICE_MTU  = "1500"
+	DEFAULT_DEVICE_MTU  = "8192"
 )
 
 func Connect() (lxd.ContainerServer, error) {
@@ -40,6 +40,10 @@ func GetImage(c lxd.ContainerServer, name string) (*api.Image, string, error) {
 	}
 
 	return c.GetImage(alias.Target)
+}
+
+func GetState(c lxd.ContainerServer, name string) (*api.ContainerState, string, error) {
+	return c.GetContainerState(name)
 }
 
 func CreateContainer(c lxd.ContainerServer, image string, container *api.ContainersPost) (lxd.RemoteOperation, error) {

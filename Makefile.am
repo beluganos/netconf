@@ -19,9 +19,15 @@ clean-local:
 release: install
 	install -v -C `pwd`/bin/* ${GOPREFIX}/bin/
 
+install-lxcinit:
+	cp -v -r `pwd`/etc/lxcinit /etc/
+
+uninstall-lxcinit:
+	@echo "*** Remove /etc/lxcinit manually on your needs. ***"
+
 NCMS = ncmd ncmi ncms
 CFGS = cfgc cfgd cfgcp cfgbgp cfgbgpc cfgfrr cfglxd cfgnet cfgsysc cfgsysctl cfgvtyc netplan+ lxcinit.sh
-install-services:
+install-service: install-lxcinit
 	@for ncmname in $(NCMS) ; do \
 		install -v -C ${GOPREFIX}/bin/$$ncmname /usr/bin/ ; \
 		install -v -C `pwd`/etc/systemd/$$ncmname.service /etc/systemd/system/ ; \
@@ -37,7 +43,7 @@ install-services:
 
 	systemctl daemon-reload
 
-uninstall-services: disable-services
+uninstall-service: uninstall-lxcinit disable-services
 	@for ncmname in $(NCMS) ; do \
 		rm -v -f /usr/bin/$$ncmname ; \
 		rm -v -f /etc/systemd/system/$$ncmname.service; \
