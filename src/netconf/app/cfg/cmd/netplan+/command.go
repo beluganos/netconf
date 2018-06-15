@@ -19,6 +19,7 @@ package main
 
 import (
 	"os/exec"
+	"time"
 
 	"netconf/lib/netplan"
 
@@ -29,6 +30,9 @@ import (
 
 const (
 	DEFAULT_CFG_DIR = "/etc/netplan"
+
+	DEFAULT_RETRY_CNT = 3
+	DEFAULT_RETRY_SEC = 1000 * time.Millisecond
 )
 
 type NpCommand struct {
@@ -152,7 +156,14 @@ func (c *NpCommand) DoInit(force bool) error {
 }
 
 func (c *NpCommand) Run(arg string) error {
-	_, err := c.Exec("netplan", arg)
+	var err error
+	for retry := 0; retry < DEFAULT_RETRY_CNT; retry++ {
+		if _, err = c.Exec("netplan", arg); err == nil {
+			return nil
+		}
+		log.Warnf("retrying...netplay %s err=%s", arg, err)
+		time.Sleep(DEFAULT_RETRY_SEC)
+	}
 	return err
 }
 
