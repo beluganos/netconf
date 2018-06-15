@@ -43,7 +43,7 @@ $ ./create.sh
 ## 2.  Register as a service
 
 ```
-$ sudo make install-services
+$ sudo make install-service
 ```
 
 ---
@@ -88,3 +88,4 @@ You have two options for installation:
 ## Next steps
 
 Please refer [setup-guide.md](setup-guide.md).
+q

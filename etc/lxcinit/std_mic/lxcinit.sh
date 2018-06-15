@@ -23,10 +23,23 @@ RUN_MODE=$3
 do_init() {
     local BEL_USER="beluganos"
     local FRR_USER="frr"
-    local SERVICES="cfgd.service netplan-ext.service"
+    local SERVICES="beluganos.service nlad.service ribcd.service ribpd.service beluganos.target gobgpd.service cfgd.service netplan-ext.service"
+
+    # add user and create directory for beluganos.
+    adduser --system --no-create-home --group ${BEL_USER}
+    mkdir -p /etc/beluganos
+    chown ${BEL_USER}:${BEL_USER} /etc/beluganos
 
     # copy config files
-    install -v -m 0644 -o ${FRR_USER} -g ${FRR_USER} ./conf/daemons /etc/frr/daemons
+    install -v -m 0644 ./conf/sysctl.conf /etc/sysctl.d/30-beluganos.conf
+    install -v -m 0644 -o ${FRR_USER} -g ${FRR_USER} ./conf/daemons     /etc/frr/daemons
+    install -v -m 0644 -o ${FRR_USER} -g ${FRR_USER} ./conf/gobgpd.conf /etc/frr/gobgpd.toml
+    install -v -m 0644 -o ${FRR_USER} -g ${FRR_USER} ./conf/gobgp.conf  /etc/frr/gobgp.conf
+    install -v -m 0644 -o ${BEL_USER} -g ${BEL_USER} ./conf/ribxd.conf  /etc/beluganos/ribxd.conf
+
+    # create frr.conf and restart frr
+    touch /etc/frr/frr.conf
+    systemctl restart frr
 
     # copy service files.
     local SERVICE
@@ -44,16 +57,32 @@ do_init() {
 }
 
 do_local() {
-    echo "success"
+    local BEL_BIN_HOME
+    if [ -z "${NC_HOME}" ]; then
+        BEL_BIN_HOME=/usr/bin
+    else
+        BEL_BIN_HOME=$HOME/go/bin
+    fi
+
+    local BEL_BINS="nlad nlac ribcd ribpd ribsdmp gobgpd gobgp"
+    local BEL_BIN
+    for BEL_BIN in ${BEL_BINS}; do
+        echo "'${BEL_BIN_HOME}/${BEL_BIN}' -> '${LXC_NAME}/usr/bin/'"
+        lxc file push ${BEL_BIN_HOME}/${BEL_BIN} ${LXC_NAME}/usr/bin/
+    done
 }
 
-echo "[lxcinit] START: $LXC_NAME/$WORK_DIR $RUN_MODE"
-cd $WORK_DIR
+_main() {
+    echo "[lxcinit] START: $LXC_NAME/$WORK_DIR $RUN_MODE"
+    cd $WORK_DIR
 
-if [ "$RUN_MODE" = "local" ]; then
-    do_local
-else
-    do_init
-fi
+    if [ "$RUN_MODE" = "local" ]; then
+        do_local
+    else
+        do_init
+    fi
 
-exit 0
+    exit 0
+}
+
+_main
