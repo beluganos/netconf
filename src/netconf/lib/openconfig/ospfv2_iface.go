@@ -191,9 +191,11 @@ func ProcessOspfv2Interface(p Ospfv2InterfaceProcessor, reverse bool, name strin
 type Ospfv2InterfaceConfig struct {
 	nclib.SrChanges `xml:"-"`
 
-	Id      string `xml:"id"`
-	Metric  uint16 `xml:"metric"`
-	Passive bool   `xml:"passive"`
+	Id          string          `xml:"id"`
+	Metric      uint16          `xml:"metric"`
+	Passive     bool            `xml:"passive"`
+	NetworkType OspfNetworkType `xml:"network-type"`
+	Priority    uint8           `xml:"priority"`
 }
 
 type Ospfv2InterfaceConfigProcessor interface {
@@ -202,10 +204,12 @@ type Ospfv2InterfaceConfigProcessor interface {
 
 func NewOspfv2InterfaceConfig() *Ospfv2InterfaceConfig {
 	return &Ospfv2InterfaceConfig{
-		SrChanges: nclib.NewSrChanges(),
-		Id:        "",
-		Metric:    0,
-		Passive:   false,
+		SrChanges:   nclib.NewSrChanges(),
+		Id:          "",
+		Metric:      0,
+		Passive:     false,
+		NetworkType: OSPF_BROADCAST_NETWORK,
+		Priority:    1,
 	}
 }
 
@@ -231,6 +235,20 @@ func (c *Ospfv2InterfaceConfig) Put(nodes []*ncxml.XPathNode, value string) erro
 			return err
 		}
 		c.Passive = b
+
+	case OSPFV2_NETWORK_TYPE_KEY:
+		n, err := ParseOspfNetworkType(value)
+		if err != nil {
+			return err
+		}
+		c.NetworkType = n
+
+	case OSPFV2_PRIORITY_KEY:
+		priority, err := strconv.ParseUint(value, 0, 8)
+		if err != nil {
+			return err
+		}
+		c.Priority = uint8(priority)
 	}
 
 	c.SetChange(nodes[0].Name)

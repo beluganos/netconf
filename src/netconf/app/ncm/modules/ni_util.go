@@ -69,6 +69,23 @@ func NewNetworkInstancesSet() NetworkInstancesSet {
 	}
 }
 
+func getOspfNetworkType(config *openconfig.Ospfv2InterfaceConfig) (string, error) {
+	switch config.NetworkType {
+	case openconfig.OSPF_POINT_TO_POINT_NETWORK:
+		return "point-to-point", nil
+
+	case openconfig.OSPF_BROADCAST_NETWORK:
+		return "broadcast", nil
+
+	case openconfig.OSPF_NON_BROADCAST_NETWORK:
+		return "non-broadcast", nil
+
+	default:
+		log.Errorf("Unknown ospf-network-type %s", config.NetworkType)
+		return "", fmt.Errorf("Unknown ospf-network-type %s", config.NetworkType)
+	}
+}
+
 func (s NetworkInstancesSet) Unmarshall(cv *srlib.SrChangeVal) error {
 	return cv.Dispatch(
 		s[srlib.SR_OP_CREATED],

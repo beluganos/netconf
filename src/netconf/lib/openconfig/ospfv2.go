@@ -29,6 +29,8 @@ const (
 	OSPFV2_AREA_KEY           = "area"
 	OSPFV2_METRIC_KEY         = "metric"
 	OSPFV2_PASSIVE_KEY        = "passive"
+	OSPFV2_NETWORK_TYPE_KEY   = "network-type"
+	OSPFV2_PRIORITY_KEY       = "priority"
 	OSPFV2_TIMERS_KEY         = "timers"
 	OSPFV2_DEAD_INTERVAL_KEY  = "dead-interval"
 	OSPFV2_HELLO_INTERVAL_KEY = "hello-interval"

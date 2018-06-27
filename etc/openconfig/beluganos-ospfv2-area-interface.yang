@@ -38,6 +38,22 @@ submodule beluganos-ospfv2-area-interface {
         reference this interface";
     }
 
+    leaf network-type {
+      type identityref {
+        base "oc-ospf-types:OSPF_NETWORK_TYPE";
+      }
+      description
+        "The type of network that OSPFv2 should use for the specified
+        interface.";
+    }
+
+    leaf priority {
+      type uint8;
+      description
+        "The local system's priority to become the designated
+        router";
+    }
+
     leaf metric {
       type oc-ospf-types:ospf-metric;
       description

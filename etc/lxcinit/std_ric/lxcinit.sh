@@ -23,7 +23,7 @@ RUN_MODE=$3
 do_init() {
     local BEL_USER="beluganos"
     local FRR_USER="frr"
-    local SERVICES="beluganos.service nlad.service ribcd.service ribpd.service beluganos.target gobgpd.service cfgd.service netplan-ext.service"
+    local SERVICES="beluganos.service nlad.service ribpd.service beluganos.target gobgpd.service cfgd.service netplan-ext.service"
 
     # add user and create directory for beluganos.
     adduser --system --no-create-home --group ${BEL_USER}
@@ -64,7 +64,7 @@ do_local() {
         BEL_BIN_HOME=$HOME/go/bin
     fi
 
-    local BEL_BINS="nlad nlac ribcd ribpd ribsdmp gobgpd gobgp"
+    local BEL_BINS="nlad nlac ribpd ribsdmp gobgpd gobgp"
     local BEL_BIN
     for BEL_BIN in ${BEL_BINS}; do
         echo "'${BEL_BIN_HOME}/${BEL_BIN}' -> '${LXC_NAME}/usr/bin/'"

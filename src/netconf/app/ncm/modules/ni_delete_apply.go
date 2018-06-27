@@ -133,6 +133,15 @@ func (h *NIDeleteApplyHandler) Ospfv2InterfaceConfig(name string, key *openconfi
 		AddNIOspfRouterCmd(h, name, "passive-interface", ifaceId, false)
 	}
 
+	if config.GetChange(openconfig.OSPFV2_PRIORITY_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ip ospf priority", config.Priority, false)
+	}
+
+	if config.GetChange(openconfig.OSPFV2_NETWORK_TYPE_KEY) {
+		n, _ := getOspfNetworkType(config)
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ip ospf network", n, false)
+	}
+
 	return nil
 }
 
