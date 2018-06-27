@@ -20,7 +20,7 @@ If you want to use this software to configure not Beluganos but FRRouting or GoB
 4. Issue NETCONF commands: [example](doc/examples).
 
 ## Support
-Github issue page and e-mail are available. If you prefer to use e-mail, please contact `msf-contact [at] lab.ntt.co.jp`.
+Github issue page and e-mail are available. If you prefer to use e-mail, please contact `msf-contact-ml [at] hco.ntt.co.jp`.
 
 ## Development & Contribution
 Any contribution is encouraged. The main component is written in Go. If you wish to create pull-request on github.com, please kindly create your request for **develop branch**, not master branch. If you find any issue, please kindly notify us by github issue pages.
