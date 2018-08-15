@@ -2,7 +2,7 @@
 
 ## Pre-requirements
 
-- OS:  Ubuntu 17.10 Server edition
+- OS:  Ubuntu 18.04 server edition
 - Mem: 4GB+
 - HDD: 10GB+ (each LXC needs extra 1GB storage)
 - Software: [sysrepo(v0.7.1)](https://github.com/sysrepo/sysrepo/releases/tag/v0.7.1), [Netopeer2(v0.4-r1)](https://github.com/CESNET/Netopeer2/releases/tag/v0.4-r1)
@@ -23,9 +23,9 @@ $ vi create.ini
 PROXY=http://192.168.1.100:8080
 ```
 
-### Change netopeer2/sysrepo settings
+### Change netopeer2/sysrepo build options
 
-Changing building settings of netopeer2/sysrepo is recommended. If you did not change this settings, you cannot use systemctl commands to start netopeer2/sysrepo.
+Changing building option of netopeer2/sysrepo is recommended. If you did not change this settings, you cannot use systemctl commands to start netopeer2/sysrepo.
 
 ```
 $ vi etc/sysrepo/sr_install.sh
@@ -56,13 +56,13 @@ In this software, "network-instance" means "linux container (LXD)". This means t
 
 ### Current support status
 
-- OS: Ubuntu 17.10
+- OS: Ubuntu 18.04
 - ARCH: x86_64
 
 ### Create "base" image
 
 ```
-$ lxc launch ubuntu:17.10 temp
+$ lxc launch ubuntu:18.04 temp
 $ lxc stop temp
 $ lxc publish temp --alias base
 $ lxc delete temp
@@ -88,4 +88,3 @@ You have two options for installation:
 ## Next steps
 
 Please refer [setup-guide.md](setup-guide.md).
-q
