@@ -25,7 +25,7 @@ Generally, in [install-guide.md](install-guide.md), the operation of `sudo make 
 
 ## Understand the principle of network-instance
 
-This repositories software has been developed based on the idea of [OpenConfig](http://www.openconfig.net/). This is because at least one "**network-instance**" is required by this software. For example, in general IP routers, single **network-instance** (type = `DEFAULT_INSTANCE`) exists is assumed.
+This repositories software has been developed based on the idea of [OpenConfig](http://www.openconfig.net/). This is because at least one "**network-instance**" is required by this software. For example, in general IP routers, single **network-instance** (type = `DEFAULT_INSTANCE`) is required. Only in  case of VRF-Lite or MPLS-VPN, two or more network-instance are required.
 
 In this section, the operation principle about adding network-instance is described. Generally, **adding network-instance may be operated at first NETCONF request**, except in case of adding beforehand some network-instance by another methods.
 
@@ -68,7 +68,7 @@ For example, following edit-config requests (default operation is "merge") is as
 
 ### (step 1) execute initialization script at host
 
-The script of `lxcinit.sh` is executed automatically at host server (**NOT** linux container). The argument is container's name, path of directory, and the strings of "local".
+The script of `lxcinit.sh` is executed automatically at host server (**NOT** Linux container). The argument is container's name, path of directory, and the strings of "local".
 
 ```
 (host)$ ~/etc/lxcinit/std_mic/lxcinit.sh PE1 ~/etc/lxcinit/std_mic local
