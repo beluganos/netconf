@@ -10,9 +10,9 @@ The main components of this software are based on [sysrepo](https://github.com/s
 
 ## Getting Started
 
-***If you want to use this software in order to just configure Beluganos, you don't have to check this repositories.*** This is because this repositories software will be installed automatically by install tool at [https://github.com/beluganos/beluganos](https://github.com/beluganos/beluganos).
+***Important Notice: If you want to just configure Beluganos by NETCONF, you don't have to check this documents.*** This is because this repositories (beluganos/netconf) software will be installed automatically by install tool at [https://github.com/beluganos/beluganos/create.sh](https://github.com/beluganos/beluganos).
 
-If you want to use this software to configure not Beluganos but FRRouting or GoBGP, following steps are required.
+If you want to use this software to configure FRRouting or GoBGP, following steps are required.
 
 1. Install software: [install guide](doc/install-guide.md).
 2. Setup some configuration: [setup guide](doc/setup-guide.md).
@@ -23,9 +23,7 @@ If you want to use this software to configure not Beluganos but FRRouting or GoB
 Github issue page and e-mail are available. If you prefer to use e-mail, please contact `msf-contact-ml [at] hco.ntt.co.jp`.
 
 ## Development & Contribution
-Any contribution is encouraged. The main component is written in Go. If you wish to create pull-request on github.com, please kindly create your request for **develop branch**, not master branch. If you find any issue, please kindly notify us by github issue pages.
-
-For more details, please refer to [CONTRIBUTING.md](CONTRIBUTING.md).
+The main component is written in Go. Any contribution is encouraged. For more details, please refer to [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 Beluganos is licensed under the **Apache 2.0** license. See [LICENSE](LICENSE).
