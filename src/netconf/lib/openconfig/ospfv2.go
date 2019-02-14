@@ -18,8 +18,8 @@
 package openconfig
 
 import (
-	"netconf/lib"
-	"netconf/lib/xml"
+	nclib "netconf/lib"
+	ncxml "netconf/lib/xml"
 )
 
 const (

@@ -35,6 +35,8 @@ apt_install() {
 }
 
 install_cmocka() {
+    sudo -E apt -y install libcmocka-dev
+<< COMMENT
     pushd ${WORK_HOME}
 
     if [ ! -e cmocka ]; then
@@ -49,6 +51,7 @@ install_cmocka() {
     sudo make install
 
     popd
+COMMENT
 }
 
 install_libyang() {
@@ -130,6 +133,7 @@ install_netop2() {
     sudo make install
     popd
 
+<< COMMENT
     pushd Netopeer2/cli
     mkdir build; cd build
     cmake ${CMAKE_OPTS} ..
@@ -137,6 +141,7 @@ install_netop2() {
     make ${MAKEALL_OPTS}
     sudo make install
     popd
+COMMENT
 
     popd
 

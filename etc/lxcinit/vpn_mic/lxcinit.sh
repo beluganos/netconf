@@ -20,6 +20,36 @@ LXC_NAME=$1
 WORK_DIR=$2
 RUN_MODE=$3
 
+set_mic_name() {
+    if [ -z "${NC_HOME}" ]; then
+	MICNAME_DIR=/etc/beluganos
+    else
+	MICNAME_DIR=$NC_HOME/etc/test
+    fi
+
+    MICNAME_FILE=$MICNAME_DIR/mic_name
+}
+
+save_mic_name() {
+    mkdir -v -p $MICNAME_DIR
+    echo "$LXC_NAME" > $MICNAME_FILE
+
+    echo "save mic-name '$LXC_NAME' to $MICNAME_FILE"
+}
+
+fix_mic_name() {
+    local FILE_NAME=$1
+    local TEMP_NAME=$FILE_NAME.bak
+    local MIC_NAME=$LXC_NAME
+
+    cp -v $FILE_NAME $TEMP_NAME
+
+    sed s/%MIC_NAME%/$MIC_NAME/g $TEMP_NAME > $FILE_NAME
+    echo "mic-name $MIC_NAME $FILE_NAME"
+
+    rm -v -f $TEMP_NAME
+}
+
 do_init() {
     local BEL_USER="beluganos"
     local FRR_USER="frr"
@@ -37,6 +67,8 @@ do_init() {
     install -v -m 0644 -o ${FRR_USER} -g ${FRR_USER} ./conf/gobgp.conf  /etc/frr/gobgp.conf
     install -v -m 0644 -o ${BEL_USER} -g ${BEL_USER} ./conf/ribxd.conf  /etc/beluganos/ribxd.conf
     install -v -m 0644 -o ${BEL_USER} -g ${BEL_USER} ./conf/vrf.conf    /etc/vrf.conf
+
+    fix_mic_name /etc/beluganos/ribxd.conf
 
     # create frr.conf and restart frr
     touch /etc/frr/frr.conf
@@ -71,11 +103,15 @@ do_local() {
         echo "'${BEL_BIN_HOME}/${BEL_BIN}' -> '${LXC_NAME}/usr/bin/'"
         lxc file push ${BEL_BIN_HOME}/${BEL_BIN} ${LXC_NAME}/usr/bin/
     done
+
+    save_mic_name
 }
 
 _main() {
     echo "[lxcinit] START: $LXC_NAME/$WORK_DIR $RUN_MODE"
     cd $WORK_DIR
+
+    set_mic_name
 
     if [ "$RUN_MODE" = "local" ]; then
         do_local

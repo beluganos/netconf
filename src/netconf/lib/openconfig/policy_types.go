@@ -19,7 +19,7 @@ package openconfig
 
 import (
 	"fmt"
-	"netconf/lib/xml"
+	ncxml "netconf/lib/xml"
 )
 
 type InstallProtocolType int
@@ -48,13 +48,13 @@ var installProtocolTypeNames = map[InstallProtocolType]string{
 
 var installProtocolTypeValues = map[string]InstallProtocolType{
 	"INSTALL_PROTOCOL_TYPE": INSTALL_PROTOCOL_TYPE,
-	"BGP":                INSTALL_PROTOCOL_BGP,
-	"ISIS":               INSTALL_PROTOCOL_ISIS,
-	"OSPF":               INSTALL_PROTOCOL_OSPF,
-	"OSPF3":              INSTALL_PROTOCOL_OSPF3,
-	"STATIC":             INSTALL_PROTOCOL_STATIC,
-	"DIRECTLY_CONNECTED": INSTALL_PROTOCOL_DIRECTLY_CONNECTED,
-	"LOCAL_AGGREGATE":    INSTALL_PROTOCOL_LOCAL_AGGREGATE,
+	"BGP":                   INSTALL_PROTOCOL_BGP,
+	"ISIS":                  INSTALL_PROTOCOL_ISIS,
+	"OSPF":                  INSTALL_PROTOCOL_OSPF,
+	"OSPF3":                 INSTALL_PROTOCOL_OSPF3,
+	"STATIC":                INSTALL_PROTOCOL_STATIC,
+	"DIRECTLY_CONNECTED":    INSTALL_PROTOCOL_DIRECTLY_CONNECTED,
+	"LOCAL_AGGREGATE":       INSTALL_PROTOCOL_LOCAL_AGGREGATE,
 }
 
 func (v InstallProtocolType) String() string {
@@ -90,9 +90,9 @@ var policyMatchSetOptionsTypeNames = map[PolicyMatchSetOptionsType]string{
 
 var policyMatchSetOptionsTypeValues = map[string]PolicyMatchSetOptionsType{
 	"POLICY_MATCH_SET_OPTIONS_TYPE": POLICY_MATCH_SET_OPTIONS_TYPE,
-	"ANY":    POLICY_MATCH_SET_OPTIONS_ANY,
-	"ALL":    POLICY_MATCH_SET_OPTIONS_ALL,
-	"INVERT": POLICY_MATCH_SET_OPTIONS_INVERT,
+	"ANY":                           POLICY_MATCH_SET_OPTIONS_ANY,
+	"ALL":                           POLICY_MATCH_SET_OPTIONS_ALL,
+	"INVERT":                        POLICY_MATCH_SET_OPTIONS_INVERT,
 }
 
 func (v PolicyMatchSetOptionsType) String() string {

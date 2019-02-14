@@ -20,8 +20,8 @@ package openconfig
 import (
 	"encoding/xml"
 	"fmt"
-	"netconf/lib"
-	"netconf/lib/xml"
+	nclib "netconf/lib"
+	ncxml "netconf/lib/xml"
 )
 
 type NetworkInstanceProtocolKey struct {

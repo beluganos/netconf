@@ -18,11 +18,11 @@
 package main
 
 import (
-	"netconf/app/ncm/cfg"
-	"netconf/app/ncm/dbm"
-	"netconf/app/ncm/modules"
-	"netconf/lib/signal"
-	"netconf/lib/sysrepo"
+	ncmcfg "netconf/app/ncm/cfg"
+	ncmdbm "netconf/app/ncm/dbm"
+	ncm "netconf/app/ncm/modules"
+	ncsignal "netconf/lib/signal"
+	srlib "netconf/lib/sysrepo"
 	"os"
 	"syscall"
 

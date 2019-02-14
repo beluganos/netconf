@@ -18,7 +18,7 @@
 package main
 
 import (
-	"netconf/lib/netplan"
+	ncnplib "netconf/lib/netplan"
 
 	log "github.com/sirupsen/logrus"
 )

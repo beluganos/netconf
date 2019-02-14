@@ -18,9 +18,9 @@
 package ncm
 
 import (
-	"netconf/app/ncm/dbm"
+	ncmdbm "netconf/app/ncm/dbm"
 	"netconf/lib/openconfig"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 
 	log "github.com/sirupsen/logrus"
 )

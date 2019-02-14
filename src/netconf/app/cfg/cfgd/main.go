@@ -19,7 +19,7 @@ package main
 
 import (
 	"net"
-	"netconf/lib/signal"
+	ncsignal "netconf/lib/signal"
 	"os"
 	"syscall"
 
@@ -43,7 +43,7 @@ func main() {
 
 	ss := ncsignal.NewServer()
 	ss.Register(syscall.SIGPIPE, func(sig os.Signal) {
-		log.Debug("SIGNAL: %s", sig)
+		log.Debugf("SIGNAL: %s", sig)
 	}).Start(nil)
 
 	g := grpc.NewServer()

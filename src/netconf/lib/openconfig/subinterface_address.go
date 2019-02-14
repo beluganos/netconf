@@ -21,9 +21,9 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net"
-	"netconf/lib"
-	"netconf/lib/net"
-	"netconf/lib/xml"
+	nclib "netconf/lib"
+	ncnet "netconf/lib/net"
+	ncxml "netconf/lib/xml"
 	"strconv"
 )
 

@@ -21,7 +21,7 @@ import (
 	"os/exec"
 	"time"
 
-	"netconf/lib/netplan"
+	ncnplib "netconf/lib/netplan"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -33,6 +33,7 @@ const (
 
 	DEFAULT_RETRY_CNT = 3
 	DEFAULT_RETRY_SEC = 1000 * time.Millisecond
+	DEFAULT_APPLY_SEC = 1500 * time.Millisecond
 )
 
 type NpCommand struct {
@@ -173,6 +174,9 @@ func (c *NpCommand) Apply() error {
 	if err := c.Run("apply"); err != nil {
 		return err
 	}
+
+	log.Debugf("Wait for apply... %s", DEFAULT_APPLY_SEC)
+	time.Sleep(DEFAULT_APPLY_SEC)
 
 	return c.DoInit(false) // force flag: false
 }

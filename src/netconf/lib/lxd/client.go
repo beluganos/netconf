@@ -69,8 +69,10 @@ func (c *Client) CreateOrUpdateProfile(name string, profile *api.ProfilePut) err
 	})
 }
 
-func (c *Client) InitializeProfile(name string) (*api.Profile, string, error) {
+func (c *Client) InitializeProfile(name string, logdir string) (*api.Profile, string, error) {
 	profile := NewDefaultProfile()
+	SetMontToProfle(profile, "/var/log", logdir)
+
 	if err := c.CreateOrUpdateProfile(name, profile); err != nil {
 		return nil, "", err
 	}

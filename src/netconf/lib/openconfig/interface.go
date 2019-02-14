@@ -20,9 +20,9 @@ package openconfig
 import (
 	"encoding/xml"
 	"fmt"
-	"netconf/lib"
-	"netconf/lib/iana"
-	"netconf/lib/xml"
+	nclib "netconf/lib"
+	ncianalib "netconf/lib/iana"
+	ncxml "netconf/lib/xml"
 	"strconv"
 )
 

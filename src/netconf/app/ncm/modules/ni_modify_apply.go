@@ -19,7 +19,7 @@ package ncm
 
 import (
 	"netconf/lib/openconfig"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 
 	log "github.com/sirupsen/logrus"
 )
