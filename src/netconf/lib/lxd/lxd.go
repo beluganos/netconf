@@ -130,3 +130,13 @@ func NewDefaultProfile() *api.ProfilePut {
 		},
 	}
 }
+
+func SetMontToProfle(profile *api.ProfilePut, path string, source string) {
+	if len(path) > 0 && len(source) > 0 {
+		profile.Devices["logdir"] = map[string]string{
+			"path":   path,
+			"source": source,
+			"type":   "disk",
+		}
+	}
+}
