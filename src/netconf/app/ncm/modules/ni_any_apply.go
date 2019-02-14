@@ -40,14 +40,14 @@ func AddNIContainerCmd(h NICommandsHandler, name string, create bool) {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("create")...), // Do
 			nclib.NewShell(cmd, arg("delete")...), // Undo
-			nil, // End
+			nil,                                   // End
 		)
 
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("delete")...), // Do
-			nil, // Undo
-			nil, // End
+			nil,                                   // Undo
+			nil,                                   // End
 		)
 	}
 }
@@ -72,13 +72,13 @@ func AddNIContainerInterfaceCmd(h NICommandsHandler, name string, ifname string,
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("add")...),    // Do
 			nclib.NewShell(cmd, arg("delete")...), // Undo
-			nil, // End
+			nil,                                   // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("delete")...), // Do
 			nclib.NewShell(cmd, arg("add")...),    // Undo
-			nil, // End
+			nil,                                   // End
 		)
 	}
 }
@@ -98,13 +98,13 @@ func AddNIInterfaceSysctlCmd(h NICommandsHandler, name string, ifname string, ad
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...),     // Do
 			nclib.NewShell(cmd, arg("-n")...), // Undo
-			nil, // End
+			nil,                               // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do
 			nclib.NewShell(cmd, arg()...),     // Undo
-			nil, // End
+			nil,                               // End
 		)
 	}
 }
@@ -124,13 +124,13 @@ func AddNIMplsInterfaceSysctlCmd(h NICommandsHandler, name string, ifname string
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...),     // Do
 			nclib.NewShell(cmd, arg("-n")...), // Undo
-			nil, // End
+			nil,                               // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do
 			nclib.NewShell(cmd, arg()...),     // Undo
-			nil, // End
+			nil,                               // End
 		)
 	}
 }
@@ -142,8 +142,11 @@ func AddNIInterfaceNetworkCmd(h NICommandsHandler, name string, device string, s
 	cmd := cliConfig().SysPath()
 	arg := func(flags ...string) []string {
 		vid := fmt.Sprintf("%d", subif.Index)
-		mtu := fmt.Sprintf("%d", subif.IPv4.Config.Mtu)
-		flags = append(flags, "--mtu", mtu, "-H", name)
+		if add {
+			mtu := fmt.Sprintf("%d", subif.IPv4.Config.Mtu)
+			flags = append(flags, "--mtu", mtu, "-H", name)
+		}
+		flags = append(flags, "-H", name)
 		return append([]string{"network", "set", "vlan", device, vid}, flags...)
 	}
 
@@ -151,13 +154,13 @@ func AddNIInterfaceNetworkCmd(h NICommandsHandler, name string, device string, s
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...),     // Do
 			nclib.NewShell(cmd, arg("-n")...), // UnDo
-			nil, // End
+			nil,                               // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do
 			nclib.NewShell(cmd, arg()...),     // UnDo
-			nil, // End
+			nil,                               // End
 		)
 	}
 }
@@ -175,14 +178,14 @@ func AddNIRouterIdCmd(h NICommandsHandler, name string, routerId string, add boo
 	if add {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                           // Undo (restart frr if failed.)
+			nil,                           // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                               // Undo (restart frr if failed.)
+			nil,                               // End
 		)
 	}
 }
@@ -207,14 +210,14 @@ func AddNIVrfCmd(h NICommandsHandler, name string, rd string, rt string, add boo
 	if add {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                           // Undo (restart frr if failed.)
+			nil,                           // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                               // Undo (restart frr if failed.)
+			nil,                               // End
 		)
 	}
 }
@@ -232,14 +235,14 @@ func AddNIVtyInterfaceCmd(h NICommandsHandler, name string, ifname string, key s
 	if add {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                           // Undo (restart frr if failed.)
+			nil,                           // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                               // Undo (restart frr if failed.)
+			nil,                               // End
 		)
 	}
 }
@@ -256,14 +259,14 @@ func AddNIOspfRouterCmd(h NICommandsHandler, name string, key string, val interf
 	if add {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                           // Undo (restart frr if failed.)
+			nil,                           // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                               // Undo (restart frr if failed.)
+			nil,                               // End
 		)
 	}
 }
@@ -281,14 +284,14 @@ func AddNIMplsLdpCmd(h NICommandsHandler, name string, key string, val interface
 	if add {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...), // Do,
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                           // Undo (restart frr if failed.)
+			nil,                           // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do,
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                               // Undo (restart frr if failed.)
+			nil,                               // End
 		)
 	}
 }
@@ -305,14 +308,14 @@ func AddNIMplsLdpIPv4Cmd(h NICommandsHandler, name string, key string, val inter
 	if add {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...), // Do,
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                           // Undo (restart frr if failed.)
+			nil,                           // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do,
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                               // Undo (restart frr if failed.)
+			nil,                               // End
 		)
 	}
 }
@@ -330,14 +333,14 @@ func AddNIMplsLdpIPv4IfaceCmd(h NICommandsHandler, name string, ifname string, k
 	if add {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...), // Do,
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                           // Undo (restart frr if failed.)
+			nil,                           // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do,
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                               // Undo (restart frr if failed.)
+			nil,                               // End
 		)
 	}
 }
@@ -355,14 +358,14 @@ func AddNIStaticRouteCmd(h NICommandsHandler, name string, dest string, nexthop 
 	if add {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg()...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                           // Undo (restart frr if failed.)
+			nil,                           // End
 		)
 	} else {
 		h.AddCmd(
 			nclib.NewShell(cmd, arg("-n")...), // Do
-			nil, // Undo (restart frr if failed.)
-			nil, // End
+			nil,                               // Undo (restart frr if failed.)
+			nil,                               // End
 		)
 	}
 }
@@ -392,8 +395,8 @@ func AddNIBgpConfigCmd(h NICommandsHandler, name string, cfgs io.Reader, restart
 		h.SetCmd(
 			NI_UPDATE_GOBGP_CFG,
 			nclib.NewShellIn(cmd, cfgs, arg()...), // Do
-			nil, // Undo
-			nil, // End
+			nil,                                   // Undo
+			nil,                                   // End
 		)
 	} else {
 		h.SetCmd(

@@ -252,9 +252,9 @@ var signallingProtocol_names = map[SignallingProtocol]string{
 
 var signallingProtocol_values = map[string]SignallingProtocol{
 	"SIGNALLING_PROTOCOL": SIGNALLING_PROTOCOL,
-	"LDP":      SIGNALLING_PROTOCOL_LDP,
-	"BGP_VPLS": SIGNALLING_PROTOCOL_BGP_VPLS,
-	"BGP_EVPN": SIGNALLING_PROTOCOL_BGP_EVPN,
+	"LDP":                 SIGNALLING_PROTOCOL_LDP,
+	"BGP_VPLS":            SIGNALLING_PROTOCOL_BGP_VPLS,
+	"BGP_EVPN":            SIGNALLING_PROTOCOL_BGP_EVPN,
 }
 
 func (v SignallingProtocol) String() string {
