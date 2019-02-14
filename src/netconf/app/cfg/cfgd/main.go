@@ -43,7 +43,7 @@ func main() {
 
 	ss := ncsignal.NewServer()
 	ss.Register(syscall.SIGPIPE, func(sig os.Signal) {
-		log.Debug("SIGNAL: %s", sig)
+		log.Debugf("SIGNAL: %s", sig)
 	}).Start(nil)
 
 	g := grpc.NewServer()

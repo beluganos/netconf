@@ -28,6 +28,11 @@ import (
 )
 
 func PrintReply(reply *ExecuteReply) {
+	if reply == nil {
+		log.Infof("-- Reply## (Empty)")
+		return
+	}
+
 	for i, r := range reply.Results {
 		log.Infof("-- Reply#%d --", i)
 		for _, s := range r.Strings() {
