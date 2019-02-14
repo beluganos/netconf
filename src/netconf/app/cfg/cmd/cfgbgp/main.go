@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"flag"
 	"io"
-	"netconf/lib/gobgp"
+	ncgobgp "netconf/lib/gobgp"
 	"os"
 
 	log "github.com/sirupsen/logrus"

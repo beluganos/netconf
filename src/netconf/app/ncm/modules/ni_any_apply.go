@@ -20,10 +20,10 @@ package ncm
 import (
 	"fmt"
 	"io"
-	"netconf/app/ncm/cfg"
-	"netconf/lib"
+	ncmcfg "netconf/app/ncm/cfg"
+	nclib "netconf/lib"
 	"netconf/lib/openconfig"
-	"netconf/lib/sysctl"
+	ncsclib "netconf/lib/sysctl"
 )
 
 func cliConfig() *ncmcfg.CliConfig {

@@ -19,8 +19,8 @@ package openconfig
 
 import (
 	"fmt"
-	"netconf/lib/iana"
-	"netconf/lib/sysrepo"
+	ncianalib "netconf/lib/iana"
+	srlib "netconf/lib/sysrepo"
 	"testing"
 )
 

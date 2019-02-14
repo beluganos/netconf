@@ -21,7 +21,7 @@ import (
 	"os/exec"
 	"time"
 
-	"netconf/lib/netplan"
+	ncnplib "netconf/lib/netplan"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

@@ -24,7 +24,7 @@ package srlib
 */
 import "C"
 import (
-	"netconf/lib/xml"
+	ncxml "netconf/lib/xml"
 	"unsafe"
 )
 

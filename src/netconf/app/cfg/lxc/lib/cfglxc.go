@@ -21,7 +21,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"netconf/lib/lxd"
+	lxdlib "netconf/lib/lxd"
 	"os"
 	"path"
 	"strings"
@@ -29,7 +29,7 @@ import (
 	"github.com/lxc/lxd/shared"
 	"github.com/lxc/lxd/shared/api"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (

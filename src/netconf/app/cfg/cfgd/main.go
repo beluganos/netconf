@@ -19,7 +19,7 @@ package main
 
 import (
 	"net"
-	"netconf/lib/signal"
+	ncsignal "netconf/lib/signal"
 	"os"
 	"syscall"
 

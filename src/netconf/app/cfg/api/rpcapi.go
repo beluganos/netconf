@@ -20,7 +20,7 @@ package cfgrpcapi
 import (
 	"bytes"
 	"fmt"
-	"netconf/lib"
+	nclib "netconf/lib"
 	"strings"
 
 	"google.golang.org/grpc"

@@ -21,8 +21,8 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net"
-	"netconf/lib"
-	"netconf/lib/xml"
+	nclib "netconf/lib"
+	ncxml "netconf/lib/xml"
 )
 
 type PolicyPrefixSetPrefixKey struct {

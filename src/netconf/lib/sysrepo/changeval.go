@@ -19,7 +19,7 @@ package srlib
 
 import (
 	"fmt"
-	"netconf/lib/xml"
+	ncxml "netconf/lib/xml"
 )
 
 type SrChangeVal struct {

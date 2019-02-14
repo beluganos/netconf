@@ -18,7 +18,7 @@
 package ncm
 
 import (
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 )
 
 //

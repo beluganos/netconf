@@ -21,7 +21,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net"
-	"netconf/lib/xml"
+	ncxml "netconf/lib/xml"
 )
 
 type BgpNexthopType string

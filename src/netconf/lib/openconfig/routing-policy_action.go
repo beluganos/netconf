@@ -19,8 +19,8 @@ package openconfig
 
 import (
 	"fmt"
-	"netconf/lib"
-	"netconf/lib/xml"
+	nclib "netconf/lib"
+	ncxml "netconf/lib/xml"
 )
 
 //

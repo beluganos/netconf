@@ -19,7 +19,7 @@ package main
 
 import (
 	"flag"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 	"os"
 
 	log "github.com/sirupsen/logrus"
