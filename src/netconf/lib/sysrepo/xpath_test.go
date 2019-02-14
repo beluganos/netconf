@@ -18,7 +18,7 @@
 package srlib
 
 import (
-	"netconf/lib/xml"
+	ncxml "netconf/lib/xml"
 	"testing"
 )
 

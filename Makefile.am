@@ -16,6 +16,11 @@ clean-local:
 	-find . -name cover.out  | xargs rm -f
 	-find . -name cover.log  | xargs rm -f
 
+distclean-local:
+	-find . -name "Makefile.in" | xargs rm -f
+	-rm -f aclocal.m4 config.log config.status
+	-rm -fr ./autom4te.cache
+
 release: install
 	install -v -C `pwd`/bin/* ${GOPREFIX}/bin/
 

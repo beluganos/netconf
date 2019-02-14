@@ -19,7 +19,7 @@ package openconfig
 
 import (
 	"fmt"
-	"netconf/lib/xml"
+	ncxml "netconf/lib/xml"
 )
 
 const IANAifTypeNS = "iana-if-type"

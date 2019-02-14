@@ -25,11 +25,15 @@ import (
 
 type ContainerCommand struct {
 	Command
-	keep bool
+	keep   bool
+	umtlog bool
+	dellog bool
 }
 
 func (c *ContainerCommand) SetFlags(cmd *cobra.Command) *cobra.Command {
 	cmd.PersistentFlags().BoolVarP(&c.keep, "keep", "k", false, "keep file on error.")
+	cmd.PersistentFlags().BoolVarP(&c.umtlog, "unmount-log", "", false, "mount log dir.")
+	cmd.PersistentFlags().BoolVarP(&c.dellog, "delete-log", "", false, "delete log dir.")
 	return c.Command.SetFlags(cmd)
 }
 
@@ -41,7 +45,14 @@ func (c *ContainerCommand) Create(name string) error {
 		return err
 	}
 
-	if err := lib.CreateContainer(client, name, c.keep); err != nil {
+	logdir := func() string {
+		if c.umtlog {
+			return ""
+		}
+		return lib.MakeLogDir(name)
+	}()
+
+	if err := lib.CreateContainer(client, name, c.keep, logdir); err != nil {
 		return err
 	}
 
@@ -57,6 +68,10 @@ func (c *ContainerCommand) Delete(name string) error {
 	}
 
 	lib.DeleteContainer(client, name)
+
+	if c.dellog {
+		lib.RmLogDir(name)
+	}
 
 	return nil
 }

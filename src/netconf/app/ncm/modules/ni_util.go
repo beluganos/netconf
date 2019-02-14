@@ -19,11 +19,11 @@ package ncm
 
 import (
 	"fmt"
-	"netconf/lib"
-	"netconf/lib/gobgp/openconfig"
-	"netconf/lib/net"
+	nclib "netconf/lib"
+	srocgobgp "netconf/lib/gobgp/openconfig"
+	ncnet "netconf/lib/net"
 	"netconf/lib/openconfig"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 
 	log "github.com/sirupsen/logrus"
 )

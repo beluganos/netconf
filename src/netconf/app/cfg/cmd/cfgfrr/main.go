@@ -21,7 +21,7 @@ import (
 	"flag"
 	"fmt"
 	prop "netconf/lib/property"
-	"netconf/lib/vty"
+	vtylib "netconf/lib/vty"
 	"os"
 
 	log "github.com/sirupsen/logrus"

@@ -19,9 +19,9 @@ package ncmdbm
 
 import (
 	"fmt"
-	"netconf/lib/net"
+	ncnet "netconf/lib/net"
 	"netconf/lib/openconfig"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 )
 
 //

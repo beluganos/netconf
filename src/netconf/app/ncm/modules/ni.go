@@ -19,10 +19,10 @@ package ncm
 
 import (
 	"fmt"
-	"netconf/app/ncm/cfg"
-	"netconf/app/ncm/dbm"
+	ncmcfg "netconf/app/ncm/cfg"
+	ncmdbm "netconf/app/ncm/dbm"
 	"netconf/lib/openconfig"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 
 	log "github.com/sirupsen/logrus"
 )

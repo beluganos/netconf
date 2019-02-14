@@ -20,7 +20,7 @@ package main
 import (
 	"fmt"
 	"netconf/lib/openconfig"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 )
 
 type InterfaceVals struct {

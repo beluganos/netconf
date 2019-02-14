@@ -20,7 +20,7 @@ package ncmdbm
 import (
 	"fmt"
 	"netconf/lib/openconfig"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 )
 
 //

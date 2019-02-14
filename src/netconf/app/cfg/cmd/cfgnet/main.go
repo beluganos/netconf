@@ -19,7 +19,7 @@ package main
 
 import (
 	"fmt"
-	"netconf/lib/netplan"
+	ncnplib "netconf/lib/netplan"
 	"os"
 
 	log "github.com/sirupsen/logrus"

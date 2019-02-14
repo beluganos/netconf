@@ -44,7 +44,7 @@ func (c *IfaceCommand) Interface(ifname string, args []string) error {
 	defer conn.Close()
 
 	res, err := lib.SetInterfaceRun(c.negate, ifname, args, client)
-	if err != nil {
+	if err != nil && !c.negate {
 		return err
 	}
 

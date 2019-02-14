@@ -20,7 +20,7 @@ package cfgrpcapi
 import (
 	"fmt"
 	"net"
-	"netconf/lib/lxd"
+	lxdlib "netconf/lib/lxd"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -28,6 +28,11 @@ import (
 )
 
 func PrintReply(reply *ExecuteReply) {
+	if reply == nil {
+		log.Infof("-- Reply## (Empty)")
+		return
+	}
+
 	for i, r := range reply.Results {
 		log.Infof("-- Reply#%d --", i)
 		for _, s := range r.Strings() {

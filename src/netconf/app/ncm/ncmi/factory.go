@@ -20,9 +20,9 @@ package main
 import (
 	"fmt"
 	"net"
-	"netconf/lib/iana"
+	ncianalib "netconf/lib/iana"
 	"netconf/lib/openconfig"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 )
 
 type InterfaceFactory struct {

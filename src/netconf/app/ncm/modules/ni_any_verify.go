@@ -19,7 +19,7 @@ package ncm
 
 import (
 	"fmt"
-	"netconf/app/ncm/dbm"
+	ncmdbm "netconf/app/ncm/dbm"
 	"netconf/lib/openconfig"
 )
 

@@ -19,7 +19,7 @@ package cfglxccmd
 
 import (
 	lib "netconf/app/cfg/lxc/lib"
-	"netconf/lib/lxd"
+	lxdlib "netconf/lib/lxd"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

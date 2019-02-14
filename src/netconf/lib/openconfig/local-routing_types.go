@@ -38,8 +38,8 @@ var localDefinedNexthopNames = map[LocalDefinedNexthop]string{
 
 var localDefinedNexthopValues = map[string]LocalDefinedNexthop{
 	"LOCAL_DEFINED_NEXT_HOP": LOCAL_DEFINED_NEXT_HOP,
-	"DROP":       LOCAL_DEFINED_NEXT_HOP_DROP,
-	"LOCAL_LINK": LOCAL_DEFINED_NEXT_HOP_LOCAL_LINK,
+	"DROP":                   LOCAL_DEFINED_NEXT_HOP_DROP,
+	"LOCAL_LINK":             LOCAL_DEFINED_NEXT_HOP_LOCAL_LINK,
 }
 
 func (v LocalDefinedNexthop) String() string {

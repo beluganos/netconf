@@ -19,7 +19,7 @@ package openconfig
 
 import (
 	"net"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 	"testing"
 )
 

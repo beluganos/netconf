@@ -21,7 +21,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"netconf/lib/lxd"
+	lxdlib "netconf/lib/lxd"
 	"os"
 	"path"
 	"strings"
@@ -29,12 +29,13 @@ import (
 	"github.com/lxc/lxd/shared"
 	"github.com/lxc/lxd/shared/api"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
 	PROFILE_BACKUP_DIR = "/tmp"
 	PROFILE_IMAGE_NANE = "base"
+	CONTAINER_LOG_DIR  = "/var/log/beluganos"
 )
 
 func Usage(code int) {
@@ -139,10 +140,10 @@ func ClearBackup(path string) error {
 	return nil
 }
 
-func CreateContainer(client *lxdlib.Client, name string, keep bool) error {
+func CreateContainer(client *lxdlib.Client, name string, keep bool, logdir string) error {
 	log.Debugf("CreateContainer: name='%s'", name)
 
-	if _, _, err := client.InitializeProfile(name); err != nil {
+	if _, _, err := client.InitializeProfile(name, logdir); err != nil {
 		log.Errorf("CreateContainer: InitializeProfile error. %s", err)
 		return err
 	}
@@ -276,4 +277,28 @@ func DeleteInterface(client *lxdlib.Client, name string, ifname string) error {
 
 	log.Debugf("DeleteInterface: ok name='%s' iface='%s'", name, ifname)
 	return nil
+}
+
+func logDirPath(name string) string {
+	return fmt.Sprintf("%s/%s", CONTAINER_LOG_DIR, name)
+}
+
+func MakeLogDir(name string) string {
+	path := logDirPath(name)
+	if err := os.MkdirAll(path, 0755); err != nil {
+		log.Warnf("MakeLogDir: mkdir error. %s", err)
+		return ""
+	}
+
+	log.Debugf("MakeLogDir: ok. %s", path)
+	return path
+}
+
+func RmLogDir(name string) {
+	path := logDirPath(name)
+	if err := os.RemoveAll(path); err != nil {
+		log.Warnf("MakeLogDir: rmdir error. %s", err)
+	} else {
+		log.Debugf("MakeLogDir: rmdir ok. %s", path)
+	}
 }

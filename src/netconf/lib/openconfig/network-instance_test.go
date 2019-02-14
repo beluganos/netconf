@@ -19,7 +19,7 @@ package openconfig
 
 import (
 	"fmt"
-	"netconf/lib/sysrepo"
+	srlib "netconf/lib/sysrepo"
 	"testing"
 )
 

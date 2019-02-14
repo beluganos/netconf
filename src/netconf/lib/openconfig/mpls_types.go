@@ -20,7 +20,7 @@ package openconfig
 import (
 	"encoding/xml"
 	"fmt"
-	"netconf/lib/xml"
+	ncxml "netconf/lib/xml"
 )
 
 type MplsNullLabelType int

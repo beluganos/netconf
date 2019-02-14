@@ -21,7 +21,7 @@ import (
 	"flag"
 	"fmt"
 	prop "netconf/lib/property"
-	"netconf/lib/sysctl"
+	ncsclib "netconf/lib/sysctl"
 	"os"
 
 	log "github.com/sirupsen/logrus"

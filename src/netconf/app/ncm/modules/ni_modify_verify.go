@@ -17,9 +17,7 @@
 
 package ncm
 
-import (
-	"netconf/lib/sysrepo"
-)
+import srlib "netconf/lib/sysrepo"
 
 type NIModifyVerifyHandler struct {
 	*NIAnyHandler
