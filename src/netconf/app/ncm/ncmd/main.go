@@ -30,7 +30,9 @@ import (
 )
 
 func subscribeNetworkInstanceChange(s *srlib.SrSession) *srlib.Subscriber {
-	factory := ncm.NewNIChangeFactory(ncmcfg.GetOpts().DryRun)
+	factory := ncm.NewNIChangeFactory()
+	factory.DryRun = ncmcfg.GetOpts().DryRun
+	factory.Mtu = uint16(ncmcfg.GetConfig().Global.LxcMtu)
 	ctrl := ncm.NewNIChangeController(s, factory)
 	subscr, err := ctrl.Subscribe()
 	if err != nil {
@@ -51,6 +53,9 @@ func main() {
 	if ncmcfg.GetOpts().Verbose {
 		log.SetLevel(log.DebugLevel)
 		log.Debugf("%s", ncmcfg.GetCfg())
+	}
+	if ncmcfg.GetOpts().Trace {
+		log.SetLevel(log.TraceLevel)
 	}
 
 	conn := srlib.NewSrConnection()

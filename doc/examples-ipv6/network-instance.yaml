@@ -1,0 +1,10 @@
+---
+
+network-instances:
+  R1:
+    type: DEFAULT_INSTANCE
+    router-id: 10.0.0.1
+    loopbacks:
+      lo:
+        - 10.0.0.1/32
+        - 2001::1/128

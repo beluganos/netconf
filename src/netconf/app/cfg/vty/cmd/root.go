@@ -48,6 +48,7 @@ func RootCmd(name string) *cobra.Command {
 		IPv4Cmd(),
 		IPv6Cmd(),
 		OspfCmd(),
+		Ospfv3Cmd(),
 		MplsCmd(),
 	)
 

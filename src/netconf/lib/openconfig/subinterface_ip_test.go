@@ -35,6 +35,18 @@ func makeSubinterfaceIPv4(datas [][2]string) *SubinterfaceIPv4 {
 	return ipv4
 }
 
+func makeSubinterfaceIPv6(datas [][2]string) *SubinterfaceIPv6 {
+	ipv6 := NewSubinterfaceIPv6()
+	for _, data := range datas {
+		xpath, value := data[0], data[1]
+		nodes := srlib.ParseXPath(xpath)
+		if err := ipv6.Put(nodes[1:], value); err != nil {
+			panic(err)
+		}
+	}
+	return ipv6
+}
+
 func TestSubinterfaceIPv4(t *testing.T) {
 	ipv4 := makeSubinterfaceIPv4([][2]string{
 		{"/openconfig-if-ip:ipv4", ""},
@@ -141,5 +153,114 @@ func TestSubinterfaceIPv4_addresses_x2(t *testing.T) {
 	}
 	if _, ok := ipv4.Addresses["10.0.1.1"]; !ok {
 		t.Errorf("subaddr.ipv4.Push unmatch. addresses['10.0.1.1']=%t", ok)
+	}
+}
+
+func TestSubinterfaceIPv6(t *testing.T) {
+	ipv6 := makeSubinterfaceIPv6([][2]string{
+		{"/openconfig-if-ip:ipv6", ""},
+	})
+
+	t.Log(ipv6)
+
+	if v := ipv6.Compare(); !v {
+		t.Errorf("subaddr.ipv6.Push unmatch. cmp=%t", v)
+	}
+}
+
+func TestSubinterfaceIPv6_config(t *testing.T) {
+	ipv6 := makeSubinterfaceIPv4([][2]string{
+		{"/openconfig-if-ip:ipv6", ""},
+		{"/openconfig-if-ip:ipv6/config", ""},
+	})
+
+	t.Log(ipv6)
+
+	if v := ipv6.Compare(OC_CONFIG_KEY); !v {
+		t.Errorf("subaddr.ipv6.Push unmatch. cmp=%t", v)
+	}
+	if v := ipv6.Config.Compare(); !v {
+		t.Errorf("subaddr.ipv6.Push unmatch. condig.cmp=%t", v)
+	}
+}
+
+func TestSubinterfaceIPv6_config_mtu(t *testing.T) {
+	mtu := uint16(100)
+	ipv6 := makeSubinterfaceIPv6([][2]string{
+		{"/openconfig-if-ip:ipv6", ""},
+		{"/openconfig-if-ip:ipv6/config", ""},
+		{"/openconfig-if-ip:ipv6/config/mtu", fmt.Sprintf("%d", mtu)},
+	})
+
+	t.Log(ipv6)
+
+	if v := ipv6.Compare(OC_CONFIG_KEY); !v {
+		t.Errorf("subaddr.ipv6.Push unmatch. cmp=%t", v)
+	}
+	if v := ipv6.Config.Compare(SUBINTERFACE_MTU_KEY); !v {
+		t.Errorf("subaddr.ipv6.Push unmatch. config.cmp=%t", v)
+	}
+	if v := ipv6.Config.Mtu; v != mtu {
+		t.Errorf("subaddr.ipv6.Push unmatch. config.mtu=%d", v)
+	}
+}
+
+func TestSubinterfaceIPv6_addresses_x0(t *testing.T) {
+	ipv6 := makeSubinterfaceIPv6([][2]string{
+		{"/openconfig-if-ip:ipv6", ""},
+		{"/openconfig-if-ip:ipv6/addresses", ""},
+	})
+
+	t.Log(ipv6)
+
+	if v := ipv6.Compare(SUBINTERFACE_ADDRS_KEY); !v {
+		t.Errorf("subaddr.ipv6.Push unmatch. cmp=%t", v)
+	}
+	if v := len(ipv6.Addresses); v != 0 {
+		t.Errorf("subaddr.ipv6.Push unmatch. #addresses=%d", v)
+	}
+}
+
+func TestSubinterfaceIPv6_addresses_x1(t *testing.T) {
+	ipv6 := makeSubinterfaceIPv6([][2]string{
+		{"/openconfig-if-ip:ipv6", ""},
+		{"/openconfig-if-ip:ipv6/addresses", ""},
+		{"/openconfig-if-ip:ipv6/addresses/address[ip='2001:2001::']", ""},
+	})
+
+	t.Log(ipv6)
+
+	if v := ipv6.Compare(SUBINTERFACE_ADDRS_KEY); !v {
+		t.Errorf("subaddr.ipv6.Push unmatch. cmp=%t", v)
+	}
+	if v := len(ipv6.Addresses); v != 1 {
+		t.Errorf("subaddr.ipv6.Push unmatch. #addresses=%d", v)
+	}
+	if _, ok := ipv6.Addresses["2001:2001::"]; !ok {
+		t.Errorf("subaddr.ipv6.Push unmatch. addresses['2001:2001::']=%t", ok)
+	}
+}
+
+func TestSubinterfaceIPv6_addresses_x2(t *testing.T) {
+	ipv6 := makeSubinterfaceIPv6([][2]string{
+		{"/openconfig-if-ip:ipv6", ""},
+		{"/openconfig-if-ip:ipv6/addresses", ""},
+		{"/openconfig-if-ip:ipv6/addresses/address[ip='2001:2001::']", ""},
+		{"/openconfig-if-ip:ipv6/addresses/address[ip='2001:2001::1']", ""},
+	})
+
+	t.Log(ipv6)
+
+	if v := ipv6.Compare(SUBINTERFACE_ADDRS_KEY); !v {
+		t.Errorf("subaddr.ipv6.Push unmatch. cmp=%t", v)
+	}
+	if v := len(ipv6.Addresses); v != 2 {
+		t.Errorf("subaddr.ipv6.Push unmatch. #addresses=%d", v)
+	}
+	if _, ok := ipv6.Addresses["2001:2001::"]; !ok {
+		t.Errorf("subaddr.ipv6.Push unmatch. addresses['2001:2001::']=%t", ok)
+	}
+	if _, ok := ipv6.Addresses["2001:2001::1"]; !ok {
+		t.Errorf("subaddr.ipv6.Push unmatch. addresses['2001:2001::1']=%t", ok)
 	}
 }

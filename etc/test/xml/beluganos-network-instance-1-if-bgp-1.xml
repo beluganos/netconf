@@ -1,4 +1,15 @@
 <network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
+  <!--
+      +- network-instance(PE1)
+      |  +- router-id:10.0.0.1, RD:10:100, RT:10:10, DEFAULT_INSTANCE
+      |  +- interface(eth1)
+      |  +- interface(eth1.10)
+      |  +- bgp (as:65000 routr-id:10.10.10.10)
+      |    +- neighbor (192.168.100.100, peer-as:10, local-as:100)
+      |      +- timer (hold:1000, keepalive:2000)
+      |      +- import-policy (policy-next-hop-self)
+      |      +- export-policy (policy-local-pref)
+  -->
   <!-- PE1 -->
   <network-instance>
     <name>PE1</name>

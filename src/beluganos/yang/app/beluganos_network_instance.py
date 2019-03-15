@@ -42,14 +42,14 @@ from beluganos.yang.python.mpls import (Mpls,
 from beluganos.yang.python.static_route import (StaticRoute,
                                                 StaticRoutes,
                                                 StaticRouteNexthop)
-from beluganos.yang.python.ospfv2 import (Ospfv2,
-                                          OspfArea,
-                                          OspfAreaInterface)
+from beluganos.yang.python.ospf import OspfArea, OspfAreaInterface, OspfAreaRange
+from beluganos.yang.python.ospfv2 import Ospfv2
+from beluganos.yang.python.ospfv3 import Ospfv3
 from beluganos.yang.python.bgp import Bgp
 from beluganos.yang.python.bgp_neigh import BgpNeighbor, BgpNeighborAfiSafi
 
 _ZEBRA_URL = "unix:/var/run/frr/zserv.api"
-_ZEBRA_VER = 4
+_ZEBRA_VER = 5
 
 def get_sub_dict(d, *names):
     """
@@ -106,8 +106,8 @@ def new_bgp(cfg):
         bgp.zebra.config.enabled = zebracfg.get("enabled", None)
         bgp.zebra.config.redistributes = zebracfg.get("redistribute-routes", list())
         if bgp.zebra.config.enabled:
-            bgp.zebra.config.version = _ZEBRA_VER
-            bgp.zebra.config.url =_ZEBRA_URL
+            bgp.zebra.config.version = zebracfg.get("version", _ZEBRA_VER)
+            bgp.zebra.config.url = zebracfg.get("url", _ZEBRA_URL)
 
     neighscfg = get_sub_dict(bgpcfg, "neighbors")
     for neighaddr, neighcfg in neighscfg.items():
@@ -133,6 +133,12 @@ def new_ospf_area(areaid, areacfg):
     return area
 
 
+def new_ospf_area_range(rangeid, rangecfg):
+    ipnet = IPNetwork(rangeid)
+    rng = OspfAreaRange(ipnet.ip, ipnet.prefixlen)
+    return rng
+
+
 def new_ospf(cfg):
     """
     create protocols(ospf)
@@ -149,6 +155,34 @@ def new_ospf(cfg):
             ospf.areas.append(areaid, new_ospf_area(areaid, areacfg))
 
     return NetworkInstanceProtocol(ospf)
+
+
+def new_ospfv3(cfg):
+    """
+    create protocols(ospfv3)
+    """
+    ospfcfg = get_sub_dict(cfg, "ospfv3")
+    if not ospfcfg:
+        return None
+
+    ospfv3 = Ospfv3(router_id=ospfcfg["router-id"])
+
+    areascfg = get_sub_dict(ospfcfg, "areas")
+    if areascfg:
+        for areaid, areacfg in sorted(areascfg.items()):
+            ospfv3.areas.append(areaid, new_ospf_area(areaid, areacfg))
+
+    rangescfg = get_sub_dict(ospfcfg, "ranges")
+    if rangescfg:
+        for areaid, rangecfg in sorted(rangescfg.items()):
+            area = ospfv3.areas.get(areaid)
+            if not area:
+                continue
+
+            for rangeid in sorted(rangecfg):
+                area.ranges.append(rangeid, new_ospf_area_range(rangeid, rangecfg))
+
+    return NetworkInstanceProtocol(ospfv3)
 
 
 def new_route(cfg):
@@ -278,6 +312,10 @@ def new_ni(name, cfg):
     ospfv2 = new_ospf(cfg)
     if ospfv2:
         ni.protocols.append("ospfv2", ospfv2)
+
+    ospfv3 = new_ospfv3(cfg)
+    if ospfv3:
+        ni.protocols.append("ospfv3", ospfv3)
 
     bgp = new_bgp(cfg)
     if bgp:

@@ -22,6 +22,7 @@ import (
 	"io"
 	ncmcfg "netconf/app/ncm/cfg"
 	nclib "netconf/lib"
+	ncnet "netconf/lib/net"
 	"netconf/lib/openconfig"
 	ncsclib "netconf/lib/sysctl"
 )
@@ -62,10 +63,10 @@ func AddNIContainterInitCmd(h NICommandsHandler, name string, config *openconfig
 	)
 }
 
-func AddNIContainerInterfaceCmd(h NICommandsHandler, name string, ifname string, hwaddr string, add bool) {
+func AddNIContainerInterfaceCmd(h NICommandsHandler, name string, ifname string, hwaddr string, mtu uint16, add bool) {
 	cmd := cliConfig().LxdPath()
 	arg := func(ope string) []string {
-		return []string{"interface", ope, name, ifname, hwaddr}
+		return []string{"interface", ope, name, ifname, hwaddr, "--mtu", fmt.Sprintf("%d", mtu)}
 	}
 
 	if add {
@@ -271,6 +272,30 @@ func AddNIOspfRouterCmd(h NICommandsHandler, name string, key string, val interf
 	}
 }
 
+func AddNIOspfv3RouterCmd(h NICommandsHandler, name string, key string, val interface{}, add bool) {
+	AddNIVtyConfigCmd(h, name)
+
+	cmd := cliConfig().VtyPath()
+	arg := func(flags ...string) []string {
+		flags = append(flags, "-H", name)
+		return append([]string{"ospfv3", key, fmt.Sprintf("%v", val)}, flags...)
+	}
+
+	if add {
+		h.AddCmd(
+			nclib.NewShell(cmd, arg()...), // Do
+			nil,                           // Undo (restart frr if failed.)
+			nil,                           // End
+		)
+	} else {
+		h.AddCmd(
+			nclib.NewShell(cmd, arg("-n")...), // Do
+			nil,                               // Undo (restart frr if failed.)
+			nil,                               // End
+		)
+	}
+}
+
 func AddNIMplsLdpCmd(h NICommandsHandler, name string, key string, val interface{}, add bool) {
 
 	AddNIVtyConfigCmd(h, name)
@@ -349,9 +374,14 @@ func AddNIStaticRouteCmd(h NICommandsHandler, name string, dest string, nexthop 
 
 	AddNIVtyConfigCmd(h, name)
 
+	ipver, _ := ncnet.IPStringToVersion(dest)
+
 	cmd := cliConfig().VtyPath()
 	arg := func(flags ...string) []string {
 		flags = append(flags, "-H", name)
+		if ipver == ncnet.IPVER6 {
+			return append([]string{"ipv6", "route", dest, nexthop}, flags...)
+		}
 		return append([]string{"ip", "route", dest, nexthop}, flags...)
 	}
 

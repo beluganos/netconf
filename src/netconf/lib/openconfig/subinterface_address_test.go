@@ -196,7 +196,7 @@ func TestIPAddress_config_err(t *testing.T) {
 // /addresses/address[ip='10.0.0.1']/config/ip = "10.0.0.1"
 // /addresses/address[ip='10.0.0.1']/config/prefix-length = 24
 //
-func TestIPAddress_config_conv(t *testing.T) {
+func TestIPAddress_config_ifaddr(t *testing.T) {
 	addrs := makeAddrs([][2]string{
 		{"/addresses/address[ip='10.0.0.1']", ""},
 		{"/addresses/address[ip='10.0.0.1']/config", ""},
@@ -214,6 +214,177 @@ func TestIPAddress_config_conv(t *testing.T) {
 	addr := addrs["10.0.0.1"]
 
 	if v := addr.Config.IFAddr(); v.String() != "10.0.0.1/24" {
+		t.Errorf("IPAddress.Config.IFAddr unmatch. %s", v)
+	}
+}
+
+//
+// /addresses/address[ip='2001:2001::1']
+//
+func TestIPAddressV6_empty(t *testing.T) {
+	addrs := makeAddrs([][2]string{
+		{"/addresses/address[ip='2001:2001::1']", ""},
+	})
+
+	t.Log(addrs)
+
+	// check
+	if v := len(addrs); v != 1 {
+		t.Errorf("IPAddress.Put unmatch. len=%d", v)
+	}
+
+	addr := addrs["2001:2001::1"]
+
+	if v := addr.Compare(); !v {
+		t.Errorf("IPAddress.Put unmatch. cmp=%t", v)
+	}
+}
+
+//
+// /addresses/address[ip='2001:2001::']/unknown
+//
+func TestIPAddressV6_unknown(t *testing.T) {
+	addrs := NewIPAddresses()
+	xpath := "/addresses/address[ip='2001:2001::']/UNKNOWN"
+	nodes := srlib.ParseXPath(xpath)
+
+	if err := addrs.Put(nodes[1:], ""); err != nil {
+		t.Errorf("addresses.Put error. %s", err)
+	}
+
+	addr := addrs["2001:2001::"]
+
+	if v := addr.Compare("UNKNOWN"); !v {
+		t.Errorf("IPAddress.Put unmatch. cmp=%t", v)
+	}
+}
+
+//
+// /addresses/address[ip='2001:2001::1']/ip
+// /addresses/address[ip='2001:2001::1']/config
+//
+func TestIPAddressV6(t *testing.T) {
+	addrs := makeAddrs([][2]string{
+		{"/addresses/address[ip='2001:2001::1']", ""},
+		{"/addresses/address[ip='2001:2001::1']/ip", "2001:2001::1"},
+		{"/addresses/address[ip='2001:2001::1']/config", ""},
+	})
+
+	t.Log(addrs)
+
+	// check
+	if v := len(addrs); v != 1 {
+		t.Errorf("IPAddress.Put unmatch. len=%d", v)
+	}
+
+	addr := addrs["2001:2001::1"]
+
+	if v := addr.Compare(OC_CONFIG_KEY, SUBINTERFACE_ADDR_IP_KEY); !v {
+		t.Errorf("IPAddress.Put unmatch. cmp=%t", v)
+	}
+	if v := addr.IP; v != "2001:2001::1" {
+		t.Errorf("IPAddress.Put unmatch. ip=%s", v)
+	}
+}
+
+//
+// /addresses/address[ip='2001:2001::']/config
+//
+func TestIPAddressV6_config_empty(t *testing.T) {
+	addrs := makeAddrs([][2]string{
+		{"/addresses/address[ip='2001:2001::']", ""},
+		{"/addresses/address[ip='2001:2001::']/config", ""},
+	})
+
+	t.Log(addrs)
+
+	// check
+	if v := len(addrs); v != 1 {
+		t.Errorf("IPAddress.Put unmatch. len=%d", v)
+	}
+
+	addr := addrs["2001:2001::"]
+
+	if v := addr.Compare(OC_CONFIG_KEY); !v {
+		t.Errorf("IPAddress.Put unmatch. addr.cmp=%t", v)
+	}
+	if v := addr.Config.Compare(); !v {
+		t.Errorf("IPAddress.Put unmatch. config.cmp=%t", v)
+	}
+}
+
+//
+// /addresses/address[ip='2001:2001::1']/config/ip = "2001:2001::1"
+// /addresses/address[ip='2001:2001::1']/config/prefix-length = 64
+//
+func TestIPAddressV6_config(t *testing.T) {
+	addrs := makeAddrs([][2]string{
+		{"/addresses/address[ip='2001:2001::1']", ""},
+		{"/addresses/address[ip='2001:2001::1']/config", ""},
+		{"/addresses/address[ip='2001:2001::1']/config/ip", "2001:2001::1"},
+		{"/addresses/address[ip='2001:2001::1']/config/prefix-length", "64"},
+	})
+
+	t.Log(addrs)
+
+	// check
+	if v := len(addrs); v != 1 {
+		t.Errorf("IPAddress.Put unmatch. len=%d", v)
+	}
+
+	addr := addrs["2001:2001::1"]
+
+	if v := addr.Config.Compare(SUBINTERFACE_ADDR_IP_KEY, SUBINTERFACE_ADDR_PREFIXLEN_KEY); !v {
+		t.Errorf("IPAddress.Put unmatch. config.cmp=%t", v)
+	}
+	if v := addr.Config.IP.String(); v != "2001:2001::1" {
+		t.Errorf("IPAddress.Put unmatch. config.ip=%s", v)
+	}
+	if v := addr.Config.PrefixLen; v != 64 {
+		t.Errorf("IPAddress.Put unmatch. config.ip=%d", v)
+	}
+}
+
+//
+// /addresses/address[ip='2001:2001::1']/config/ip = "BAD_IP_ADDR"
+// /addresses/address[ip='2001:2001::1']/config/prefix-length = "BAD_PREFIX_LEN"
+//
+func TestIPAddressV6_config_err(t *testing.T) {
+	addrs := NewIPAddresses()
+
+	nodes := srlib.ParseXPath("/addresses/address[ip='2001:2001::1']/config/ip")
+	if err := addrs.Put(nodes[1:], "BAD_IP_ADDR"); err == nil {
+		t.Errorf("addresses.Put must be error.")
+	}
+
+	nodes = srlib.ParseXPath("/addresses/address[ip='2001:2001::1']/config/prefix-length")
+	if err := addrs.Put(nodes[1:], "BAD_PREFIX_LEN"); err == nil {
+		t.Errorf("addresses.Put must be error.")
+	}
+}
+
+//
+// /addresses/address[ip='2001:2001::1']/config/ip = "2001:2001::1"
+// /addresses/address[ip='2001:2001::1']/config/prefix-length = 64
+//
+func TestIPAddressV6_config_ifaddr(t *testing.T) {
+	addrs := makeAddrs([][2]string{
+		{"/addresses/address[ip='2001:2001::1']", ""},
+		{"/addresses/address[ip='2001:2001::1']/config", ""},
+		{"/addresses/address[ip='2001:2001::1']/config/ip", "2001:2001::1"},
+		{"/addresses/address[ip='2001:2001::1']/config/prefix-length", "64"},
+	})
+
+	t.Log(addrs)
+
+	// check
+	if v := len(addrs); v != 1 {
+		t.Errorf("IPAddress.Put unmatch. len=%d", v)
+	}
+
+	addr := addrs["2001:2001::1"]
+
+	if v := addr.Config.IFAddr(); v.String() != "2001:2001::1/64" {
 		t.Errorf("IPAddress.Config.IFAddr unmatch. %s", v)
 	}
 }

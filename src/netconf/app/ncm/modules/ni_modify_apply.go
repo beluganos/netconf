@@ -72,7 +72,7 @@ func (h *NIModifyApplyHandler) Ospfv2InterfaceConfig(name string, key *openconfi
 	}
 
 	if config.GetChange(openconfig.OSPFV2_NETWORK_TYPE_KEY) {
-		n, _ := getOspfNetworkType(config)
+		n, _ := getOspfNetworkType(config.NetworkType)
 		AddNIVtyInterfaceCmd(h, name, ifaceId, "ip ospf network", n, true)
 	}
 
@@ -88,6 +88,53 @@ func (h *NIModifyApplyHandler) Ospfv2InterfaceTimers(name string, key *openconfi
 
 	if timers.GetChange(openconfig.OSPFV2_HELLO_INTERVAL_KEY) {
 		AddNIVtyInterfaceCmd(h, name, ifaceId, "ip ospf hello-interval", timers.HelloInterval, true)
+	}
+
+	return nil
+}
+
+func (h *NIModifyApplyHandler) Ospfv3GlobalConfig(name string, key *openconfig.NetworkInstanceProtocolKey, config *openconfig.Ospfv3GlobalConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/CONF: %s", h.ev, h.oper, name, key, config)
+
+	if config.GetChange(openconfig.OSPFV3_ROUTERID_KEY) {
+		AddNIOspfv3RouterCmd(h, name, "router-id", config.RouterId, true)
+	}
+
+	return nil
+}
+
+func (h *NIModifyApplyHandler) Ospfv3InterfaceConfig(name string, key *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, config *openconfig.Ospfv3InterfaceConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/CONF: %s", h.ev, h.oper, name, key, areaId, ifaceId, config)
+
+	if config.GetChange(openconfig.OSPFV3_METRIC_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 cost", config.Metric, true)
+	}
+
+	if config.GetChange(openconfig.OSPFV3_PASSIVE_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 passive", "", true)
+	}
+
+	if config.GetChange(openconfig.OSPFV3_PRIORITY_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 priority", config.Priority, true)
+	}
+
+	if config.GetChange(openconfig.OSPFV3_NETWORK_TYPE_KEY) {
+		n, _ := getOspfNetworkType(config.NetworkType)
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 network", n, true)
+	}
+
+	return nil
+}
+
+func (h *NIModifyApplyHandler) Ospfv3InterfaceTimers(name string, key *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, timers *openconfig.Ospfv3InterfaceTimers) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/TIMERS: %s", h.ev, h.oper, name, key, areaId, ifaceId, timers)
+
+	if timers.GetChange(openconfig.OSPFV3_DEAD_INTERVAL_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 dead-interval", timers.DeadInterval, true)
+	}
+
+	if timers.GetChange(openconfig.OSPFV3_HELLO_INTERVAL_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 hello-interval", timers.HelloInterval, true)
 	}
 
 	return nil

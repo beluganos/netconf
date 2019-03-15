@@ -191,3 +191,14 @@ func (i *InterfaceVals) SubinterfaceIPv4AddressConfig(name string, index uint32,
 	*/
 	return nil
 }
+func (i *InterfaceVals) SubinterfaceIPv6Config(name string, index uint32, config *openconfig.SubinterfaceIPv6Config) error {
+	return nil
+}
+
+func (i *InterfaceVals) SubinterfaceIPv6Address(name string, index uint32, ip string, addr *openconfig.IPAddress) error {
+	return nil
+}
+
+func (i *InterfaceVals) SubinterfaceIPv6AddressConfig(name string, index uint32, ip string, config *openconfig.IPAddressConfig) error {
+	return nil
+}

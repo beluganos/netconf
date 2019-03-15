@@ -114,6 +114,7 @@ type NetworkInstanceProtocol struct {
 	Config       *NetworkInstanceProtocolConfig `xml:"config"`
 	StaticRoutes StaticRoutes                   `xml:"-"`
 	Ospfv2       *Ospfv2                        `xml:"-"`
+	Ospfv3       *Ospfv3                        `xml:"-"`
 	Bgp          *Bgp                           `xml:"-"`
 }
 
@@ -122,6 +123,7 @@ type NetworkInstanceProtocolProcessor interface {
 	NetworkInstanceProtocolConfigProcessor
 	StaticRouteProcessor
 	Ospfv2Processor
+	Ospfv3Processor
 	BgpProcessor
 }
 
@@ -137,6 +139,7 @@ func NewNetworkInstanceProtocol(key *NetworkInstanceProtocolKey) *NetworkInstanc
 		Config:       NewNetworkInstanceProtocolConfig(),
 		StaticRoutes: NewStaticRoutes(),
 		Ospfv2:       NewOspfv2(),
+		Ospfv3:       NewOspfv3(),
 		Bgp:          NewBgp(),
 	}
 }
@@ -165,6 +168,11 @@ func (p *NetworkInstanceProtocol) Put(nodes []*ncxml.XPathNode, value string) er
 
 	case OSPFV2_KEY:
 		if err := p.Ospfv2.Put(nodes[1:], value); err != nil {
+			return err
+		}
+
+	case OSPFV3_KEY:
+		if err := p.Ospfv3.Put(nodes[1:], value); err != nil {
 			return err
 		}
 
@@ -212,7 +220,7 @@ func ProcessNetworkInstanceProtocol(p NetworkInstanceProtocolProcessor, reverse 
 		return nil
 	}
 
-	ospfFunc := func() error {
+	ospfv2Func := func() error {
 		if proto.GetChange(OSPFV2_KEY) && key.Ident == INSTALL_PROTOCOL_OSPF {
 			return ProcessOspfv2(
 				p.(Ospfv2Processor),
@@ -220,6 +228,19 @@ func ProcessNetworkInstanceProtocol(p NetworkInstanceProtocolProcessor, reverse 
 				name,
 				key,
 				proto.Ospfv2,
+			)
+		}
+		return nil
+	}
+
+	ospfv3Func := func() error {
+		if proto.GetChange(OSPFV3_KEY) && key.Ident == INSTALL_PROTOCOL_OSPF3 {
+			return ProcessOspfv3(
+				p.(Ospfv3Processor),
+				reverse,
+				name,
+				key,
+				proto.Ospfv3,
 			)
 		}
 		return nil
@@ -238,7 +259,7 @@ func ProcessNetworkInstanceProtocol(p NetworkInstanceProtocolProcessor, reverse 
 		return nil
 	}
 
-	return nclib.CallFunctions(reverse, niProtoFunc, configFunc, staticFunc, ospfFunc, bgpFunc)
+	return nclib.CallFunctions(reverse, niProtoFunc, configFunc, staticFunc, ospfv2Func, ospfv3Func, bgpFunc)
 }
 
 type NetworkInstanceProtocolConfig struct {

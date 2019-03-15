@@ -1,0 +1,10 @@
+---
+
+policy-definitions:
+  policy-next-hop-self:
+    stmts:
+      stmt-next-hop-self:
+        actions:
+          policy-result: ACCEPT_ROUTE
+          bgp:
+            set-next-hop: SELF

@@ -18,6 +18,7 @@
 package ncm
 
 import (
+	"fmt"
 	ncmdbm "netconf/app/ncm/dbm"
 	"netconf/lib/openconfig"
 	srlib "netconf/lib/sysrepo"
@@ -76,7 +77,14 @@ func (h *NICreateApplyHandler) NetworkInstanceConfig(name string, config *openco
 func (h *NICreateApplyHandler) NetworkInstanceLoopbackAddrConfig(name string, id string, index string, config *openconfig.NetworkInstanceLoopbackAddrConfig) error {
 	log.Debugf("NI/%s/%s/%s/%s/%s: %s", h.ev, h.oper, name, id, index, config)
 
-	AddNIVtyInterfaceCmd(h, name, "lo", "ip address", config.IFAddr().IPNet(), true)
+	cmd := func() string {
+		if config.IFAddr().IPVer() == 4 {
+			return "ip address"
+		}
+		return "ipv6 address"
+	}()
+
+	AddNIVtyInterfaceCmd(h, name, "lo", cmd, config.IFAddr().IPNet(), true)
 
 	return nil
 }
@@ -95,7 +103,7 @@ func (h *NICreateApplyHandler) NetworkInstanceInterfaceConfig(name string, id st
 		if subif.Index == 0 {
 			iface, _ := ncmdbm.Interfaces().Select(id)
 			hwaddr := iface.Ethernet.Config.MacAddr.String()
-			AddNIContainerInterfaceCmd(h, name, id, hwaddr, true)
+			AddNIContainerInterfaceCmd(h, name, id, hwaddr, h.mtu, true)
 		}
 
 		AddNIInterfaceNetworkCmd(h, name, device, subif, true)
@@ -110,6 +118,9 @@ func (h *NICreateApplyHandler) NetworkInstanceInterfaceConfig(name string, id st
 
 		for _, ifv4 := range subif.IPv4.Addresses {
 			AddNIVtyInterfaceCmd(h, name, id, "ip address", ifv4.Config.IFAddr(), true)
+		}
+		for _, ifv6 := range subif.IPv6.Addresses {
+			AddNIVtyInterfaceCmd(h, name, id, "ipv6 address", ifv6.Config.IFAddr(), true)
 		}
 	}
 
@@ -143,7 +154,7 @@ func (h *NICreateApplyHandler) Ospfv2InterfaceConfig(name string, key *openconfi
 	}
 
 	if config.GetChange(openconfig.OSPFV2_NETWORK_TYPE_KEY) {
-		n, _ := getOspfNetworkType(config)
+		n, _ := getOspfNetworkType(config.NetworkType)
 		AddNIVtyInterfaceCmd(h, name, ifaceId, "ip ospf network", n, true)
 	}
 
@@ -169,6 +180,75 @@ func (h *NICreateApplyHandler) Ospfv2InterfaceTimers(name string, key *openconfi
 
 	if timers.GetChange(openconfig.OSPFV2_HELLO_INTERVAL_KEY) {
 		AddNIVtyInterfaceCmd(h, name, ifaceId, "ip ospf hello-interval", timers.HelloInterval, true)
+	}
+
+	return nil
+}
+
+func (h *NICreateApplyHandler) Ospfv3GlobalConfig(name string, key *openconfig.NetworkInstanceProtocolKey, config *openconfig.Ospfv3GlobalConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/CONF: %s", h.ev, h.oper, name, key, config)
+
+	if config.GetChange(openconfig.OSPFV3_ROUTERID_KEY) {
+		AddNIOspfv3RouterCmd(h, name, "router-id", config.RouterId, true)
+	}
+
+	return nil
+}
+
+func (h *NICreateApplyHandler) Ospfv3InterfaceConfig(name string, key *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, config *openconfig.Ospfv3InterfaceConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/CONF: %s", h.ev, h.oper, name, key, areaId, ifaceId, config)
+
+	if config.GetChange(openconfig.OSPFV3_METRIC_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 cost", config.Metric, true)
+	}
+
+	if config.GetChange(openconfig.OSPFV3_PASSIVE_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 passive", "", config.Passive)
+	}
+
+	if config.GetChange(openconfig.OSPFV3_PRIORITY_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 priority", config.Priority, true)
+	}
+
+	if config.GetChange(openconfig.OSPFV3_NETWORK_TYPE_KEY) {
+		n, _ := getOspfNetworkType(config.NetworkType)
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 network", n, true)
+	}
+
+	return nil
+}
+
+func (h *NICreateApplyHandler) Ospfv3InterfaceRefConfig(name string, key *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, config *openconfig.InterfaceRefConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/IFREF: %s", h.ev, h.oper, name, key, areaId, ifaceId, config)
+
+	if config.GetChanges(openconfig.INTERFACE_KEY, openconfig.SUBINTERFACE_KEY) {
+		cmd := fmt.Sprintf("interface %s area", ifaceId)
+		AddNIOspfv3RouterCmd(h, name, cmd, areaId, true)
+	}
+
+	return nil
+}
+
+func (h *NICreateApplyHandler) Ospfv3InterfaceTimers(name string, key *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, timers *openconfig.Ospfv3InterfaceTimers) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/TIMERS: %s", h.ev, h.oper, name, key, areaId, ifaceId, timers)
+
+	if timers.GetChange(openconfig.OSPFV3_DEAD_INTERVAL_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 dead-interval", timers.DeadInterval, true)
+	}
+
+	if timers.GetChange(openconfig.OSPFV3_HELLO_INTERVAL_KEY) {
+		AddNIVtyInterfaceCmd(h, name, ifaceId, "ipv6 ospf6 hello-interval", timers.HelloInterval, true)
+	}
+
+	return nil
+}
+
+func (h *NICreateApplyHandler) Ospfv3AreaRangeConfig(name string, nikey *openconfig.NetworkInstanceProtocolKey, areaId string, rngkey *openconfig.Ospfv3AreaRangeKey, config *openconfig.Ospfv3AreaRangeConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/CONF %s", h.ev, h.oper, name, nikey, areaId, rngkey, config)
+
+	if config.GetChanges(openconfig.OSPFV3_RANGE_IP_KEY, openconfig.OSPFV3_RANGE_PREFIXLEN_KEY) {
+		cmd := fmt.Sprintf("area %s range", areaId)
+		AddNIOspfv3RouterCmd(h, name, cmd, config.IPNet().String(), true)
 	}
 
 	return nil
@@ -253,7 +333,7 @@ func (h *NICreateApplyHandler) StaticRouteNexthop(name string, prkey *openconfig
 	case openconfig.LOCAL_DEFINED_NEXT_HOP_LOCAL_LINK:
 		AddNIStaticRouteCmd(h, name, rtkey.String(), nexthop.IfaceRef.Config.IFName(), true)
 	case openconfig.LOCAL_DEFINED_NEXT_HOP_DROP:
-		AddNIStaticRouteCmd(h, name, rtkey.String(), "null0", true)
+		AddNIStaticRouteCmd(h, name, rtkey.String(), "nill0", true)
 	default:
 		AddNIStaticRouteCmd(h, name, rtkey.String(), ip.String(), true)
 	}
@@ -268,6 +348,8 @@ func (h *NICreateApplyHandler) Bgp(name string, key *openconfig.NetworkInstanceP
 
 	openconfig.ProcessBgp(h.Bgps, false, name, key, bgp)
 	AddNIBgpConfigCmd(h, name, h.Bgps.Bytes(), restart, true)
+
+	h.TraceBgps(fmt.Sprintf("NI/%s/%s/%s/PROTOS:", h.ev, h.oper, name))
 
 	return nil
 }
@@ -290,6 +372,8 @@ func (h *NICreateApplyHandler) BgpNeighborApplyPolicyConfig(name string, key *op
 	}
 
 	AddNIBgpConfigCmd(h, name, h.Bgps.Bytes(), false, true)
+
+	h.TraceBgps(fmt.Sprintf("NI/%s/%s/%s/PROTOS/%s/%s/APPLYPOL:", h.ev, h.oper, name, key, addr))
 
 	return nil
 }

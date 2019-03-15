@@ -29,6 +29,17 @@ const (
 	IPBITS_FULL = -1
 )
 
+func IPStringToVersion(s string) (int, error) {
+	ip := net.ParseIP(s)
+	if ip == nil {
+		var err error
+		if ip, _, err = net.ParseCIDR(s); err != nil {
+			return 0, err
+		}
+	}
+	return IPToVersion(ip), nil
+}
+
 func IPToVersion(ip net.IP) int {
 	if ip.To4() == nil {
 		return IPVER6

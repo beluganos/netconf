@@ -82,3 +82,7 @@ func (i *IFAddr) IPNet() *net.IPNet {
 		Mask: i.Mask,
 	}
 }
+
+func (i *IFAddr) IPVer() int {
+	return IPToVersion(i.IP)
+}

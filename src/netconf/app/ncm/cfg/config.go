@@ -28,17 +28,19 @@ import (
 const (
 	DEFAULT_CLI_PATH = "/usr/bin"
 	NC_HOME_ENV      = "NC_HOME"
+	DEFAULT_LXC_MTU  = 9000
 )
 
 //
 // Config - Global
 //
 type GlobalConfig struct {
-	Persist bool `toml:"persist"`
+	Persist bool   `toml:"persist"`
+	LxcMtu  uint16 `toml:"lxc-mtu"`
 }
 
 func (c *GlobalConfig) String() string {
-	return fmt.Sprintf("Global{persist=%t}", c.Persist)
+	return fmt.Sprintf("Global{persist=%t, lxc-mtu=%d}", c.Persist, c.LxcMtu)
 }
 
 //
@@ -123,6 +125,7 @@ func GetCliPathFromEnv() string {
 
 func (c *Config) Load(path string) error {
 	c.Cli.Path = GetCliPathFromEnv() // set default value
+	c.Global.LxcMtu = DEFAULT_LXC_MTU
 	if _, err := toml.DecodeFile(path, c); err != nil {
 		return err
 	}

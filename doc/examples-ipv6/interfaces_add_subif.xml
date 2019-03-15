@@ -1,0 +1,119 @@
+<interfaces xmlns="https://github.com/beluganos/beluganos/yang/interfaces">
+  <interface>
+    <name>eth3</name>
+    <config>
+      <name>eth3</name>
+      <type xmlns:iana-if-type="urn:ietf:params:xml:ns:yang:iana-if-type">iana-if-type:ethernetCsmacd</type>
+      <enabled>true</enabled>
+    </config>
+    <subinterfaces>
+      <subinterface>
+        <index>0</index>
+        <config>
+          <index>0</index>
+          <enabled>true</enabled>
+        </config>
+        <ipv4 xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ip">
+          <addresses>
+            <address>
+              <ip>10.4.0.1</ip>
+              <config>
+                <ip>10.4.0.1</ip>
+                <prefix-length>24</prefix-length>
+              </config>
+            </address>
+          </addresses>
+          <config/>
+        </ipv4>
+        <ipv6 xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ip">
+          <addresses/>
+          <config/>
+        </ipv6>
+      </subinterface>
+    </subinterfaces>
+    <ethernet xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ethernet">
+      <config/>
+    </ethernet>
+  </interface>
+  <interface>
+    <name>eth2</name>
+    <config>
+      <name>eth2</name>
+      <type xmlns:iana-if-type="urn:ietf:params:xml:ns:yang:iana-if-type">iana-if-type:ethernetCsmacd</type>
+      <enabled>true</enabled>
+    </config>
+    <subinterfaces>
+      <subinterface>
+        <index>0</index>
+        <config>
+          <index>0</index>
+          <enabled>true</enabled>
+        </config>
+        <ipv4 xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ip">
+          <addresses/>
+          <config/>
+        </ipv4>
+        <ipv6 xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ip">
+          <addresses>
+            <address>
+              <ip>2001:db8:3::1</ip>
+              <config>
+                <ip>2001:db8:3::1</ip>
+                <prefix-length>64</prefix-length>
+              </config>
+            </address>
+          </addresses>
+          <config/>
+        </ipv6>
+      </subinterface>
+    </subinterfaces>
+    <ethernet xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ethernet">
+      <config/>
+    </ethernet>
+  </interface>
+  <interface>
+    <name>eth1</name>
+    <config>
+      <name>eth1</name>
+      <type xmlns:iana-if-type="urn:ietf:params:xml:ns:yang:iana-if-type">iana-if-type:ethernetCsmacd</type>
+      <enabled>true</enabled>
+    </config>
+    <subinterfaces>
+      <subinterface>
+        <index>0</index>
+        <config>
+          <index>0</index>
+          <enabled>true</enabled>
+        </config>
+        <ipv4 xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ip">
+          <addresses>
+            <address>
+              <ip>10.2.0.2</ip>
+              <config>
+                <ip>10.2.0.2</ip>
+                <prefix-length>24</prefix-length>
+              </config>
+            </address>
+          </addresses>
+          <config/>
+        </ipv4>
+        <ipv6 xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ip">
+          <addresses>
+            <address>
+              <ip>2001:db8:2::2</ip>
+              <config>
+                <ip>2001:db8:2::2</ip>
+                <prefix-length>64</prefix-length>
+              </config>
+            </address>
+          </addresses>
+          <config/>
+        </ipv6>
+      </subinterface>
+    </subinterfaces>
+    <ethernet xmlns="https://github.com/beluganos/beluganos/yang/interfaces/ethernet">
+      <config/>
+    </ethernet>
+  </interface>
+</interfaces>
+

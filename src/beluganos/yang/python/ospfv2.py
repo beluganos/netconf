@@ -25,8 +25,7 @@ OSPF module
 from beluganos.yang.python import constants
 from beluganos.yang.python import elements
 from beluganos.yang.python import policy_types
-from beluganos.yang.python.interface_ref import InterfaceRef
-from beluganos.yang.python.interface import InterfaceName
+
 
 class Ospfv2(elements.BaseElement):
     """
@@ -78,84 +77,3 @@ class Ospfv2GlobalConfig(elements.BaseElement):
     def __init__(self, router_id=None):
         super(Ospfv2GlobalConfig, self).__init__(constants.CONFIG)
         self.router_id = router_id
-
-
-class OspfArea(elements.BaseElement):
-    """
-    OSPF area element
-    """
-
-    _FIELDS = ("identifier", "config", "interfaces")
-
-    def __init__(self, areaid):
-        super(OspfArea, self).__init__("area")
-        self.identifier = areaid
-        self.config = OspfAreaConfig(areaid)
-        self.interfaces = elements.DictElement("interfaces")
-
-
-class OspfAreaConfig(elements.BaseElement):
-    """
-    OSPF area config element
-    """
-
-    _FIELDS = ("identifier",)
-
-    def __init__(self, areaid):
-        super(OspfAreaConfig, self).__init__(constants.CONFIG)
-        self.identifier = areaid
-
-
-class OspfAreaInterface(elements.BaseElement):
-    """
-    OSPF area  interface element
-    """
-
-    _FIELDS = ("id", "config", "interface_ref", "timers")
-
-    def __init__(self, iface_id):
-        super(OspfAreaInterface, self).__init__("interface")
-        ifname = InterfaceName(iface_id)
-        self.id = iface_id
-        self.config = OspfAreaInterfaceConfig(iface_id)
-        self.interface_ref = InterfaceRef(ifname.iface, ifname.index)
-        self.timers = OspfAreaInterfaceTimers()
-
-
-class OspfAreaInterfaceConfig(elements.BaseElement):
-    """
-    OSPF area interface config element
-    """
-
-    _FIELDS = ("id", "metric", "passive")
-
-    def __init__(self, iface_id, metric=None, passive=None):
-        super(OspfAreaInterfaceConfig, self).__init__(constants.CONFIG)
-        self.id = iface_id
-        self.metric = metric
-        self.passive = passive
-
-
-class OspfAreaInterfaceTimers(elements.BaseElement):
-    """
-    OSPF area interface timers element
-    """
-
-    _FIELDS = ("config",)
-
-    def __init__(self, hello_interval=None, dead_interval=None):
-        super(OspfAreaInterfaceTimers, self).__init__("timers")
-        self.config = OspfAreaInterfaceTimersConfig(hello_interval, dead_interval)
-
-
-class OspfAreaInterfaceTimersConfig(elements.BaseElement):
-    """
-    OSPF area interface timers config element
-    """
-
-    _FIELDS = ("hello_interval", "dead_interval")
-
-    def __init__(self, hello_interval=None, dead_interval=None):
-        super(OspfAreaInterfaceTimersConfig, self).__init__(constants.CONFIG)
-        self.dead_interval = dead_interval
-        self.hello_interval = hello_interval

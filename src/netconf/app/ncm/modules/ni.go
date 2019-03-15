@@ -31,7 +31,7 @@ type NIChangeHandler interface {
 	Begin(string, *openconfig.NetworkInstance) error
 	Commit() error
 	Rollback()
-	DryRun(bool)
+	SetOpt(string, interface{})
 }
 
 type NIChangeSet interface {

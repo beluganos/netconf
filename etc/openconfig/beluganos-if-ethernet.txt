@@ -1,3 +1,4 @@
+
 module: beluganos-if-ethernet
   augment /boc-if:interfaces/boc-if:interface:
     +--rw ethernet

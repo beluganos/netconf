@@ -18,7 +18,6 @@
 package openconfig
 
 import (
-	"fmt"
 	srlib "netconf/lib/sysrepo"
 	"testing"
 )
@@ -41,7 +40,7 @@ func TestNwInstance(t *testing.T) {
 	}
 
 	insts := makeNwInstances(datas)
-	fmt.Println(insts)
+	t.Log(insts)
 }
 
 func TestNwInstanceLDP(t *testing.T) {
@@ -51,5 +50,5 @@ func TestNwInstanceLDP(t *testing.T) {
 		{ldp_path + "/address-family/ipv4/discovery/transport-address", "10.0.0.2"},
 	}
 	insts := makeNwInstances(datas)
-	fmt.Println(insts)
+	t.Log(insts)
 }

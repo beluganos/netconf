@@ -5,7 +5,7 @@ submodule beluganos-bgp-neighbor {
   }
 
   import openconfig-extensions { prefix oc-ext; }
-  import openconfig-inet-types { prefix oc-inet; }
+  // import openconfig-inet-types { prefix oc-inet; }
   import beluganos-routing-policy { prefix boc-rpol; }
 
   // Include the common submodule
@@ -39,7 +39,9 @@ submodule beluganos-bgp-neighbor {
       (e.g., peer group)";
 
     leaf neighbor-address {
-        type oc-inet:ipv4-address;
+      // @BEL changed to string
+      //  type oc-inet:ipv4-address;
+      type string;
         description
           "Address of the BGP peer, either in IPv4 or IPv6";
     }

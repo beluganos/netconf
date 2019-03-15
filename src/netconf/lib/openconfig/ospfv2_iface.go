@@ -119,7 +119,7 @@ func (o *Ospfv2Interface) Put(nodes []*ncxml.XPathNode, value string) error {
 
 	case INTERFACE_REF_KEY:
 		if err := o.InterfaceRef.Put(nodes[1:], value); err != nil {
-			return nil
+			return err
 		}
 
 	case OSPFV2_TIMERS_KEY:

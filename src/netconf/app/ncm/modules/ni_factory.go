@@ -28,12 +28,14 @@ type NIChangeFactoryFunc func(srlib.SrNotifEvent, srlib.SrChangeOper) NIChangeHa
 
 type NIChangeFactory struct {
 	DryRun   bool
+	Mtu      uint16
 	handlers map[srlib.SrNotifEvent]map[srlib.SrChangeOper]NIChangeFactoryFunc
 }
 
-func NewNIChangeFactory(dryRun bool) *NIChangeFactory {
+func NewNIChangeFactory() *NIChangeFactory {
 	return &NIChangeFactory{
-		DryRun: dryRun,
+		DryRun: false,
+		Mtu:    NIConterinerDefaultMTU,
 		handlers: map[srlib.SrNotifEvent]map[srlib.SrChangeOper]NIChangeFactoryFunc{
 			srlib.SR_EV_VERIFY: {
 				srlib.SR_OP_CREATED:  NewNICreateVerifyHandler,
@@ -67,7 +69,8 @@ func (n *NIChangeFactory) NewHandler(ev srlib.SrNotifEvent, oper srlib.SrChangeO
 	if opers, ok := n.handlers[ev]; ok {
 		if f, ok := opers[oper]; ok && f != nil {
 			h := f(ev, oper)
-			h.DryRun(n.DryRun)
+			h.SetOpt("dryrun", n.DryRun)
+			h.SetOpt("mtu", n.Mtu)
 			return h
 		}
 	}

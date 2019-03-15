@@ -34,6 +34,7 @@ type Opts struct {
 	Path    string
 	DryRun  bool
 	Verbose bool
+	Trace   bool
 }
 
 func newOpts() *Opts {
@@ -41,12 +42,17 @@ func newOpts() *Opts {
 }
 
 func (o *Opts) String() string {
-	return fmt.Sprintf("Opts{Path='%s', Verbose=%t, DryRun=%t}", o.Path, o.Verbose, o.DryRun)
+	return fmt.Sprintf("Opts{Path='%s', Verbose=%t, Trace=%t, DryRun=%t}", o.Path, o.Verbose, o.Trace, o.DryRun)
 }
 
 func (o *Opts) Parse() {
 	flag.BoolVar(&o.Verbose, "v", false, "show detail log.")
+	flag.BoolVar(&o.Trace, "vv", false, "show more detail log.")
 	flag.BoolVar(&o.DryRun, "d", false, "dry run.")
 	flag.StringVar(&o.Path, "c", DEFAULT_CONFIG, "Config file.")
 	flag.Parse()
+
+	if o.Trace {
+		o.Verbose = true
+	}
 }

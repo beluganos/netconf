@@ -69,8 +69,8 @@ func NewNetworkInstancesSet() NetworkInstancesSet {
 	}
 }
 
-func getOspfNetworkType(config *openconfig.Ospfv2InterfaceConfig) (string, error) {
-	switch config.NetworkType {
+func getOspfNetworkType(networkType openconfig.OspfNetworkType) (string, error) {
+	switch networkType {
 	case openconfig.OSPF_POINT_TO_POINT_NETWORK:
 		return "point-to-point", nil
 
@@ -81,8 +81,8 @@ func getOspfNetworkType(config *openconfig.Ospfv2InterfaceConfig) (string, error
 		return "non-broadcast", nil
 
 	default:
-		log.Errorf("Unknown ospf-network-type %s", config.NetworkType)
-		return "", fmt.Errorf("Unknown ospf-network-type %s", config.NetworkType)
+		log.Errorf("Unknown ospf-network-type %s", networkType)
+		return "", fmt.Errorf("Unknown ospf-network-type %s", networkType)
 	}
 }
 
@@ -190,4 +190,14 @@ func (n *NICommands) SetCmd(t NIUpdateType, do, undo, end *nclib.Shell) {
 	} else {
 		n.Cmds.Set(cmd, pos)
 	}
+}
+
+func (n *NICommands) TraceBgps(msg string) {
+	if log.GetLevel() == log.TraceLevel {
+		n.Bgps.Iterate(func(line string) error {
+			log.Tracef("%s %s", msg, line)
+			return nil
+		})
+	}
+
 }

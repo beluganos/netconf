@@ -1,0 +1,22 @@
+---
+
+network:
+  ethernets:
+    eth1:
+      mtu: 1500
+      addresses:
+        - 10.0.11.2/30
+        - 2001:2011::2/64
+    eth2:
+      mtu: 1500
+      addresses:
+        - 10.0.12.2/30
+        - 2001:2012::2/64
+    eth3:
+      mtu: 1500
+      addresses:
+        - 20.1.0.1/24
+    eth4:
+      mtu: 1500
+      addresses:
+        - 20.2.0.1/24

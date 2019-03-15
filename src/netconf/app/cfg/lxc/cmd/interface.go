@@ -23,16 +23,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const InterfaceDefaultMTU = 9000
+
 type InterfaceCommand struct {
 	Command
 	keep   bool
 	prefix string
+	mtu    uint16
 	negate bool
 }
 
 func (c *InterfaceCommand) SetFlags(cmd *cobra.Command) *cobra.Command {
 	cmd.PersistentFlags().BoolVarP(&c.keep, "keep", "k", false, "keep file on error.")
 	cmd.PersistentFlags().StringVarP(&c.prefix, "prefix", "p", "v", "Prefix of ifname on host.")
+	cmd.PersistentFlags().Uint16VarP(&c.mtu, "mtu", "m", InterfaceDefaultMTU, "MTU of NIC devices.")
 	return c.Command.SetFlags(cmd)
 }
 
@@ -50,7 +54,7 @@ func (c *InterfaceCommand) Add(name string, ifname string, hwaddr string) error 
 		return err
 	}
 
-	if err := lib.AddInterface(client, name, c.prefix, ifname, hwaddr); err != nil {
+	if err := lib.AddInterface(client, name, c.prefix, ifname, hwaddr, c.mtu); err != nil {
 		return err
 	}
 

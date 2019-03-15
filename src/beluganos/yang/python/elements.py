@@ -131,6 +131,12 @@ class DictElement(Element):
         for key, val in d.items():
             self.append(key. val)
 
+    def get(self, key):
+        """
+        get child
+        """
+        return self._children.get(key)
+
     def xml_element(self):
         """
         create XML element.

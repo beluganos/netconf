@@ -500,3 +500,452 @@ func TestStaticRoute_nexthop_config_getnexthop_error(t *testing.T) {
 		t.Errorf("StaticRouteNexthopConfig.GetNexthop must be error. %s", err)
 	}
 }
+
+func TestStaticRoutesV6_Put(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='64']", ""},
+	})
+
+	t.Log(routes)
+
+	if v := len(routes); v != 1 {
+		t.Errorf("StaticRoutes.Put unmatch. len=%d", v)
+	}
+
+	route, ok := routes[*NewStaticRouteKey("2001:db8::", 64)]
+	if !ok {
+		t.Errorf("StaticRoutes.Put not found. %t.", ok)
+	}
+	if v := route.IP; v != "2001:db8::" {
+		t.Errorf("StaticRoutes.Put unmatch. ip=%s", v)
+	}
+	if v := route.PrefixLen; v != 64 {
+		t.Errorf("StaticRoutes.Put unmatch. plen=%d", v)
+	}
+}
+
+func TestStaticRoutesV6_Put_multi(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']", ""},
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='25']", ""},
+		{"/static-routes/static[ip='2001:2001::'][prefix-length='24']", ""},
+		{"/static-routes/static[ip='2001:2001::'][prefix-length='25']", ""},
+	})
+
+	t.Log(routes)
+
+	if v := len(routes); v != 4 {
+		t.Errorf("StaticRoutes.Put unmatch. len=%d", v)
+	}
+
+	if _, ok := routes[*NewStaticRouteKey("2001:db8::", 24)]; !ok {
+		t.Errorf("StaticRoutes.Put unmatch.")
+	}
+	if _, ok := routes[*NewStaticRouteKey("2001:db8::", 25)]; !ok {
+		t.Errorf("StaticRoutes.Put unmatch.")
+	}
+	if _, ok := routes[*NewStaticRouteKey("2001:2001::", 24)]; !ok {
+		t.Errorf("StaticRoutes.Put unmatch.")
+	}
+	if _, ok := routes[*NewStaticRouteKey("2001:2001::", 25)]; !ok {
+		t.Errorf("StaticRoutes.Put unmatch.")
+	}
+}
+
+func TestStaticRoutesV6_Put_dup(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes", ""},
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/name", ""},
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']", ""},
+	})
+
+	t.Log(routes)
+
+	if v := len(routes); v != 1 {
+		t.Errorf("StaticRoutes.Put unmatch. len=%d", v)
+	}
+
+	if _, ok := routes[*NewStaticRouteKey("2001:db8::", 24)]; !ok {
+		t.Errorf("StaticRoutes.Put unmatch.")
+	}
+}
+
+func TestStaticRoutesV6_Put_err(t *testing.T) {
+	xpaths := []string{
+		"/static-routes/static[ip='2001:db8::']",
+		"/static-routes/static[ip='2001:db8::'][prefix-leng='24']",
+		"/static-routes/static[prefix-length='24']",
+		"/static-routes/static[ipp='2001:db8::'][prefix-length='24']",
+	}
+
+	for _, xpath := range xpaths {
+		routes := NewStaticRoutes()
+		nodes := srlib.ParseXPath(xpath)
+		if err := routes.Put(nodes[1:], ""); err == nil {
+			t.Errorf("StaticRoutes.Put must be error. %s", xpath)
+		}
+	}
+}
+
+func TestNewStaticRouteV6Key(t *testing.T) {
+	ip := "2001::db8"
+	plen := uint8(24)
+
+	key := NewStaticRouteKey(ip, plen)
+
+	if v := key.String(); v != "2001::db8/24" {
+		t.Errorf("NewStaticRouteKey unmatch. %s", key)
+	}
+}
+
+func TestStaticRouteV6_ip(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/ip", "2001:db8::"},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+
+	if v := route.Compare(STATICROUTE_IP_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. compare=%t", v)
+	}
+	if v := route.IP; v != "2001:db8::" {
+		t.Errorf("StaticRoutes.Put not found. ip=%s", v)
+	}
+	if v := route.PrefixLen; v != 24 {
+		t.Errorf("StaticRoutes.Put not found. plen=%d", v)
+	}
+}
+
+func TestStaticRouteV6_prefixlen(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:2001::'][prefix-length='64']/prefix-length", "64"},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:2001::", 64)]
+
+	if v := route.Compare(STATICROUTE_PREFIXLEN_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. compare=%t", v)
+	}
+	if v := route.IP; v != "2001:2001::" {
+		t.Errorf("StaticRoutes.Put not found. ip=%s", v)
+	}
+	if v := route.PrefixLen; v != 64 {
+		t.Errorf("StaticRoutes.Put not found. plen=%d", v)
+	}
+}
+
+func TestStaticRouteV6_config(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/config", ""},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+
+	if v := route.Compare(OC_CONFIG_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. compare=%t", v)
+	}
+	if v := route.Config.Compare(); !v {
+		t.Errorf("StaticRoutes.Put unmatch. config.compare=%t", v)
+	}
+}
+
+func TestStaticRouteV6_config_ip(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/config/ip", "2001:db8::"},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+
+	if v := route.Compare(OC_CONFIG_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. compare=%t", v)
+	}
+	if v := route.Config.Compare(STATICROUTE_IP_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. compare=%t", v)
+	}
+	if v := route.Config.Ip; v.String() != "2001:db8::" {
+		t.Errorf("StaticRoutes.Put unmatch. config.ip=%s", v)
+	}
+}
+
+func TestStaticRouteV6_config_plen(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/config/prefix-length", "24"},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+
+	if v := route.Compare(OC_CONFIG_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. compare=%t", v)
+	}
+	if v := route.Config.Compare(STATICROUTE_PREFIXLEN_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. compare=%t", v)
+	}
+	if v := route.Config.PrefixLen; v != 24 {
+		t.Errorf("StaticRoutes.Put unmatch. config.plen=%d", v)
+	}
+}
+
+func TestStaticRouteV6_config_error(t *testing.T) {
+	xpaths := []string{
+		"/static-routes/static[ip='2001:db8::'][prefix-length='24']/config/ip",
+		"/static-routes/static[ip='2001:db8::'][prefix-length='24']/config/prefix-length",
+	}
+
+	for _, xpath := range xpaths {
+		nodes := srlib.ParseXPath(xpath)
+		routes := NewStaticRoutes()
+		if err := routes.Put(nodes[1:], "ERROR"); err == nil {
+			t.Errorf("StaticRoutes.Put must be error. %s %s", err, xpath)
+		}
+	}
+}
+
+//
+// EEEEEEEEEEEEEEEEEE
+//
+func TestStaticRouteV6_nexthops(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops", ""},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+
+	if v := route.Compare(STATICROUTE_NEXTHOPS_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. compare=%t", v)
+	}
+	if v := len(route.Nexthops); v != 0 {
+		t.Errorf("StaticRoutes.Put unmatch. #nexthops=%d", v)
+	}
+}
+
+func TestStaticRouteV6_nexthops_error(t *testing.T) {
+	xpaths := []string{
+		"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop",
+	}
+
+	for _, xpath := range xpaths {
+		nodes := srlib.ParseXPath(xpath)
+		routes := NewStaticRoutes()
+		if err := routes.Put(nodes[1:], ""); err == nil {
+			t.Errorf("StaticRoutes.Put must be error. %s, %s", err, xpath)
+		}
+
+	}
+}
+
+func TestStaticRouteV6_nexthop(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']", ""},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+
+	if v := len(route.Nexthops); v != 1 {
+		t.Errorf("StaticRoutes.Put unmatch. #nexthops=%d", v)
+	}
+
+	nh, ok := route.Nexthops["TEST1"]
+
+	if !ok {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop[TEST1]=%t", ok)
+	}
+	if v := nh.Compare(); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.compare=%t", v)
+	}
+}
+
+func TestStaticRouteV6_nexthop_multi(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']", ""},
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST2']", ""},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+	if v := len(route.Nexthops); v != 2 {
+		t.Errorf("StaticRoutes.Put unmatch. #nexthops=%d", v)
+	}
+
+	nh1, ok := route.Nexthops["TEST1"]
+
+	if !ok {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop[TEST1]=%t", ok)
+	}
+	if v := nh1.Compare(); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.compare=%t", v)
+	}
+	if v := nh1.Index; v != "TEST1" {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.Index=%s", v)
+	}
+
+	nh2, ok := route.Nexthops["TEST2"]
+
+	if !ok {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop[TEST2]=%t", ok)
+	}
+	if v := nh2.Compare(); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.compare=%t", v)
+	}
+	if v := nh2.Index; v != "TEST2" {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.Index=%s", v)
+	}
+}
+
+func TestStaticRouteV6_nexthop_index(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']/index", "TEST1"},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+	nh := route.Nexthops["TEST1"]
+
+	if v := nh.Compare(OC_INDEX_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.compare=%t", v)
+	}
+	if v := nh.Index; v != "TEST1" {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.Index=%s", v)
+	}
+}
+
+func TestStaticRouteV6_nexthop_config(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']/config", ""},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+	nh := route.Nexthops["TEST1"]
+
+	if v := nh.Compare(OC_CONFIG_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.compare=%t", v)
+	}
+	if v := nh.Config.Compare(); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.config.compare=%t", v)
+	}
+}
+
+func TestStaticRouteV6_nexthop_config_index(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']/config/index", "TEST1"},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+	nh := route.Nexthops["TEST1"]
+
+	if v := nh.Compare(OC_CONFIG_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.compare=%t", v)
+	}
+	if v := nh.Config.Compare(OC_INDEX_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.config.compare=%t", v)
+	}
+	if v := nh.Config.Index; v != "TEST1" {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.config.index=%s", v)
+	}
+}
+
+func TestStaticRouteV6_nexthop_config_nexthop(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']/config/next-hop", "LOCAL_LINK"},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+	nh := route.Nexthops["TEST1"]
+
+	if v := nh.Compare(OC_CONFIG_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.compare=%t", v)
+	}
+	if v := nh.Config.Compare(STATICROUTE_NEXTHOP_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.config.compare=%t", v)
+	}
+	if v := nh.Config.Nexthop; v != "LOCAL_LINK" {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.config.nexthop=%s", v)
+	}
+}
+
+func TestStaticRouteV6_nexthop_ifref(t *testing.T) {
+	routes := makeStaticRoutes([][2]string{
+		{"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']/interface-ref", ""},
+	})
+
+	t.Log(routes)
+
+	route := routes[*NewStaticRouteKey("2001:db8::", 24)]
+	nh := route.Nexthops["TEST1"]
+
+	if v := nh.Compare(INTERFACE_REF_KEY); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.compare=%t", v)
+	}
+	if v := nh.IfaceRef.Compare(); !v {
+		t.Errorf("StaticRoutes.Put unmatch. nexthop.ifref.compare=%t", v)
+	}
+}
+
+func TestStaticRouteV6_nexthop_error(t *testing.T) {
+	xpaths := []string{
+		"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']/config/index",
+		"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']/config/next-hop",
+		"/static-routes/static[ip='2001:db8::'][prefix-length='24']/next-hops/next-hop[index='TEST1']/interface-ref/config/subinterface",
+	}
+
+	for _, xpath := range xpaths {
+		routes := NewStaticRoutes()
+		nodes := srlib.ParseXPath(xpath)
+		if err := routes.Put(nodes[1:], ""); err == nil {
+			t.Errorf("StaticRoutes.Put must be error. %s %s", err, xpath)
+		}
+	}
+}
+
+func TestStaticRouteV6_nexthop_config_getnexthop(t *testing.T) {
+	c := NewStaticRouteNexthopConfig()
+
+	var ip net.IP
+	var nh LocalDefinedNexthop
+	var err error
+
+	c.Nexthop = "DROP"
+	ip, nh, err = c.GetNexthop()
+	if err != nil {
+		t.Errorf("StaticRouteNexthopConfig.GetNexthop error. %s", err)
+	}
+	if ip != nil {
+		t.Errorf("StaticRouteNexthopConfig.GetNexthop unmatch. ip=%s", ip)
+	}
+	if nh != LOCAL_DEFINED_NEXT_HOP_DROP {
+		t.Errorf("StaticRouteNexthopConfig.GetNexthop unmatch. nexhop=%s", nh)
+	}
+
+	c.Nexthop = "2001:db8::1"
+	ip, nh, err = c.GetNexthop()
+	if err != nil {
+		t.Errorf("StaticRouteNexthopConfig.GetNexthop error. %s", err)
+	}
+	if ip.String() != "2001:db8::1" {
+		t.Errorf("StaticRouteNexthopConfig.GetNexthop unmatch. ip=%s", ip)
+	}
+	if nh != LOCAL_DEFINED_NEXT_HOP {
+		t.Errorf("StaticRouteNexthopConfig.GetNexthop unmatch. nexhop=%s", nh)
+	}
+}

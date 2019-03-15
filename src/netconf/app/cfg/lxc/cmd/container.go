@@ -23,17 +23,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	ContainerDefaultBridgeIfName = "lxdbr0"
+	ContainerDefaultMngIfName    = "eth0"
+)
+
 type ContainerCommand struct {
 	Command
-	keep   bool
-	umtlog bool
-	dellog bool
+	keep     bool
+	umtlog   bool
+	dellog   bool
+	mngIf    string
+	bridgeIf string
 }
 
 func (c *ContainerCommand) SetFlags(cmd *cobra.Command) *cobra.Command {
 	cmd.PersistentFlags().BoolVarP(&c.keep, "keep", "k", false, "keep file on error.")
 	cmd.PersistentFlags().BoolVarP(&c.umtlog, "unmount-log", "", false, "mount log dir.")
 	cmd.PersistentFlags().BoolVarP(&c.dellog, "delete-log", "", false, "delete log dir.")
+	cmd.PersistentFlags().StringVarP(&c.mngIf, "mng-if", "m", ContainerDefaultMngIfName, "management interface name.")
+	cmd.PersistentFlags().StringVarP(&c.bridgeIf, "bridge-if", "b", ContainerDefaultBridgeIfName, "bridge interface name.")
 	return c.Command.SetFlags(cmd)
 }
 
@@ -52,7 +61,7 @@ func (c *ContainerCommand) Create(name string) error {
 		return lib.MakeLogDir(name)
 	}()
 
-	if err := lib.CreateContainer(client, name, c.keep, logdir); err != nil {
+	if err := lib.CreateContainer(client, name, c.keep, logdir, c.mngIf, c.bridgeIf); err != nil {
 		return err
 	}
 

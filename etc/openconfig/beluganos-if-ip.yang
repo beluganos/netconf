@@ -445,20 +445,6 @@ module beluganos-if-ip {
                   Section 5";
     }
 
-    leaf dup-addr-detect-transmits {
-      type uint32;
-      default 1;
-      description
-        "The number of consecutive Neighbor Solicitation messages
-        sent while performing Duplicate Address Detection on a
-        tentative address.  A value of zero indicates that
-        Duplicate Address Detection is not performed on
-        tentative addresses.  A value of one indicates a single
-        transmission with no follow-up retransmissions.";
-      reference
-        "RFC 4862: IPv6 Stateless Address Autoconfiguration";
-    }
-
     uses ip-common-global-config;
   }
 
@@ -490,65 +476,6 @@ module beluganos-if-ip {
       description
         "The origin of this address, e.g., static, dhcp, etc.";
     }
-
-    leaf status {
-      type enumeration {
-        enum PREFERRED {
-          description
-            "This is a valid address that can appear as the
-            destination or source address of a packet.";
-        }
-        enum DEPRECATED {
-          description
-            "This is a valid but deprecated address that should
-            no longer be used as a source address in new
-            communications, but packets addressed to such an
-            address are processed as expected.";
-        }
-        enum INVALID {
-          description
-            "This isn't a valid address, and it shouldn't appear
-            as the destination or source address of a packet.";
-        }
-        enum INACCESSIBLE {
-          description
-            "The address is not accessible because the interface
-            to which this address is assigned is not
-            operational.";
-        }
-        enum UNKNOWN {
-          description
-            "The status cannot be determined for some reason.";
-        }
-        enum TENTATIVE {
-          description
-            "The uniqueness of the address on the link is being
-            verified.  Addresses in this state should not be
-            used for general communication and should only be
-            used to determine the uniqueness of the address.";
-        }
-        enum DUPLICATE {
-          description
-           "The address has been determined to be non-unique on
-            the link and so must not be used.";
-        }
-        enum OPTIMISTIC {
-          description
-            "The address is available for use, subject to
-            restrictions, while its uniqueness on a link is
-            being verified.";
-        }
-      }
-      description
-        "The status of an address.  Most of the states correspond
-        to states from the IPv6 Stateless Address
-        Autoconfiguration protocol.";
-      reference
-          "RFC 4293: Management Information Base for the
-                      Internet Protocol (IP)
-                      - IpAddressStatusTC
-            RFC 4862: IPv6 Stateless Address Autoconfiguration";
-    }
   }
 
   grouping ipv6-neighbor-config {
@@ -576,53 +503,6 @@ module beluganos-if-ip {
       type neighbor-origin;
       description
         "The origin of this neighbor entry.";
-    }
-    leaf is-router {
-      type empty;
-      description
-        "Indicates that the neighbor node acts as a router.";
-    }
-    leaf neighbor-state {
-      type enumeration {
-        enum INCOMPLETE {
-          description
-          "Address resolution is in progress, and the link-layer
-                address of the neighbor has not yet been
-                determined.";
-        }
-        enum REACHABLE {
-          description
-          "Roughly speaking, the neighbor is known to have been
-                reachable recently (within tens of seconds ago).";
-        }
-        enum STALE {
-          description
-          "The neighbor is no longer known to be reachable, but
-                until traffic is sent to the neighbor no attempt
-                should be made to verify its reachability.";
-        }
-        enum DELAY {
-          description
-          "The neighbor is no longer known to be reachable, and
-                traffic has recently been sent to the neighbor.
-                Rather than probe the neighbor immediately, however,
-                delay sending probes for a short while in order to
-                give upper-layer protocols a chance to provide
-                reachability confirmation.";
-        }
-        enum PROBE {
-          description
-          "The neighbor is no longer known to be reachable, and
-                unicast Neighbor Solicitation probes are being sent
-                to verify reachability.";
-        }
-      }
-      description
-        "The Neighbor Unreachability Detection state of this
-        entry.";
-      reference
-        "RFC 4861: Neighbor Discovery for IP version 6 (IPv6)
-             Section 7.3.2";
     }
   }
 
@@ -1046,12 +926,13 @@ module beluganos-if-ip {
       }
 
       container state {
-        config false;
+        // @BEL
+        //config false;
         description
           "Top-level operational state data for the IPv6 interface";
 
-        uses ipv6-global-config;
-        uses ip-common-counters-state;
+        //uses ipv6-global-config;
+        //uses ip-common-counters-state;
 
       }
     }
@@ -1066,6 +947,16 @@ module beluganos-if-ip {
       interfaces";
 
     uses ipv4-top;
+
+  }
+
+  augment "/boc-if:interfaces/boc-if:interface/boc-if:subinterfaces/" +
+    "boc-if:subinterface" {
+    description
+      "IPv6 addr family configuration for
+      interfaces";
+
+    uses ipv6-top;
 
   }
 

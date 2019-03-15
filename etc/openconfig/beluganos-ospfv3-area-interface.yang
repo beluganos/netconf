@@ -1,0 +1,162 @@
+submodule beluganos-ospfv3-area-interface {
+
+  belongs-to beluganos-ospfv3 {
+    prefix "boc-ospfv3";
+  }
+
+  import openconfig-extensions { prefix "oc-ext"; }
+  import openconfig-ospf-types { prefix "oc-ospf-types"; }
+  import beluganos-interfaces { prefix "boc-if"; }
+
+  // meta
+  organization "OpenConfig working group";
+
+  contact
+    "OpenConfig working group
+    www.openconfig.net";
+
+  description
+    "This submodule provides OSPFv3 configuration and operational
+    state parameters that are specific to the area context";
+
+  oc-ext:openconfig-version "0.1.1";
+
+  revision "2017-10-20" {
+    description
+      "Minor formatting fixes.";
+    reference "0.0.1";
+  }
+
+  grouping ospfv3-area-interface-config {
+    description
+      "Configuration parameters for an OSPF interface";
+
+    leaf id {
+      type string;
+      description
+        "An operator-specified string utilised to uniquely
+        reference this interface";
+    }
+
+    leaf network-type {
+      type identityref {
+        base "oc-ospf-types:OSPF_NETWORK_TYPE";
+      }
+      description
+        "The type of network that OSPFv3 should use for the specified
+        interface.";
+    }
+
+    leaf priority {
+      type uint8;
+      description
+        "The local system's priority to become the designated
+        router";
+    }
+
+    leaf metric {
+      type oc-ospf-types:ospf-metric;
+      description
+        "The metric for the interface";
+    }
+
+    leaf passive {
+      type boolean;
+      description
+        "When this leaf is set to true, the interface should be
+        advertised within the OSPF area but OSPF adjacencies should
+        not be established over the interface";
+    }
+  }
+
+  grouping ospfv3-area-interface-timers-config {
+    description
+      "Configuration parameters relating to per-interface OSPFv3
+      timers";
+
+    leaf dead-interval {
+      type uint32;
+      units seconds;
+      description
+        "The number of seconds that the local system should let
+        elapse before declaring a silent router down";
+      reference "RFC2328";
+    }
+
+    leaf hello-interval {
+      type uint32;
+      units seconds;
+      description
+        "The number of seconds the local system waits between the
+        transmission of subsequent Hello packets";
+    }
+  }
+
+  grouping ospfv3-area-interfaces-structure {
+    description
+      "Structural grouping for configuration and operational state
+      parameters that relate to an interface";
+
+    container interfaces {
+      description
+        "Enclosing container for a list of interfaces enabled within
+        this area";
+
+      list interface {
+        key "id";
+
+        description
+          "List of interfaces which are enabled within this area";
+
+        leaf id {
+          type leafref {
+            path "../config/id";
+          }
+          description
+            "A pointer to the identifier for the interface.";
+        }
+
+        container config {
+          description
+            "Configuration parameters for the interface on which
+            OSPFv3 is enabled";
+
+          uses ospfv3-area-interface-config;
+        }
+
+        container state {
+	  // @BEL
+          //config false;
+          description
+            "Operational state parameters for the interface on which
+            OSPFv3 is enabled";
+          //uses ospfv3-area-interface-config;
+        }
+
+        uses boc-if:interface-ref;
+
+        container timers {
+          description
+            "Timers relating to OSPFv3 on the interface";
+
+          container config {
+            description
+              "Configuration parameters for OSPFv3 timers on the
+              interface";
+            uses ospfv3-area-interface-timers-config;
+          }
+
+          container state {
+	    // @BEL
+            //config false;
+            description
+              "Operational state parameters for OSPFv3 timers on
+              the interface";
+
+            //uses ospfv3-area-interface-timers-config;
+          }
+        }
+      }
+    }
+  }
+}
