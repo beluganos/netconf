@@ -29,13 +29,14 @@ class Subinterface(elements.BaseElement):
     Subinterface element.
     """
 
-    _FIELDS = ("index", "config", "ipv4")
+    _FIELDS = ("index", "config", "ipv4", "ipv6")
 
     def __init__(self, index):
         super(Subinterface, self).__init__(constants.SUBINTERFACE)
         self.index = index
         self.config = SubinterfaceConfig(index)
         self.ipv4 = SubinterfaceIPv4()
+        self.ipv6 = SubinterfaceIPv6()
 
 
 class SubinterfaceConfig(elements.BaseElement):
@@ -61,6 +62,20 @@ class SubinterfaceIPv4(elements.BaseElement):
 
     def __init__(self):
         super(SubinterfaceIPv4, self).__init__(constants.INTERFACES_IP_V4, nsmap=self._NSMAP)
+        self.addresses = elements.ListElement("addresses")
+        self.config = SubinterfaceIPv4Config()
+
+
+class SubinterfaceIPv6(elements.BaseElement):
+    """
+    Subinterface/ipv4 element
+    """
+
+    _NSMAP = {None: constants.INTERFACES_IP_NS}
+    _FIELDS = ("addresses", "config")
+
+    def __init__(self):
+        super(SubinterfaceIPv6, self).__init__(constants.INTERFACES_IP_V6, nsmap=self._NSMAP)
         self.addresses = elements.ListElement("addresses")
         self.config = SubinterfaceIPv4Config()
 

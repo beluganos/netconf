@@ -1,0 +1,69 @@
+---
+
+network-instances:
+  R1:
+    ospfv2:
+      router-id: 10.0.0.1
+      areas:
+        0.0.0.0:
+          lo:
+            metric: 10
+            passive: true
+          eth1:
+            metric: 100
+            passive: false
+            hello-interval: 40
+            dead-interval: 10
+    ospfv3:
+      router-id: 10.0.0.1
+      areas:
+        0.0.0.0:
+          lo:
+            metric: 10
+            passive: true
+          eth1:
+            metric: 100
+            passive: false
+            hello-interval: 40
+            dead-interval: 10
+      ranges:
+        0.0.0.0:
+          - 2001:db8:2::/64
+          - 2001::1/128
+
+    bgp:
+      router-id: 10.0.0.1
+      as: 65001
+      zebra:
+        enabled: true
+      neighbors:
+        "2001:db8:3::2":
+          peer-as: 65001
+          # local-as: 65001
+          # transport-local-address: "2001::1"
+          afi-safis:
+            - IPV6_UNICAST
+          timers:
+            hold-time: 3600
+            keepalive-interval: 180
+          apply-policy:
+            import-policy: []
+            export-policy:
+              - policy-next-hop-self
+            default-import-policy: ACCEPT_ROUTE
+            default-export-policy: ACCEPT_ROUTE
+        10.0.0.4:
+          peer-as: 65001
+          # local-as: 65001
+          transport-local-address: 10.0.0.1
+          afi-safis:
+            - IPV4_UNICAST
+          timers:
+            hold-time: 3600
+            keepalive-interval: 180
+          apply-policy:
+            import-policy: []
+            export-policy:
+              - policy-next-hop-self
+            default-import-policy: ACCEPT_ROUTE
+            default-export-policy: ACCEPT_ROUTE

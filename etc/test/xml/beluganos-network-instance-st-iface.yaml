@@ -1,0 +1,17 @@
+---
+
+network-instances:
+  PE1:
+    type: DEFAULT_INSTANCE
+    router-id: 10.0.0.1
+    loopbacks:
+      lo:
+        - 10.0.0.1/32
+        - 2010:2010::1/128
+        - 2010:2020::1/128
+
+    interfaces:
+      eth1: []
+      eth2: []
+      eth3: []
+      eth4: []

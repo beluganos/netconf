@@ -1,3 +1,4 @@
+
 module: beluganos-if-ip
   augment /boc-if:interfaces/boc-if:interface/boc-if:subinterfaces/boc-if:subinterface:
     +--rw ipv4
@@ -24,5 +25,32 @@ module: beluganos-if-ip
        +--rw config
        |  +--rw enabled?       boolean
        |  +--rw mtu?           uint16
+       |  +--rw dhcp-client?   boolean
+       +--rw state
+  augment /boc-if:interfaces/boc-if:interface/boc-if:subinterfaces/boc-if:subinterface:
+    +--rw ipv6
+       +--rw addresses
+       |  +--rw address* [ip]
+       |     +--rw ip        -> ../config/ip
+       |     +--rw config
+       |     |  +--rw ip?              oc-inet:ipv6-address
+       |     |  +--rw prefix-length    uint8
+       |     +--ro state
+       |        +--ro ip?              oc-inet:ipv6-address
+       |        +--ro prefix-length    uint8
+       |        +--ro origin?          ip-address-origin
+       +--rw neighbors
+       |  +--rw neighbor* [ip]
+       |     +--rw ip        -> ../config/ip
+       |     +--rw config
+       |     |  +--rw ip?                   oc-inet:ipv6-address
+       |     |  +--rw link-layer-address    oc-yang:phys-address
+       |     +--ro state
+       |        +--ro ip?                   oc-inet:ipv6-address
+       |        +--ro link-layer-address    oc-yang:phys-address
+       |        +--ro origin?               neighbor-origin
+       +--rw config
+       |  +--rw enabled?       boolean
+       |  +--rw mtu?           uint32
        |  +--rw dhcp-client?   boolean
        +--rw state

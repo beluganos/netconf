@@ -8,7 +8,7 @@ module beluganos-network-instance {
   prefix "boc-netinst";
 
   // import some basic types
-  import ietf-inet-types { prefix inet; }
+  // import ietf-inet-types { prefix inet; }
   import ietf-yang-types { prefix "yang"; }
   import openconfig-network-instance-types { prefix "oc-ni-types"; }
   import openconfig-policy-types { prefix "oc-pol-types"; }
@@ -18,6 +18,7 @@ module beluganos-network-instance {
   import beluganos-mpls { prefix "boc-mpls"; }
   import beluganos-bgp { prefix "boc-bgp"; }
   import beluganos-ospfv2 { prefix "boc-ospfv2"; }
+  import beluganos-ospfv3 { prefix "boc-ospfv3"; }
   import beluganos-interfaces { prefix "boc-if"; }
 
   // meta
@@ -54,12 +55,14 @@ module beluganos-network-instance {
     }
 
     leaf ip {
-      type inet:ipv4-address;
+      //@BEL changed to string
+      // type inet:ipv4-address;
+      type string;
     }
 
     leaf prefix-length {
       type uint8 {
-        range "0..32";
+        range "0..128";
       }
     }
   }
@@ -81,9 +84,9 @@ module beluganos-network-instance {
 
       container addresses {
         list address {
-	  key "index";
-	  leaf index {
-	    type leafref {
+          key "index";
+          leaf index {
+            type leafref {
               path "../config/index";
             }
           }
@@ -91,7 +94,7 @@ module beluganos-network-instance {
           container config {
             uses network-instance-loopback-address-config;
           }
-	}
+        }
       }
     }
   }
@@ -264,6 +267,14 @@ module beluganos-network-instance {
             }
 
             uses boc-ospfv2:ospfv2-top {
+              //when "../config/identifier = 'OSPF2'" {
+              //  description
+              //    "Include OSPFv2 parameters only when the protocol
+              //    is of type OSPFv2";
+              //}
+            }
+
+            uses boc-ospfv3:ospfv3-top {
               //when "../config/identifier = 'OSPF2'" {
               //  description
               //    "Include OSPFv2 parameters only when the protocol

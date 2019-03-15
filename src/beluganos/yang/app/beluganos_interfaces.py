@@ -41,7 +41,10 @@ def new_subiface(index, device):
     if "addresses" in device:
         for addr in device["addresses"]:
             addr = IPNetwork(addr)
-            subiface.ipv4.addresses.append(Address(addr.ip, addr.prefixlen))
+            if addr.ip.version == 4:
+                subiface.ipv4.addresses.append(Address(addr.ip, addr.prefixlen))
+            else:
+                subiface.ipv6.addresses.append(Address(addr.ip, addr.prefixlen))
 
     if "mtu" in device:
         subiface.ipv4.config.mtu = device["mtu"]

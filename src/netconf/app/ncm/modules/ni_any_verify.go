@@ -19,6 +19,7 @@ package ncm
 
 import (
 	"fmt"
+	"net"
 	ncmdbm "netconf/app/ncm/dbm"
 	"netconf/lib/openconfig"
 )
@@ -63,11 +64,40 @@ func VerifyNIInterfaceConfig(id string, config *openconfig.NetworkInstanceInterf
 	return nil
 }
 
+func verifyIPAndPrefixLen(ip net.IP, plen uint8) error {
+	if ip.To4() != nil {
+		// ip is ipv4 address
+		if plen > 32 {
+			return fmt.Errorf("invalid prefix-length. %s/%d", ip, plen)
+		}
+	}
+
+	return nil
+}
+
 func VerifyNILoopbackAddrConfig(config *openconfig.NetworkInstanceLoopbackAddrConfig) error {
 	keys := []string{openconfig.NETWORKINSTANCE_LO_IP_KEY, openconfig.NETWORKINSTANCE_LO_PLEN_KEY}
 
 	if chg := config.GetChanges(keys...); !chg {
 		return fmt.Errorf("ip or prefix not specified. %s/%d", config.Ip, config.PrefixLen)
+	}
+
+	if err := verifyIPAndPrefixLen(config.Ip, config.PrefixLen); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func VerifyNIStaticRouteConfig(config *openconfig.StaticRouteConfig) error {
+	keys := []string{openconfig.STATICROUTE_IP_KEY, openconfig.STATICROUTE_PREFIXLEN_KEY}
+
+	if chg := config.GetChanges(keys...); !chg {
+		return fmt.Errorf("ip or prefix not specified. %s/%d", config.Ip, config.PrefixLen)
+	}
+
+	if err := verifyIPAndPrefixLen(config.Ip, config.PrefixLen); err != nil {
+		return err
 	}
 
 	return nil

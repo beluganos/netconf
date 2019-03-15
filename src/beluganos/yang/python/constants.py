@@ -74,6 +74,7 @@ CONFIG = "config"
 POLICY_PROTOCOL_BGP = "BGP"
 POLICY_PROTOCOL_STATIC = "STATIC"
 POLICY_PROTOCOL_OSPF = "OSPF"
+POLICY_PROTOCOL_OSPF6 = "OSPF6"
 
 ROUTING_POLICY_NS = "https://github.com/beluganos/beluganos/yang/routing-policy"
 

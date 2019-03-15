@@ -1,3 +1,4 @@
 zebra=yes
 ospfd=no
+ospf6d=yes
 ldpd=no

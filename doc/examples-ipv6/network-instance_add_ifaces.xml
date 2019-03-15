@@ -1,0 +1,32 @@
+<network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
+  <network-instance>
+    <name>R1</name>
+    <config>
+      <name>R1</name>
+      <type xmlns:oc-ni-types="http://openconfig.net/yang/network-instance-types">oc-ni-types:DEFAULT_INSTANCE</type>
+    </config>
+    <loopbacks/>
+    <interfaces>
+      <interface>
+        <id>eth1</id>
+        <config>
+          <id>eth1</id>
+        </config>
+      </interface>
+      <interface>
+        <id>eth2</id>
+        <config>
+          <id>eth2</id>
+        </config>
+      </interface>
+      <interface>
+        <id>eth3</id>
+        <config>
+          <id>eth3</id>
+        </config>
+      </interface>
+    </interfaces>
+    <protocols/>
+  </network-instance>
+</network-instances>
+

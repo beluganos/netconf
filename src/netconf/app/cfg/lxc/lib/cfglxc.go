@@ -140,10 +140,10 @@ func ClearBackup(path string) error {
 	return nil
 }
 
-func CreateContainer(client *lxdlib.Client, name string, keep bool, logdir string) error {
+func CreateContainer(client *lxdlib.Client, name string, keep bool, logdir, mngIf, bridgeIf string) error {
 	log.Debugf("CreateContainer: name='%s'", name)
 
-	if _, _, err := client.InitializeProfile(name, logdir); err != nil {
+	if _, _, err := client.InitializeProfile(name, logdir, mngIf, bridgeIf); err != nil {
 		log.Errorf("CreateContainer: InitializeProfile error. %s", err)
 		return err
 	}
@@ -183,8 +183,8 @@ func DeleteContainer(client *lxdlib.Client, name string) {
 	log.Debugf("DelteContainer: ok. name='%s'", name)
 }
 
-func AddInterface(client *lxdlib.Client, name string, prefix string, ifname string, hwaddr string) error {
-	log.Debugf("AddInterface: name='%s' iface='%s'", name, ifname)
+func AddInterface(client *lxdlib.Client, name string, prefix string, ifname string, hwaddr string, mtu uint16) error {
+	log.Debugf("AddInterface: name='%s' iface='%s' mac='%s' mru=%d", name, ifname, hwaddr, mtu)
 
 	profile, _, err := client.GetProfile(name)
 	if err != nil {
@@ -193,7 +193,7 @@ func AddInterface(client *lxdlib.Client, name string, prefix string, ifname stri
 	}
 
 	hostname := fmt.Sprintf("%s%s", prefix, ifname)
-	if err := lxdlib.AddProfileDeviceNIC(profile, ifname, hostname, hwaddr); err != nil {
+	if err := lxdlib.AddProfileDeviceNIC(profile, ifname, hostname, hwaddr, mtu); err != nil {
 		log.Warnf("AddInterface: AddProfileDeviceNIC error. %s", err)
 	}
 

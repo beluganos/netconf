@@ -24,11 +24,6 @@ import (
 	api "github.com/lxc/lxd/shared/api"
 )
 
-const (
-	DEFAULT_BRIDGE_NAME = "lxdbr0"
-	DEFAULT_DEVICE_MTU  = "8192"
-)
-
 func Connect() (lxd.ContainerServer, error) {
 	return lxd.ConnectLXDUnix("", nil)
 }
@@ -62,24 +57,24 @@ func NewDefaultContainer(name string) *api.ContainersPost {
 	return c
 }
 
-func NewProfileDeviceNIC(ifname, hostname, hwaddr string) map[string]string {
+func NewProfileDeviceNIC(ifname, hostname, hwaddr string, mtu uint16) map[string]string {
 	return map[string]string{
 		"type":      "nic",
 		"name":      ifname,
 		"host_name": hostname,
 		"nictype":   "p2p",
-		"mtu":       DEFAULT_DEVICE_MTU,
+		"mtu":       fmt.Sprintf("%d", mtu),
 		"hwaddr":    hwaddr,
 	}
 }
 
-func AddProfileDeviceNIC(p *api.Profile, ifname, hostname, hwaddr string) error {
+func AddProfileDeviceNIC(p *api.Profile, ifname, hostname, hwaddr string, mtu uint16) error {
 	devices := p.Devices
 	if _, ok := devices[ifname]; ok {
 		return fmt.Errorf("Device already exists. %s", ifname)
 	}
 
-	devices[ifname] = NewProfileDeviceNIC(ifname, hostname, hwaddr)
+	devices[ifname] = NewProfileDeviceNIC(ifname, hostname, hwaddr, mtu)
 
 	return nil
 }
@@ -110,16 +105,16 @@ func SetProfileDeviceNIC(p *api.Profile, ifname string, key string, value string
 	return nil
 }
 
-func NewDefaultProfile() *api.ProfilePut {
+func NewDefaultProfile(mntIface, brIface string) *api.ProfilePut {
 	return &api.ProfilePut{
 		Config: map[string]string{
 			"security.privileged": "true",
 		},
 		Devices: map[string]map[string]string{
 			"eth0": {
-				"name":    "eth0",
+				"name":    mntIface,
 				"nictype": "bridged",
-				"parent":  DEFAULT_BRIDGE_NAME,
+				"parent":  brIface,
 				"type":    "nic",
 			},
 			"root": {

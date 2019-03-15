@@ -11,7 +11,7 @@
       |  |  +- interface(eth1.10)
       |  |  |  +- interface: eth1
       |  |  |  +- subinterface: 10
-      |  |  +- ldp
+      |  |  +- ldp (lsr-id:10.0.0.1)
       |  |  |  +- transport-address: 10.10.1.2
       |  |  |  +- session-ka-holdtime: 3000
       |  |  |  +- EXPLICIT-NULL

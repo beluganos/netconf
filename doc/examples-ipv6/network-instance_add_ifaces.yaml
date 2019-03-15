@@ -1,0 +1,8 @@
+---
+
+network-instances:
+  R1:
+    interfaces:
+      eth1: []
+      eth2: []
+      eth3: []

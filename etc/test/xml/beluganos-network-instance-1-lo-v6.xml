@@ -1,0 +1,46 @@
+<network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
+  <!--
+      +- network-instance(PE1)
+      |  +- router-id:10.0.0.1, RD:10:100, RT:10:10, DEFAULT_INSTANCE
+      |  +- loopback(lo)
+      |  |  +- 2001:2020::1/128
+  -->
+  <!-- PE1 -->
+  <network-instance>
+    <name>PE1</name>
+    <config>
+      <name>PE1</name>
+      <type xmlns:oc-ni-types="http://openconfig.net/yang/network-instance-types">oc-ni-types:DEFAULT_INSTANCE</type>
+      <router-id>10.0.0.1</router-id>
+      <route-distinguisher>10:100</route-distinguisher>
+      <route-target>10:10</route-target>
+    </config>
+
+    <loopbacks>
+      <loopback>
+        <id>lo</id>
+        <config>
+          <id>lo</id>
+        </config>
+        <addresses>
+          <address>
+            <index>1</index>
+            <config>
+              <index>1</index>
+              <ip>2001:2020::1</ip>
+              <prefix-length>128</prefix-length>
+            </config>
+          </address>
+          <address>
+            <index>2</index>
+            <config>
+              <index>2</index>
+              <ip>2001:2010::1</ip>
+              <prefix-length>128</prefix-length>
+            </config>
+          </address>
+        </addresses>
+      </loopback>
+    </loopbacks>
+  </network-instance>
+</network-instances>

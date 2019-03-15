@@ -3,54 +3,60 @@
   <bgp xmlns="https://github.com/beluganos/beluganos/yang/bgp">
     <global>
       <config>
-	<as />
-	<router-id />
+        <as/>
+        <router-id/>
       </config>
-      <state />
+      <state/>
     </global>
     <zebra>
       <config>
-	<version />
-	<url />
-	<redistribute-routes />
+        <version/>
+        <url/>
+        <redistribute-routes>
+          <!-- # entries: 0.. -->
+        </redistribute-routes>
       </config>
     </zebra>
     <neighbors>
       <neighbor>
-	<neighbor-address />
-	<config>
-	  <neighbor-address />
-	  <peer-as />
-	  <local-as />
-	  <description />
-	</config>
-	<state />
-	<timers>
-	  <config />
-	  <state />
-	</timers>
-	<transport>
-	  <config>
-	    <local-address />
-	  </config>
-	  <state />
-	</transport>
-	<apply-policy>
-	  <config>
-	    <import-policy />
-	    <export-policy />
-	  </config>
-	  <state />
-	</apply-policy>
-	<afi-safis>
-	  <afi-safi>
-	    <afi-safi-name />
-	    <config>
-	      <afi-safi-name />
-	    </config>
-	    <state />
-	  </afi-safi>
-	</afi-safis>
+        <neighbor-address/>
+        <config>
+          <neighbor-address/>
+          <peer-as/>
+          <local-as/>
+          <description/>
+        </config>
+        <state/>
+        <timers>
+          <config/>
+          <state/>
+        </timers>
+        <transport>
+          <config>
+            <local-address/>
+          </config>
+          <state/>
+        </transport>
+        <apply-policy>
+          <config>
+            <import-policy>
+              <!-- # entries: 0.. -->
+            </import-policy>
+            <export-policy>
+              <!-- # entries: 0.. -->
+            </export-policy>
+          </config>
+          <state/>
+        </apply-policy>
+        <afi-safis>
+          <afi-safi>
+            <afi-safi-name/>
+            <config>
+              <afi-safi-name/>
+            </config>
+            <state/>
+          </afi-safi>
+        </afi-safis>
       </neighbor>
     </neighbors>
   </bgp>

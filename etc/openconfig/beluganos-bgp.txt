@@ -1,44 +1,44 @@
 module: beluganos-bgp
-    +--rw bgp
-       +--rw global
-       |  +--rw config
-       |  |  +--rw as?          oc-inet:as-number
-       |  |  +--rw router-id?   oc-yang:dotted-quad
-       |  +--rw state
-       +--rw zebra
-       |  +--rw config
-       |     +--rw enabled?               boolean
-       |     +--rw version?               uint32
-       |     +--rw url?                   string
-       |     +--rw redistribute-routes*   identityref
-       +--rw neighbors
-          +--rw neighbor* [neighbor-address]
-             +--rw neighbor-address    -> ../config/neighbor-address
-             +--rw config
-             |  +--rw neighbor-address?   oc-inet:ipv4-address
-             |  +--rw peer-as?            oc-inet:as-number
-             |  +--rw local-as?           oc-inet:as-number
-             |  +--rw description?        string
-             +--rw state
-             +--rw timers
-             |  +--rw config
-             |  |  +--rw hold-time?            decimal64
-             |  |  +--rw keepalive-interval?   decimal64
-             |  +--rw state
-             +--rw transport
-             |  +--rw config
-             |  |  +--rw local-address?   union
-             |  +--rw state
-             +--rw apply-policy
-             |  +--rw config
-             |  |  +--rw import-policy*           string
-             |  |  +--rw default-import-policy?   default-policy-type
-             |  |  +--rw export-policy*           string
-             |  |  +--rw default-export-policy?   default-policy-type
-             |  +--rw state
-             +--rw afi-safis
-                +--rw afi-safi* [afi-safi-name]
-                   +--rw afi-safi-name    -> ../config/afi-safi-name
-                   +--rw config
-                   |  +--rw afi-safi-name?   identityref
-                   +--rw state
+  +--rw bgp
+     +--rw global
+     |  +--rw config
+     |  |  +--rw as?          oc-inet:as-number
+     |  |  +--rw router-id?   oc-yang:dotted-quad
+     |  +--rw state
+     +--rw zebra
+     |  +--rw config
+     |     +--rw enabled?               boolean
+     |     +--rw version?               uint32
+     |     +--rw url?                   string
+     |     +--rw redistribute-routes*   identityref
+     +--rw neighbors
+        +--rw neighbor* [neighbor-address]
+           +--rw neighbor-address    -> ../config/neighbor-address
+           +--rw config
+           |  +--rw neighbor-address?   string
+           |  +--rw peer-as?            oc-inet:as-number
+           |  +--rw local-as?           oc-inet:as-number
+           |  +--rw description?        string
+           +--rw state
+           +--rw timers
+           |  +--rw config
+           |  |  +--rw hold-time?            decimal64
+           |  |  +--rw keepalive-interval?   decimal64
+           |  +--rw state
+           +--rw transport
+           |  +--rw config
+           |  |  +--rw local-address?   union
+           |  +--rw state
+           +--rw apply-policy
+           |  +--rw config
+           |  |  +--rw import-policy*           string
+           |  |  +--rw default-import-policy?   default-policy-type
+           |  |  +--rw export-policy*           string
+           |  |  +--rw default-export-policy?   default-policy-type
+           |  +--rw state
+           +--rw afi-safis
+              +--rw afi-safi* [afi-safi-name]
+                 +--rw afi-safi-name    -> ../config/afi-safi-name
+                 +--rw config
+                 |  +--rw afi-safi-name?   identityref
+                 +--rw state

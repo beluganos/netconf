@@ -2,255 +2,318 @@
 <data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <network-instances xmlns="https://github.com/beluganos/beluganos/yang/network-instance">
     <network-instance>
-      <name />
+      <name/>
       <config>
-	<name />
-	<type />
-	<description />
-	<router-id />
-	<route-distinguisher />
-	<route-target />
+        <name/>
+        <type/>
+        <description/>
+        <router-id/>
+        <route-distinguisher/>
+        <route-target/>
       </config>
       <loopbacks>
-	<loopback>
-	  <id />
-	  <config>
-	    <id />
-	  </config>
-	  <addresses>
-	    <address>
-	      <index />
-	      <config>
-		<index />
-		<ip />
-		<prefix-length />
-	      </config>
-	    </address>
-	  </addresses>
-	</loopback>
+        <loopback>
+          <id/>
+          <config>
+            <id/>
+          </config>
+          <addresses>
+            <address>
+              <index/>
+              <config>
+                <index/>
+                <ip/>
+                <prefix-length/>
+              </config>
+            </address>
+          </addresses>
+        </loopback>
       </loopbacks>
-      <state />
+      <state/>
       <interfaces>
-	<interface>
-	  <id />
-	  <config>
-	    <id />
-	    <interface />
-	    <subinterface />
-	  </config>
-	  <state />
-	</interface>
+        <interface>
+          <id/>
+          <config>
+            <id/>
+            <interface/>
+            <subinterface/>
+          </config>
+          <state/>
+        </interface>
       </interfaces>
       <mpls>
-	<global>
-	  <config>
-	    <null-label />
-	  </config>
-	  <state />
-	  <interface-attributes>
-	    <interface>
-	      <interface-id />
-	      <config>
-		<interface-id />
-	      </config>
-	      <state />
-	      <interface-ref>
-		<config>
-		  <interface />
-		  <subinterface />
-		</config>
-		<state />
-	      </interface-ref>
-	    </interface>
-	  </interface-attributes>
-	</global>
-	<signaling-protocols>
-	  <ldp>
-	    <global>
-	      <config>
-		<lsr-id />
-	      </config>
-	      <address-families>
-		<ipv4>
-		  <config>
-		    <transport-address />
-		    <session-ka-holdtime />
-		    <label-policy>
-		      <advertise>
-			<egress-explicit-null>
-			  <enable />
-			</egress-explicit-null>
-		      </advertise>
-		    </label-policy>
-		  </config>
-		</ipv4>
-	      </address-families>
-	      <discovery>
-		<interfaces>
-		  <config>
-		    <hello-holdtime />
-		    <hello-interval />
-		  </config>
-		  <interface>
-		    <interface-id />
-		    <config>
-		      <interface-id />
-		      <hello-holdtime />
-		      <hello-interval />
-		    </config>
-		    <address-families>
-		      <ipv4>
-			<config />
-		      </ipv4>
-		    </address-families>
-		    <interface-ref>
-		      <config>
-			<interface />
-			<subinterface />
-		      </config>
-		      <state />
-		    </interface-ref>
-		  </interface>
-		</interfaces>
-	      </discovery>
-	    </global>
-	  </ldp>
-	</signaling-protocols>
+        <global>
+          <config>
+            <null-label/>
+          </config>
+          <state/>
+          <interface-attributes>
+            <interface>
+              <interface-id/>
+              <config>
+                <interface-id/>
+              </config>
+              <state/>
+              <interface-ref>
+                <config>
+                  <interface/>
+                  <subinterface/>
+                </config>
+                <state/>
+              </interface-ref>
+            </interface>
+          </interface-attributes>
+        </global>
+        <signaling-protocols>
+          <ldp>
+            <global>
+              <config>
+                <lsr-id/>
+              </config>
+              <address-families>
+                <ipv4>
+                  <config>
+                    <transport-address/>
+                    <session-ka-holdtime/>
+                    <label-policy>
+                      <advertise>
+                        <egress-explicit-null>
+                          <enable/>
+                        </egress-explicit-null>
+                      </advertise>
+                    </label-policy>
+                  </config>
+                </ipv4>
+              </address-families>
+              <discovery>
+                <interfaces>
+                  <config>
+                    <hello-holdtime/>
+                    <hello-interval/>
+                  </config>
+                  <interface>
+                    <interface-id/>
+                    <config>
+                      <interface-id/>
+                      <hello-holdtime/>
+                      <hello-interval/>
+                    </config>
+                    <address-families>
+                      <ipv4>
+                        <config/>
+                      </ipv4>
+                    </address-families>
+                    <interface-ref>
+                      <config>
+                        <interface/>
+                        <subinterface/>
+                      </config>
+                      <state/>
+                    </interface-ref>
+                  </interface>
+                </interfaces>
+              </discovery>
+            </global>
+          </ldp>
+        </signaling-protocols>
       </mpls>
       <protocols>
-	<protocol>
-	  <identifier />
-	  <name />
-	  <config>
-	    <identifier />
-	    <name />
-	  </config>
-	  <state />
-	  <static-routes>
-	    <static>
-	      <ip />
-	      <prefix-length />
-	      <config>
-		<ip />
-		<prefix-length />
-	      </config>
-	      <state />
-	      <next-hops>
-		<next-hop>
-		  <index />
-		  <config>
-		    <index />
-		    <next-hop />
-		  </config>
-		  <state />
-		  <interface-ref>
-		    <config>
-		      <interface />
-		      <subinterface />
-		    </config>
-		    <state />
-		  </interface-ref>
-		</next-hop>
-	      </next-hops>
-	    </static>
-	  </static-routes>
-	  <bgp>
-	    <global>
-	      <config>
-		<as />
-		<router-id />
-	      </config>
-	      <state />
-	    </global>
-	    <zebra>
-	      <config>
-		<version />
-		<url />
-		<redistribute-routes />
-	      </config>
-	    </zebra>
-	    <neighbors>
-	      <neighbor>
-		<neighbor-address />
-		<config>
-		  <neighbor-address />
-		  <peer-as />
-		  <local-as />
-		  <description />
-		</config>
-		<state />
-		<timers>
-		  <config />
-		  <state />
-		</timers>
-		<transport>
-		  <config>
-		    <local-address />
-		  </config>
-		  <state />
-		</transport>
-		<apply-policy>
-		  <config>
-		    <import-policy />
-		    <export-policy />
-		  </config>
-		  <state />
-		</apply-policy>
-		<afi-safis>
-		  <afi-safi>
-		    <afi-safi-name />
-		    <config>
-		      <afi-safi-name />
-		    </config>
-		    <state />
-		  </afi-safi>
-		</afi-safis>
-	      </neighbor>
-	    </neighbors>
-	  </bgp>
-	  <ospfv2>
-	    <global>
-	      <config>
-		<router-id />
-	      </config>
-	      <state />
-	    </global>
-	    <areas>
-	      <area>
-		<identifier />
-		<config>
-		  <identifier />
-		</config>
-		<state />
-		<interfaces>
-		  <interface>
-		    <id />
-		    <config>
-		      <id />
-		      <metric />
-		      <passive />
-		    </config>
-		    <state />
-		    <interface-ref>
-		      <config>
-			<interface />
-			<subinterface />
-		      </config>
-		      <state />
-		    </interface-ref>
-		    <timers>
-		      <config>
-			<dead-interval />
-			<hello-interval />
-		      </config>
-		      <state />
-		    </timers>
-		  </interface>
-		</interfaces>
-	      </area>
-	    </areas>
-	  </ospfv2>
-	</protocol>
+        <protocol>
+          <identifier/>
+          <name/>
+          <config>
+            <identifier/>
+            <name/>
+          </config>
+          <state/>
+          <static-routes>
+            <static>
+              <ip/>
+              <prefix-length/>
+              <config>
+                <ip/>
+                <prefix-length/>
+              </config>
+              <state/>
+              <next-hops>
+                <next-hop>
+                  <index/>
+                  <config>
+                    <index/>
+                    <next-hop/>
+                  </config>
+                  <state/>
+                  <interface-ref>
+                    <config>
+                      <interface/>
+                      <subinterface/>
+                    </config>
+                    <state/>
+                  </interface-ref>
+                </next-hop>
+              </next-hops>
+            </static>
+          </static-routes>
+          <bgp>
+            <global>
+              <config>
+                <as/>
+                <router-id/>
+              </config>
+              <state/>
+            </global>
+            <zebra>
+              <config>
+                <version/>
+                <url/>
+                <redistribute-routes>
+                  <!-- # entries: 0.. -->
+                </redistribute-routes>
+              </config>
+            </zebra>
+            <neighbors>
+              <neighbor>
+                <neighbor-address/>
+                <config>
+                  <neighbor-address/>
+                  <peer-as/>
+                  <local-as/>
+                  <description/>
+                </config>
+                <state/>
+                <timers>
+                  <config/>
+                  <state/>
+                </timers>
+                <transport>
+                  <config>
+                    <local-address/>
+                  </config>
+                  <state/>
+                </transport>
+                <apply-policy>
+                  <config>
+                    <import-policy>
+                      <!-- # entries: 0.. -->
+                    </import-policy>
+                    <export-policy>
+                      <!-- # entries: 0.. -->
+                    </export-policy>
+                  </config>
+                  <state/>
+                </apply-policy>
+                <afi-safis>
+                  <afi-safi>
+                    <afi-safi-name/>
+                    <config>
+                      <afi-safi-name/>
+                    </config>
+                    <state/>
+                  </afi-safi>
+                </afi-safis>
+              </neighbor>
+            </neighbors>
+          </bgp>
+          <ospfv2>
+            <global>
+              <config>
+                <router-id/>
+              </config>
+              <state/>
+            </global>
+            <areas>
+              <area>
+                <identifier/>
+                <config>
+                  <identifier/>
+                </config>
+                <state/>
+                <interfaces>
+                  <interface>
+                    <id/>
+                    <config>
+                      <id/>
+                      <network-type/>
+                      <priority/>
+                      <metric/>
+                      <passive/>
+                    </config>
+                    <state/>
+                    <interface-ref>
+                      <config>
+                        <interface/>
+                        <subinterface/>
+                      </config>
+                      <state/>
+                    </interface-ref>
+                    <timers>
+                      <config>
+                        <dead-interval/>
+                        <hello-interval/>
+                      </config>
+                      <state/>
+                    </timers>
+                  </interface>
+                </interfaces>
+              </area>
+            </areas>
+          </ospfv2>
+          <ospfv3>
+            <global>
+              <config>
+                <router-id/>
+              </config>
+              <state/>
+            </global>
+            <areas>
+              <area>
+                <identifier/>
+                <config>
+                  <identifier/>
+                </config>
+                <state/>
+                <interfaces>
+                  <interface>
+                    <id/>
+                    <config>
+                      <id/>
+                      <network-type/>
+                      <priority/>
+                      <metric/>
+                      <passive/>
+                    </config>
+                    <state/>
+                    <interface-ref>
+                      <config>
+                        <interface/>
+                        <subinterface/>
+                      </config>
+                      <state/>
+                    </interface-ref>
+                    <timers>
+                      <config>
+                        <dead-interval/>
+                        <hello-interval/>
+                      </config>
+                      <state/>
+                    </timers>
+                  </interface>
+                </interfaces>
+                <ranges>
+                  <range>
+                    <ip/>
+                    <prefix-length/>
+                    <config>
+                      <ip/>
+                      <prefix-length/>
+                    </config>
+                    <state/>
+                  </range>
+                </ranges>
+              </area>
+            </areas>
+          </ospfv3>
+        </protocol>
       </protocols>
     </network-instance>
   </network-instances>

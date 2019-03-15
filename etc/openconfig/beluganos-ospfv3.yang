@@ -1,0 +1,78 @@
+module beluganos-ospfv3 {
+
+  yang-version "1";
+
+  // namespace
+  namespace "https://github.com/beluganos/beluganos/yang/ospfv3";
+
+  prefix "boc-ospfv3";
+
+  // import some basic types
+  //import ietf-inet-types { prefix inet; }
+  import openconfig-extensions { prefix "oc-ext"; }
+
+  // Include submodules
+  // Global:  All global context groupings;
+  include beluganos-ospfv3-global;
+  // Area:    Config/opstate for an area
+  include beluganos-ospfv3-area;
+  // Area Interface:  Config/opstate for an Interface
+  include beluganos-ospfv3-area-interface;
+  // Area Range:  Config/opstate for an Rannge
+  include beluganos-ospfv3-area-range;
+
+  // meta
+  organization "Nippon Telegraph and Telephone Corporation";
+
+  contact
+    "NTT R&D
+    https://github.com/beluganos";
+
+  description
+    "An OpenConfig model for Open Shortest Path First (OSPF)
+    version 2";
+
+  oc-ext:openconfig-version "0.1.1";
+
+  revision "2017-10-20" {
+    description
+      "Minor formatting fixes.";
+    reference "0.0.1";
+  }
+
+  grouping ospfv3-top {
+    description
+      "Top-level OSPF configuration and operational state";
+
+    container ospfv3 {
+      description
+        "Top-level configuration and operational state for
+        Open Shortest Path First (OSPF) v3";
+
+      uses ospfv3-global-structural;
+
+      container areas {
+        description
+          "Configuration and operational state relating to an
+	  OSPFv3 area.";
+
+        list area {
+          key "identifier";
+
+          description
+            "The OSPFv3 areas within which the local system exists";
+
+          leaf identifier {
+            type leafref {
+              path "../config/identifier";
+            }
+            description
+              "A reference to the identifier for the area.";
+          }
+
+          uses ospfv3-area-structure;
+        }
+      }
+    }
+  }
+}

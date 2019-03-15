@@ -1,0 +1,94 @@
+submodule beluganos-ospfv3-area-range {
+
+  belongs-to beluganos-ospfv3 {
+    prefix "boc-ospfv3";
+  }
+
+  import openconfig-inet-types { prefix oc-inet; }
+  import openconfig-extensions { prefix "oc-ext"; }
+
+  // meta
+  organization "Nippon Telegraph and Telephone Corporation";
+
+  contact
+    "NTT R&D
+    https://github.com/beluganos";
+
+  description
+    "This submodule provides OSPFv3 configuration and operational
+    state parameters that are specific to the area context";
+
+  oc-ext:openconfig-version "0.1.1";
+
+  revision "2017-10-20" {
+    description
+      "Minor formatting fixes.";
+    reference "0.0.1";
+  }
+
+  grouping ospfv3-area-range-config {
+    description
+      "Configuration parameters for an OSPF interface";
+
+    leaf ip {
+      type oc-inet:ipv6-address;
+      description
+        "An operator-specified string utilised to uniquely
+        reference this range";
+    }
+
+    leaf prefix-length {
+      type uint8 {
+        range "0..128";
+      }
+    }
+  }
+
+  grouping ospfv3-area-ranges-structure {
+    description
+      "Structural grouping for configuration and operational state
+      parameters that relate to an interface";
+
+    container ranges {
+      description
+        "Enclosing container for a list of interfaces enabled within
+        this area";
+
+      list range {
+        key "ip prefix-length";
+
+        leaf ip {
+          type leafref {
+            path "../config/ip";
+          }
+
+          description
+            "A pointer to the identifier for the range.";
+        }
+
+	leaf prefix-length {
+	  type leafref {
+	    path "../config/prefix-length";
+	  }
+	}
+
+        container config {
+          description
+            "Configuration parameters for the interface on which
+            OSPFv3 is enabled";
+
+          uses ospfv3-area-range-config;
+        }
+
+        container state {
+	  // @BEL
+          //config false;
+          description
+            "Operational state parameters for the interface on which
+            OSPFv3 is enabled";
+          //uses ospfv3-area-range-config;
+        }
+      }
+    }
+  }
+}

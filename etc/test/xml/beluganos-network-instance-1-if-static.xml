@@ -7,7 +7,9 @@
       |  |  +- interface(eth1)
       |  |  +- subinterface(10)
       |  +- protocol(static)
-      |  |  +- 192.168.122.0/24 via 172.16.0.1 dev eth1.10
+      |  |  +- 192.168.122.0/24 via 172.16.0.1
+      |  |  +- 10.0.100.0/24 dev eth1.10
+      |  |  +- 10.0.101.0/24 nill0
   -->
   <!-- PE1 -->
   <network-instance>

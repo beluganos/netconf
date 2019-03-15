@@ -97,6 +97,21 @@ func (h *NICreateVerifyHandler) StaticRoute(name string, prkey *openconfig.Netwo
 }
 
 //
+// /network-instances/network-instance[name]/protocols/protocol[prkey]/static-routes/static[rtkey]/config
+//
+func (h *NICreateVerifyHandler) StaticRouteConfig(name string, prkey *openconfig.NetworkInstanceProtocolKey, rtkey *openconfig.StaticRouteKey, config *openconfig.StaticRouteConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/CONF %s", h.ev, h.oper, name, prkey, rtkey, config)
+
+	if err := VerifyNIStaticRouteConfig(config); err != nil {
+		log.Errorf("NI/%s/%s/%s/PROTOS/%s/%s/CONF %s", h.ev, h.oper, name, prkey, rtkey, err)
+		return err
+	}
+
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/CONF OK", h.ev, h.oper, name, prkey, rtkey)
+	return nil
+}
+
+//
 // /network-instances/network-instance[name]/protocols/protocol[prkey]/static-routes/static[rtkey]/next-hops/next-hop[index]
 //
 func (h *NICreateVerifyHandler) StaticRouteNexthop(name string, prkey *openconfig.NetworkInstanceProtocolKey, rtkey *openconfig.StaticRouteKey, index string, nexthop *openconfig.StaticRouteNexthop) error {
@@ -140,6 +155,20 @@ func (h *NICreateVerifyHandler) Ospfv2(name string, key *openconfig.NetworkInsta
 	log.Debugf("NI/%s/%s/%s/PROTOS/%s: %s", h.ev, h.oper, name, key, ospf)
 
 	if key.Ident != openconfig.INSTALL_PROTOCOL_OSPF {
+		return fmt.Errorf("NI/%s/%s/%s/PROTOS/%s: Invalid Protocol identifier.", h.ev, h.oper, name, key)
+
+	}
+
+	return nil
+}
+
+//
+// /network-instances/network-instance[name]/protocols/protocol[prkey]/ospfv3
+//
+func (h *NICreateVerifyHandler) Ospfv3(name string, key *openconfig.NetworkInstanceProtocolKey, ospf *openconfig.Ospfv3) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s: %s", h.ev, h.oper, name, key, ospf)
+
+	if key.Ident != openconfig.INSTALL_PROTOCOL_OSPF3 {
 		return fmt.Errorf("NI/%s/%s/%s/PROTOS/%s: Invalid Protocol identifier.", h.ev, h.oper, name, key)
 
 	}

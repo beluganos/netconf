@@ -231,14 +231,14 @@ func TestSubinterface_index_not_uint32(t *testing.T) {
 //
 // /subinterfaces/subinterface[index='10']/index = 10
 // /subinterfaces/subinterface[index='10']/config
-// /subinterfaces/subinterface[index='10']/openconfig-if-ip:ipv4
+// /subinterfaces/subinterface[index='10']/beluganos-if-ip:ipv4
 //
 func TestSubinterface(t *testing.T) {
 	ifaces := makeSubinterfaces([][2]string{
 		{"/subinterfaces/subinterface[index='10']", ""},
 		{"/subinterfaces/subinterface[index='10']/index", "10"},
 		{"/subinterfaces/subinterface[index='10']/config", ""},
-		{"/subinterfaces/subinterface[index='10']/openconfig-if-ip:ipv4", ""},
+		{"/subinterfaces/subinterface[index='10']/beluganos-if-ip:ipv4", ""},
 	})
 
 	t.Log(ifaces)
@@ -250,6 +250,35 @@ func TestSubinterface(t *testing.T) {
 	iface := ifaces[10]
 
 	if v := iface.Compare(OC_INDEX_KEY, OC_CONFIG_KEY, SUBINTERFACE_IPV4_KEY); !v {
+		t.Errorf("subifaces.Put unmatch. subiface.cmp=%t", v)
+	}
+	if v := iface.Index; v != 10 {
+		t.Errorf("subifaces.Put unmatch. subiface.index=%d", v)
+	}
+}
+
+//
+// /subinterfaces/subinterface[index='10']/index = 10
+// /subinterfaces/subinterface[index='10']/config
+// /subinterfaces/subinterface[index='10']/beluganos-if-ip:ipv6
+//
+func TestSubinterfaceV6(t *testing.T) {
+	ifaces := makeSubinterfaces([][2]string{
+		{"/subinterfaces/subinterface[index='10']", ""},
+		{"/subinterfaces/subinterface[index='10']/index", "10"},
+		{"/subinterfaces/subinterface[index='10']/config", ""},
+		{"/subinterfaces/subinterface[index='10']/beluganos-if-ip:ipv6", ""},
+	})
+
+	t.Log(ifaces)
+
+	if v := len(ifaces); v != 1 {
+		t.Errorf("subifaces.Put unmatch. #subifaces=%d", v)
+	}
+
+	iface := ifaces[10]
+
+	if v := iface.Compare(OC_INDEX_KEY, OC_CONFIG_KEY, SUBINTERFACE_IPV6_KEY); !v {
 		t.Errorf("subifaces.Put unmatch. subiface.cmp=%t", v)
 	}
 	if v := iface.Index; v != 10 {

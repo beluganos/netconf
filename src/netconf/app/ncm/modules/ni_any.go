@@ -24,14 +24,26 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const NIConterinerDefaultMTU = 9000
+
 type NIAnyHandler struct {
 	*NICommands
 	ev   srlib.SrNotifEvent
 	oper srlib.SrChangeOper
+	mtu  uint16
 }
 
-func (n *NIAnyHandler) DryRun(b bool) {
-	n.Cmds.DryRun = b
+func (n *NIAnyHandler) SetOpt(key string, val interface{}) {
+	switch key {
+	case "mtu":
+		if mtu, ok := val.(uint16); ok {
+			n.mtu = mtu
+		}
+	case "dryrun":
+		if dryRun, ok := val.(bool); ok {
+			n.Cmds.DryRun = dryRun
+		}
+	}
 }
 
 func NewNIAnyHandler(ev srlib.SrNotifEvent, oper srlib.SrChangeOper) NIChangeHandler {
@@ -43,6 +55,7 @@ func newNIAnyHandler(ev srlib.SrNotifEvent, oper srlib.SrChangeOper) *NIAnyHandl
 		NICommands: NewNICommands(ev, oper),
 		ev:         ev,
 		oper:       oper,
+		mtu:        NIConterinerDefaultMTU,
 	}
 }
 
@@ -212,6 +225,57 @@ func (h *NIAnyHandler) Ospfv2InterfaceRefConfig(name string, key *openconfig.Net
 
 func (h *NIAnyHandler) Ospfv2InterfaceTimers(name string, key *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, timers *openconfig.Ospfv2InterfaceTimers) error {
 	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/TIMERS* %s", h.ev, h.oper, name, key, areaId, ifaceId, timers)
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3(name string, nikey *openconfig.NetworkInstanceProtocolKey, ospf *openconfig.Ospfv3) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s* %s", h.ev, h.oper, name, nikey, ospf)
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3GlobalConfig(name string, nikey *openconfig.NetworkInstanceProtocolKey, config *openconfig.Ospfv3GlobalConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/CONF* %s", h.ev, h.oper, name, nikey, config)
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3Area(name string, nikey *openconfig.NetworkInstanceProtocolKey, areaId string, area *openconfig.Ospfv3Area) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s* %s", h.ev, h.oper, name, nikey, areaId, area)
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3AreaConfig(name string, nikey *openconfig.NetworkInstanceProtocolKey, areaId string, config *openconfig.Ospfv3AreaConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/CONF* %s", h.ev, h.oper, name, nikey, areaId, config)
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3AreaRange(name string, nikey *openconfig.NetworkInstanceProtocolKey, areaId string, rngkey *openconfig.Ospfv3AreaRangeKey, rng *openconfig.Ospfv3AreaRange) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s* %s", h.ev, h.oper, name, nikey, areaId, rngkey, rng)
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3AreaRangeConfig(name string, nikey *openconfig.NetworkInstanceProtocolKey, areaId string, rngkey *openconfig.Ospfv3AreaRangeKey, config *openconfig.Ospfv3AreaRangeConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/CONF* %s", h.ev, h.oper, name, nikey, areaId, rngkey, config)
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3Interface(name string, nikey *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, iface *openconfig.Ospfv3Interface) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s* %s", h.ev, h.oper, name, nikey, areaId, ifaceId, iface)
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3InterfaceConfig(name string, nikey *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, config *openconfig.Ospfv3InterfaceConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/CONF* %s", h.ev, h.oper, name, nikey, areaId, ifaceId, config)
+
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3InterfaceRefConfig(name string, nikey *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, config *openconfig.InterfaceRefConfig) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/IFREF* %s", h.ev, h.oper, name, nikey, areaId, ifaceId, config)
+	return nil
+}
+
+func (h *NIAnyHandler) Ospfv3InterfaceTimers(name string, nikey *openconfig.NetworkInstanceProtocolKey, areaId string, ifaceId string, timers *openconfig.Ospfv3InterfaceTimers) error {
+	log.Debugf("NI/%s/%s/%s/PROTOS/%s/%s/%s/TIMERS* %s", h.ev, h.oper, name, nikey, areaId, ifaceId, timers)
 	return nil
 }
 

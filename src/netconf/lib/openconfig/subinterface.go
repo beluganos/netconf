@@ -104,12 +104,14 @@ type Subinterface struct {
 	Index  uint32              `xml:"index"`
 	Config *SubinterfaceConfig `xml:"config"`
 	IPv4   *SubinterfaceIPv4   `xml:"ipv4"`
+	IPv6   *SubinterfaceIPv6   `xml:"ipv6"`
 }
 
 type SubinterfaceProcessor interface {
 	subinterfaceProcessor
 	SubinterfaceConfigProcessor
 	SubinterfaceIPv4Processor
+	SubinterfaceIPv6Processor
 }
 
 type subinterfaceProcessor interface {
@@ -122,15 +124,17 @@ func NewSubinterface(index uint32) *Subinterface {
 		Index:     index,
 		Config:    NewSubinterfaceConfig(),
 		IPv4:      NewSubinterfaceIPv4(),
+		IPv6:      NewSubinterfaceIPv6(),
 	}
 }
 
 func (i *Subinterface) String() string {
-	return fmt.Sprintf("%s{%s=%d, %s, %s} %s",
+	return fmt.Sprintf("%s{%s=%d, %s, %s, %s} %s",
 		SUBINTERFACE_KEY,
 		OC_INDEX_KEY, i.Index,
 		i.Config,
 		i.IPv4,
+		i.IPv6,
 		i.SrChanges,
 	)
 }
@@ -149,6 +153,11 @@ func (i *Subinterface) SetConfig(config *SubinterfaceConfig) {
 func (i *Subinterface) SetIPv4(ipv4 *SubinterfaceIPv4) {
 	i.IPv4 = ipv4
 	i.SetChange(SUBINTERFACE_IPV4_KEY)
+}
+
+func (i *Subinterface) SetIPv6(ipv6 *SubinterfaceIPv6) {
+	i.IPv6 = ipv6
+	i.SetChange(SUBINTERFACE_IPV6_KEY)
 }
 
 func (i *Subinterface) Put(nodes []*ncxml.XPathNode, value string) error {
@@ -172,6 +181,11 @@ func (i *Subinterface) Put(nodes []*ncxml.XPathNode, value string) error {
 
 	case SUBINTERFACE_IPV4_KEY:
 		if err := i.IPv4.Put(nodes[1:], value); err != nil {
+			return err
+		}
+
+	case SUBINTERFACE_IPV6_KEY:
+		if err := i.IPv6.Put(nodes[1:], value); err != nil {
 			return err
 		}
 	}
@@ -215,7 +229,20 @@ func ProcessSubinterface(p subinterfaceProcessor, reverse bool, name string, ind
 		return nil
 	}
 
-	return nclib.CallFunctions(reverse, subifIndex, subifConfig, subifIPv4)
+	subifIPv6 := func() error {
+		if subif.GetChange(SUBINTERFACE_IPV6_KEY) {
+			return ProcessSubinterfaceIPv6(
+				p.(SubinterfaceIPv6Processor),
+				reverse,
+				name,
+				index,
+				subif.IPv6,
+			)
+		}
+		return nil
+	}
+
+	return nclib.CallFunctions(reverse, subifIndex, subifConfig, subifIPv4, subifIPv6)
 }
 
 //

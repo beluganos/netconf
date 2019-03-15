@@ -1,0 +1,57 @@
+---
+
+network-instances:
+  PE1:
+    type: DEFAULT_INSTANCE
+    router-id: 10.0.0.1
+    loopbacks:
+      lo:
+        - 10.0.0.1/32
+        - 2010:2010::1/128
+        - 2010:2020::1/128
+
+    interfaces:
+      eth1: []
+      eth2: []
+      eth3: []
+      eth4: []
+
+    ospfv2:
+      router-id: 10.0.0.1
+
+    ospfv3:
+      router-id: 10.0.0.1
+      areas:
+        0.0.0.0:
+          lo:
+            passive: true
+          eth1:
+            metric: 100
+          eth2:
+            metric: 200
+
+    bgp:
+      router-id: 10.0.0.1
+      as: 65001
+      zebra:
+        enabled: true
+        version: 5
+      neighbors:
+        20.1.0.2:
+          peer-as: 65002
+          afi-safis:
+            - L3VPN_IPV4_UNICAST
+          apply-policy:
+            default-import-policy: ACCEPT_ROUTE
+            default-export-policy: ACCEPT_ROUTE
+            export-policy:
+              - policy-next-hop-self
+        20.2.0.2:
+          peer-as: 65003
+          afi-safis:
+            - L3VPN_IPV4_UNICAST
+          apply-policy:
+            default-import-policy: ACCEPT_ROUTE
+            default-export-policy: ACCEPT_ROUTE
+            export-policy:
+              - policy-next-hop-self

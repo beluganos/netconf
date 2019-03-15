@@ -242,3 +242,221 @@ func ProcessSubinterfaceIPv4AddressConfig(p SubinterfaceIPv4AddressConfigProcess
 
 	return nclib.CallFunctions(reverse, configFunc)
 }
+
+//
+// subinterface[index]/ipv6
+//
+type SubinterfaceIPv6 struct {
+	nclib.SrChanges `xml:"-"`
+
+	XMLName   xml.Name                `xml:"https://github.com/beluganos/beluganos/yang/interfaces/ip ipv6"`
+	Addresses IPAddresses             `xml:"addresses"`
+	Config    *SubinterfaceIPv6Config `xml:"config"`
+}
+
+type SubinterfaceIPv6Processor interface {
+	SubinterfaceIPv6AddrProcessor
+	SubinterfaceIPv6ConfigProcessor
+}
+
+func NewSubinterfaceIPv6() *SubinterfaceIPv6 {
+	return &SubinterfaceIPv6{
+		SrChanges: nclib.NewSrChanges(),
+		Addresses: NewIPAddresses(),
+		Config:    NewSubinterfaceIPv6Config(),
+	}
+}
+
+func (i *SubinterfaceIPv6) String() string {
+	return fmt.Sprintf("%s{%s, %s} %s",
+		SUBINTERFACE_IPV6_KEY,
+		i.Addresses,
+		i.Config,
+		i.SrChanges,
+	)
+}
+
+func (i *SubinterfaceIPv6) SetConfig(config *SubinterfaceIPv6Config) {
+	i.Config = config
+	i.SetChange(OC_CONFIG_KEY)
+}
+
+func (i *SubinterfaceIPv6) SetAddresses(addrs IPAddresses) {
+	i.Addresses = addrs
+	i.SetChange(SUBINTERFACE_ADDRS_KEY)
+}
+
+func (i *SubinterfaceIPv6) Put(nodes []*ncxml.XPathNode, value string) error {
+	if len(nodes) == 0 {
+		return nil
+	}
+
+	switch nodes[0].Name {
+	case OC_CONFIG_KEY:
+		if err := i.Config.Put(nodes[1:], value); err != nil {
+			return err
+		}
+
+	case SUBINTERFACE_ADDRS_KEY:
+		if err := i.Addresses.Put(nodes[1:], value); err != nil {
+			return err
+		}
+	}
+
+	i.SetChange(nodes[0].Name)
+	return nil
+}
+
+func ProcessSubinterfaceIPv6(p SubinterfaceIPv6Processor, reverse bool, name string, index uint32, ipv6 *SubinterfaceIPv6) error {
+
+	configFunc := func() error {
+		if ipv6.GetChange(OC_CONFIG_KEY) {
+			return ProcessSubinterfaceIPv6Config(
+				p.(SubinterfaceIPv6ConfigProcessor),
+				reverse,
+				name,
+				index,
+				ipv6.Config,
+			)
+		}
+		return nil
+	}
+
+	addrsFunc := func() error {
+		if ipv6.GetChange(SUBINTERFACE_ADDRS_KEY) {
+			return ProcessSubinterfaceIPv6Addrs(
+				p.(SubinterfaceIPv6AddrProcessor),
+				reverse,
+				name,
+				index,
+				ipv6.Addresses,
+			)
+		}
+		return nil
+	}
+
+	return nclib.CallFunctions(reverse, configFunc, addrsFunc)
+}
+
+//
+//  subinterface[index]/ipv6/config
+//
+type SubinterfaceIPv6Config struct {
+	nclib.SrChanges `xml:"-"`
+
+	Mtu uint16 `xml:"mtu,omitempty"`
+}
+
+type SubinterfaceIPv6ConfigProcessor interface {
+	SubinterfaceIPv6Config(string, uint32, *SubinterfaceIPv6Config) error
+}
+
+func NewSubinterfaceIPv6Config() *SubinterfaceIPv6Config {
+	return &SubinterfaceIPv6Config{
+		SrChanges: nclib.NewSrChanges(),
+		Mtu:       0,
+	}
+}
+
+func (c *SubinterfaceIPv6Config) String() string {
+	return fmt.Sprintf("%s{%s=%d} %s",
+		OC_CONFIG_KEY,
+		SUBINTERFACE_MTU_KEY, c.Mtu,
+		c.SrChanges,
+	)
+}
+
+func (c *SubinterfaceIPv6Config) SetMtu(mtu uint16) {
+	c.Mtu = mtu
+	c.SetChange(SUBINTERFACE_MTU_KEY)
+}
+
+func (c *SubinterfaceIPv6Config) Put(nodes []*ncxml.XPathNode, value string) error {
+	if len(nodes) == 0 {
+		return nil
+	}
+
+	switch nodes[0].Name {
+	case SUBINTERFACE_MTU_KEY:
+		mtu, err := strconv.ParseUint(value, 0, 16)
+		if err != nil {
+			return err
+		}
+		c.Mtu = uint16(mtu)
+	}
+
+	c.SetChange(nodes[0].Name)
+	return nil
+}
+
+func ProcessSubinterfaceIPv6Config(p SubinterfaceIPv6ConfigProcessor, reverse bool, name string, index uint32, config *SubinterfaceIPv6Config) error {
+	configFunc := func() error {
+		return p.SubinterfaceIPv6Config(name, index, config)
+	}
+
+	return nclib.CallFunctions(reverse, configFunc)
+}
+
+//
+// subinterface[index]/ipv6/addresses
+//
+func ProcessSubinterfaceIPv6Addrs(p SubinterfaceIPv6AddrProcessor, reverse bool, name string, index uint32, addrs IPAddresses) error {
+	for ip, addr := range addrs {
+		if err := ProcessSubinterfaceIPv6Addr(p, reverse, name, index, ip, addr); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//
+// subinterface[index]/ipv6/addresses/address[ip]
+//
+type SubinterfaceIPv6AddrProcessor interface {
+	subinterfaceIPv6AddrProcessor
+	SubinterfaceIPv6AddressConfigProcessor
+}
+
+type subinterfaceIPv6AddrProcessor interface {
+	SubinterfaceIPv6Address(string, uint32, string, *IPAddress) error
+}
+
+func ProcessSubinterfaceIPv6Addr(p subinterfaceIPv6AddrProcessor, reverse bool, name string, index uint32, ip string, addr *IPAddress) error {
+	addrFunc := func() error {
+		if addr.GetChange(SUBINTERFACE_ADDR_IP_KEY) {
+			return p.SubinterfaceIPv6Address(name, index, ip, addr)
+		}
+		return nil
+	}
+
+	configFunc := func() error {
+		if addr.GetChange(OC_CONFIG_KEY) {
+			return ProcessSubinterfaceIPv6AddressConfig(
+				p.(SubinterfaceIPv6AddressConfigProcessor),
+				reverse,
+				name,
+				index,
+				ip,
+				addr.Config,
+			)
+		}
+		return nil
+	}
+
+	return nclib.CallFunctions(reverse, addrFunc, configFunc)
+}
+
+//
+// subinterface[index]/ipv6/addresses/address[ip]/config
+//
+type SubinterfaceIPv6AddressConfigProcessor interface {
+	SubinterfaceIPv6AddressConfig(string, uint32, string, *IPAddressConfig) error
+}
+
+func ProcessSubinterfaceIPv6AddressConfig(p SubinterfaceIPv6AddressConfigProcessor, reverse bool, name string, index uint32, ip string, config *IPAddressConfig) error {
+	configFunc := func() error {
+		return p.SubinterfaceIPv6AddressConfig(name, index, ip, config)
+	}
+
+	return nclib.CallFunctions(reverse, configFunc)
+}

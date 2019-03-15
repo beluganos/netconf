@@ -91,14 +91,15 @@ module beluganos-local-routing {
       "Configuration data for static routes.";
 
     leaf ip {
-      type inet:ipv4-address;
+      type string;
+      //type inet:ipv4-address;
       description
         "The IPv4 address on the interface.";
     }
 
     leaf prefix-length {
       type uint8 {
-	range "0..32";
+	range "0..128";
       }
       description
 	"The length of the subnet prefix.";

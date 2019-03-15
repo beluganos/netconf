@@ -2,6 +2,7 @@
 
 [global]
 persist = true
+lxc-mtu = 8192
 
 [frr]
 auto_restart = "restart"  # "restart", "reload"(experimental), "-"(no operation)
