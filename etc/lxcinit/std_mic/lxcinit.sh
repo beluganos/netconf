@@ -61,6 +61,8 @@ do_init() {
     chown ${BEL_USER}:${BEL_USER} /etc/beluganos
 
     # copy config files
+    install -v -m 0644 ./conf/snmp.conf   /etc/snmp/snmp.conf
+    install -v -m 0644 ./conf/snmpd.conf  /etc/snmp/snmpd.conf
     install -v -m 0644 ./conf/sysctl.conf /etc/sysctl.d/30-beluganos.conf
     install -v -m 0644 -o ${FRR_USER} -g ${FRR_USER} ./conf/daemons     /etc/frr/daemons
     install -v -m 0644 -o ${FRR_USER} -g ${FRR_USER} ./conf/gobgpd.conf /etc/frr/gobgpd.toml
@@ -78,6 +80,8 @@ do_init() {
     for SERVICE in ${SERVICES}; do
         install -v -m 0644 ./service/${SERVICE} /etc/systemd/system/${SERVICE}
     done
+
+    install -v -m 0644 ./service/snmpd.service /lib/systemd/system/snmpd.service
 
     # enable and start services.
     systemctl daemon-reload
